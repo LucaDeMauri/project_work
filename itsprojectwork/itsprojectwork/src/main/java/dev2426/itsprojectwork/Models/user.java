@@ -16,7 +16,10 @@ public class user {
     private String email;
     private String password;
 
+
+    //L
     public user(long id,String nome,String cognome,String mail,String password){
+        this.id=id;
         this.id=id;
         this.nome=nome;
         this.cognome=cognome;
