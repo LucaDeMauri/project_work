@@ -1,0 +1,101 @@
+body {
+  background: url("img/immagine_sfondo.png") no-repeat center/cover;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.login {
+  flex: 0 0 40%;
+  background: #eaf8ff;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: 450px;
+  border-radius: 12%;
+}
+
+.titolo{
+  font-size: 2.5em;
+  color: #444;
+  margin-bottom: 40px;
+}
+
+.form {
+  width: 100%;
+  max-width: 280px;
+}
+
+.form input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  box-sizing: border-box;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form input:focus {
+  border-color: #6a9cff;
+}
+
+.accedi-button {
+  width: 100%;
+  padding: 15px;
+  background: #4a6a66;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin: 5px 0 25px;
+}
+
+.accedi-button:hover {
+  background: #3b5753;
+}
+
+.registrazione a {
+  color: #555;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.registrazione a:hover {
+  text-decoration: underline;
+}
+
+img.logo {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    height: 100px;
+    width: auto;
+}
+
+@media (max-width: 850px) {
+  .login-container {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .illustration-panel {
+    display: none;
+  }
+
+  .login-panel {
+    flex: 1;
+    padding: 30px;
+  }
+}
