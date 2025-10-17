@@ -6,23 +6,23 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev2426.itsprojectwork.Models.user;
-import dev2426.itsprojectwork.Repository.userRepository;
+import dev2426.itsprojectwork.Models.Candidatura;
+import dev2426.itsprojectwork.Repository.CandidatureRepository;
 
 @Service
-public class userService {
+public class CandidatureService {
 	@Autowired
-	private userRepository repository;
+	private CandidatureRepository repository;
 	
-	public List<user> getAll(){
+	public List<Candidatura> getAll(){
 		return repository.findAll();
 	}
 	
-	public Optional<user> getOne(Long id) {
+	public Optional<Candidatura> getOne(Long id) {
 		return repository.findById(id);
 	}
 	
-	public void insertOne(user nuovo) {
+	public void insertOne(Candidatura nuovo) {
 		repository.save(nuovo);
 	}
 	

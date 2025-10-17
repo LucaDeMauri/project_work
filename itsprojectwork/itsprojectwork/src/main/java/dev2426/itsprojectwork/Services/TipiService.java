@@ -6,23 +6,23 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev2426.itsprojectwork.Models.tipi;
-import dev2426.itsprojectwork.Repository.tipiRepository;
+import dev2426.itsprojectwork.Models.Tipo;
+import dev2426.itsprojectwork.Repository.TipiRepository;
 
 @Service
-public class tipiService {
+public class TipiService {
 	@Autowired
-	private tipiRepository repository;
+	private TipiRepository repository;
 	
-	public List<tipi> getAll(){
+	public List<Tipo> getAll(){
 		return repository.findAll();
 	}
 	
-	public Optional<tipi> getOne(Long id) {
+	public Optional<Tipo> getOne(Long id) {
 		return repository.findById(id);
 	}
 	
-	public void insertOne(tipi nuovo) {
+	public void insertOne(Tipo nuovo) {
 		repository.save(nuovo);
 	}
 	

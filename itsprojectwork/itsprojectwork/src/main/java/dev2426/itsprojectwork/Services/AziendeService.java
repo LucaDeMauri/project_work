@@ -6,24 +6,24 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev2426.itsprojectwork.Models.aziende;
-import dev2426.itsprojectwork.Repository.aziendeRepository;
+import dev2426.itsprojectwork.Models.Azienda;
+import dev2426.itsprojectwork.Repository.AziendeRepository;
 
 
 @Service
-public class aziendeService {
+public class AziendeService {
 	@Autowired
-	private aziendeRepository repository;
+	private AziendeRepository repository;
 	
-	public List<aziende> getAll(){
+	public List<Azienda> getAll(){
 		return repository.findAll();
 	}
 	
-	public Optional<aziende> getOne(Long id) {
+	public Optional<Azienda> getOne(Long id) {
 		return repository.findById(id);
 	}
 	
-	public void insertOne(aziende nuovo) {
+	public void insertOne(Azienda nuovo) {
 		repository.save(nuovo);
 	}
 	

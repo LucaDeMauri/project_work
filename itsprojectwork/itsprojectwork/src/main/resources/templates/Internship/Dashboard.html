@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - StageUp</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="/img/logo.png" alt="StageUp Logo" class="logo">
+            <h1>Stage Up</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">
+                    <span>U</span>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profilo" class="dropdown-item">
+                        <span class="dropdown-icon">👤</span>
+                        Profilo Utente
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/logout" class="dropdown-item logout">
+                        <span class="dropdown-icon">🚪</span>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="annunci-grid" th:each="annuncioLetto : ${listaAnnunci}">
+            <!-- Annuncio 1 -->
+            <div class="annuncio-card">
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Tech Solutions S.r.l.</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">6 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Tipo:</span>
+                        <span class="valore">Sviluppatore Frontend</span>
+                    </div>
+                </div>
+                <button class="btn-candidati">Candidati</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userAvatar = document.getElementById('userAvatar');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            // Mostra/nascondi dropdown al click
+            userAvatar.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            // Chiudi dropdown cliccando fuori
+            document.addEventListener('click', function(e) {
+                if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+            
+            // Chiudi dropdown quando si clicca su un item
+            dropdownMenu.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
