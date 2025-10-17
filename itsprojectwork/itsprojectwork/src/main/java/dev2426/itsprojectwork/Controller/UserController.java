@@ -14,10 +14,5 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("salva")
-    public String salva() {
-        return null;
-    }
-
     
 }

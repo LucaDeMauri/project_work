@@ -13,19 +13,25 @@ import dev2426.itsprojectwork.Repository.CandidatureRepository;
 public class CandidatureService {
 	@Autowired
 	private CandidatureRepository repository;
-	
-	public List<Candidatura> getAll(){
-		return repository.findAll();
+
+	public List<Candidatura> getAll() {
+		List<Candidatura> elenco = null;
+		for (Candidatura e : repository.findAll()) {
+			elenco.add(e);
+		}
+		return elenco;
 	}
-	
+
 	public Optional<Candidatura> getOne(Long id) {
-		return repository.findById(id);
+		Optional<Candidatura> elemento = null;
+		elemento = repository.findById(id);
+		return elemento;
 	}
-	
+
 	public void insertOne(Candidatura nuovo) {
 		repository.save(nuovo);
 	}
-	
+
 	public void deleteOne(Long id) {
 		repository.deleteById(id);
 	}

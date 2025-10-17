@@ -15,11 +15,17 @@ public class UtenteService {
 	private UtenteRepository repository;
 	
 	public List<Utente> getAll(){
-		return repository.findAll();
+		List<Utente> elenco = null;
+		for (Utente e : repository.findAll()) {
+			elenco.add(e);
+		}
+		return elenco;
 	}
 	
 	public Optional<Utente> getOne(Long id) {
-		return repository.findById(id);
+		Optional<Utente> elemento = null;
+		elemento = repository.findById(id);
+		return elemento;
 	}
 	
 	public void insertOne(Utente nuovo) {

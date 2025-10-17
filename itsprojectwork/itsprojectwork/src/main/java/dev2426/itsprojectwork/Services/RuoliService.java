@@ -16,11 +16,19 @@ public class RuoliService {
 	private RuoliRepository repository;
 	
 	public List<Ruolo> getAll(){
-		return repository.findAll();
+		
+		List<Ruolo> elenco = null;
+		for (Ruolo e : repository.findAll()) {
+			elenco.add(e);
+		}
+		return elenco;
+		
 	}
 	
 	public Optional<Ruolo> getOne(Long id) {
-		return repository.findById(id);
+		Optional<Ruolo> elemento = null;
+		elemento = repository.findById(id);
+		return elemento;
 	}
 	
 	public void insertOne(Ruolo nuovo) {
