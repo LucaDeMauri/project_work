@@ -11,7 +11,7 @@ public class AuthController {
 
 	@GetMapping("login")
 	public String loginPage() {
-		return null;
+		return "/Auth/login";
 	}
 	
 	@GetMapping("signup")
