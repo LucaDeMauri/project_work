@@ -15,17 +15,11 @@ public class TipiService {
 	private TipiRepository repository;
 	
 	public List<Tipo> getAll(){
-		List<Tipo> elenco = null;
-		for (Tipo e : repository.findAll()) {
-			elenco.add(e);
-		}
-		return elenco;
+		return repository.findAll();
 	}
 	
 	public Optional<Tipo> getOne(Long id) {
-		Optional<Tipo> elemento = null;
-		elemento = repository.findById(id);
-		return elemento;
+		return repository.findById(id);
 	}
 	
 	public void insertOne(Tipo nuovo) {

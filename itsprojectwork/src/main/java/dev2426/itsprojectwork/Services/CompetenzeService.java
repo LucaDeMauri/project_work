@@ -16,17 +16,11 @@ public class CompetenzeService {
 	private CompetenzeRepository repository;
 	
 	public List<Competenza> getAll(){
-		List<Competenza> elenco = null;
-		for (Competenza e : repository.findAll()) {
-			elenco.add(e);
-		}
-		return elenco;
+		return repository.findAll();
 	}
 	
 	public Optional<Competenza> getOne(Long id) {
-		Optional<Competenza> elemento = null;
-		elemento = repository.findById(id);
-		return elemento;
+		return repository.findById(id);
 	}
 	
 	public void insertOne(Competenza nuovo) {

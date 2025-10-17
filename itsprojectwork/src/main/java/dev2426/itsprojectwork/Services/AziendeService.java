@@ -16,19 +16,11 @@ public class AziendeService {
 	private AziendeRepository repository;
 	
 	public List<Azienda> getAll(){
-		List<Azienda> elenco = null;
-		
-		for (Azienda e :repository.findAll()) {
-			elenco.add(e);
-		}
-		
-		return elenco;
+		return repository.findAll();
 	}
 	
 	public Optional<Azienda> getOne(Long id) {
-		Optional<Azienda> elemento = null;
-		elemento = repository.findById(id);
-		return elemento;
+		return repository.findById(id);
 	}
 	
 	public void insertOne(Azienda nuovo) {
