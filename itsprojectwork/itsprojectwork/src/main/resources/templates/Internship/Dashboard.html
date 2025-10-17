@@ -42,7 +42,7 @@
                     </div>
                     <div class="dato-item">
                         <span class="etichetta">Durata:</span>
-                        <span class="valore" th:text="${annuncio.durata}"></span>
+                        <span class="valore" th:text="@{${annuncio.durata} + ' giorni'}"></span>
                     </div>
                     <div class="dato-item">
                         <span class="etichetta">Tipo:</span>

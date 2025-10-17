@@ -16,11 +16,22 @@ public class AnnunciService {
 	private AnnunciRepository repository;
 	
 	public List<Annuncio> getAll(){
-		return repository.findAll();
+		
+		List<Annuncio> elenco = null;
+		
+		for (Annuncio e :repository.findAll()) {
+			elenco.add(e);
+		}
+		
+		return elenco;
 	}
 	
 	public Optional<Annuncio> getOne(Long id) {
-		return repository.findById(id);
+		
+		Optional<Annuncio> elemento = null;
+		elemento = repository.findById(id);
+		
+		return elemento;
 	}
 	
 	public void insertOne(Annuncio nuovo) {

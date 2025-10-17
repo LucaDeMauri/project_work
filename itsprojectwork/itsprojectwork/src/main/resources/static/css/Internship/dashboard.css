@@ -1,3 +1,421 @@
-body{
-	color: black;
+body {
+    background: url("img/immagine_sfondo.png") no-repeat center/cover;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: #eaf8ff;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 120px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    height: 100px;
+    width: auto;
+    margin-right: 25px;
+}
+
+header h1 {
+    color: #444;
+    font-size: 2em;
+    margin: 0;
+    font-weight: 600;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #4a6a66;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.user-avatar:hover {
+    background: #3b5753;
+    transform: scale(1.05);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    min-width: 200px;
+    padding: 8px 0;
+    margin-top: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #444;
+    text-decoration: none;
+    transition: background 0.3s;
+    font-size: 0.95em;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-item.logout {
+    color: #e74c3c;
+}
+
+.dropdown-item.logout:hover {
+    background: #ffeaea;
+}
+
+.dropdown-icon {
+    margin-right: 10px;
+    font-size: 1.1em;
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 8px 0;
+}
+
+.container {
+    flex: 1;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+.annunci-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.annuncio-card {
+    background: #eaf8ff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 200px;
+    position: relative;
+}
+
+.annuncio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.dati-annuncio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.dato-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #d1e7f5;
+}
+
+.dato-item:last-child {
+    border-bottom: none;
+}
+
+.etichetta {
+    font-weight: bold;
+    color: #4a6a66;
+    font-size: 0.95em;
+}
+
+.valore {
+    color: #444;
+    font-weight: normal;
+    text-align: right;
+    flex: 1;
+    margin-left: 10px;
+}
+
+.btn-candidati {
+    padding: 12px 25px;
+    background: #4a6a66;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 1em;
+    width: 100%;
+    margin-top: auto;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn-candidati:hover {
+    background: #3b5753;
+}
+
+/* Stile per la descrizione completa - ORA SOTTO L'ANNUNCIO CLICCATO */
+.descrizione-completa {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 2px solid #4a6a66;
+    grid-column: 1 / -1; /* Occupa tutte e 3 le colonne */
+    position: relative;
+    z-index: 10;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.descrizione-content {
+    position: relative;
+}
+
+.btn-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    z-index: 20;
+}
+
+.btn-close:hover {
+    background: #c0392b;
+}
+
+.descrizione-content h3 {
+    color: #4a6a66;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    border-bottom: 2px solid #eaf8ff;
+    padding-bottom: 10px;
+    padding-right: 40px;
+}
+
+.descrizione-content p {
+    margin: 12px 0;
+    line-height: 1.6;
+    color: #444;
+}
+
+.descrizione-content ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.descrizione-content li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.descrizione-content strong {
+    color: #4a6a66;
+}
+
+.btn-conferma-candidatura {
+    padding: 12px 30px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 25px;
+    font-size: 1em;
+}
+
+.btn-conferma-candidatura:hover {
+    background: #219653;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .annunci-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .descrizione-completa {
+        grid-column: 1 / -1;
+    }
+    
+    header {
+        height: 110px;
+        padding: 0 20px;
+    }
+    
+    .logo {
+        height: 90px;
+        margin-right: 20px;
+    }
+    
+    header h1 {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 768px) {
+    .annunci-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    header {
+        height: 100px;
+        padding: 0 15px;
+    }
+    
+    .logo {
+        height: 80px;
+        margin-right: 15px;
+    }
+    
+    header h1 {
+        font-size: 1.6em;
+    }
+    
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .dropdown-menu {
+        right: -10px;
+        min-width: 180px;
+    }
+    
+    .descrizione-completa {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        height: 90px;
+        padding: 0 10px;
+    }
+    
+    .logo {
+        height: 70px;
+        margin-right: 12px;
+    }
+    
+    header h1 {
+        font-size: 1.4em;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .container {
+        padding: 15px;
+        margin-top: 10px;
+    }
+    
+    .dropdown-menu {
+        right: -20px;
+        min-width: 160px;
+    }
+    
+    .descrizione-completa {
+        padding: 15px;
+    }
+    
+    .btn-close {
+        top: -10px;
+        right: -10px;
+        width: 25px;
+        height: 25px;
+        font-size: 16px;
+    }
 }

@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Data
@@ -20,9 +22,15 @@ public class Azienda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 	
+	@Getter
+	@Setter
 	private String nome;
 	
 	@OneToMany(mappedBy = "azienda", cascade = CascadeType.ALL)
     private List<Annuncio> annunci;
+
+	
+	
+	
 	
 }
