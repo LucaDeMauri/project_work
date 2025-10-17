@@ -6,24 +6,24 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev2426.itsprojectwork.Models.ruoli;
-import dev2426.itsprojectwork.Repository.ruoliRepository;
-
+import dev2426.itsprojectwork.Models.Annuncio;
+import dev2426.itsprojectwork.Repository.AnnunciRepository;
 
 @Service
-public class ruoliService {
+public class AnnunciService {
+
 	@Autowired
-	private ruoliRepository repository;
+	private AnnunciRepository repository;
 	
-	public List<ruoli> getAll(){
+	public List<Annuncio> getAll(){
 		return repository.findAll();
 	}
 	
-	public Optional<ruoli> getOne(Long id) {
+	public Optional<Annuncio> getOne(Long id) {
 		return repository.findById(id);
 	}
 	
-	public void insertOne(ruoli nuovo) {
+	public void insertOne(Annuncio nuovo) {
 		repository.save(nuovo);
 	}
 	

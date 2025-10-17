@@ -9,14 +9,16 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="candidature")
-public class candidature {
+@Table(name="annunci")
+public class Annuncio {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private String stato;
-	private long idUtenti;
-	private long idAnnunci;
 	
+	private String tipoMansione;
+	private int durata;
+	private long idAzienda;
+	
+
 }

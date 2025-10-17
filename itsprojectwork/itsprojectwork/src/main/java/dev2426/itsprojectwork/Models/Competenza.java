@@ -10,14 +10,14 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="competenze")
-public class competenze {
+public class Competenza {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String descrizione;
 
-    public competenze(long id,String descrizione){
+    public Competenza(long id,String descrizione){
         this.id=id;
         this.descrizione=descrizione;
     }

@@ -11,7 +11,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="ruoli")
-public class ruoli {
+public class Ruolo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class ruoli {
     private String tipo;
     private long id_utente;
 
-    public ruoli(long id,String tipo,long id_utente){
+    public Ruolo(long id,String tipo,long id_utente){
         this.id=id;
         this.tipo=tipo;
         this.id_utente=id_utente;
