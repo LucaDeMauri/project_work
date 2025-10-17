@@ -31,7 +31,6 @@ public class AuthService {
         if (utenteOpt.isPresent()) {
             Utente utente = utenteOpt.get();
 
-            // confronta hash
             if (passwordEncoder.matches(password, utente.getPassword())) {
                 session.setAttribute("utenteLoggato", utente);
                 return "redirect:/dashboard";
@@ -44,7 +43,7 @@ public class AuthService {
     
     
     
-    public String signUp(String email, String password, HttpSession session) {
+    public String signUp(String email, String password) {
 
         if (utenteRepository.existsByEmail(email)) {
             return "redirect:/register?error=emailInUso";
@@ -59,7 +58,6 @@ public class AuthService {
 
         Utente salvato = utenteRepository.save(nuovo);
 
-        session.setAttribute("utenteLoggato", salvato);
 
         return "redirect:/dashboard";
     }
