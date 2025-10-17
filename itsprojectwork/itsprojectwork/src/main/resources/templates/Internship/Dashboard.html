@@ -33,21 +33,20 @@
     </header>
 
     <div class="container">
-        <div class="annunci-grid" th:each="annuncioLetto : ${listaAnnunci}">
-            <!-- Annuncio 1 -->
+        <div class="annunci-grid" th:each="annuncio : ${listaAnnunci}">
             <div class="annuncio-card">
                 <div class="dati-annuncio">
                     <div class="dato-item">
                         <span class="etichetta">Azienda:</span>
-                        <span class="valore">Tech Solutions S.r.l.</span>
+                        <span class="valore" th:text="${annuncio.azienda.nome}"></span>
                     </div>
                     <div class="dato-item">
                         <span class="etichetta">Durata:</span>
-                        <span class="valore">6 mesi</span>
+                        <span class="valore" th:text="${annuncio.durata}"></span>
                     </div>
                     <div class="dato-item">
                         <span class="etichetta">Tipo:</span>
-                        <span class="valore">Sviluppatore Frontend</span>
+                        <span class="valore" th:text="${annuncio.tipoMansione}"></span>
                     </div>
                 </div>
                 <button class="btn-candidati">Candidati</button>
