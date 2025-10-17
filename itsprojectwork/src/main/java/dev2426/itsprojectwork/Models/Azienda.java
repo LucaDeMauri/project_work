@@ -22,12 +22,34 @@ public class Azienda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 	
-	@Getter
-	@Setter
 	private String nome;
 	
 	@OneToMany(mappedBy = "azienda", cascade = CascadeType.ALL)
     private List<Annuncio> annunci;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public List<Annuncio> getAnnunci() {
+		return annunci;
+	}
+
+	public void setAnnunci(List<Annuncio> annunci) {
+		this.annunci = annunci;
+	}
 
 	
 	

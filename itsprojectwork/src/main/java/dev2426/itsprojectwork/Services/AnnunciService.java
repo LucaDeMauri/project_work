@@ -1,5 +1,6 @@
 package dev2426.itsprojectwork.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +16,9 @@ public class AnnunciService {
 	@Autowired
 	private AnnunciRepository repository;
 	
-	public List<Annuncio> getAll(){
+	public ArrayList<Annuncio> getAll(){
 		
-		List<Annuncio> elenco = null;
+		ArrayList<Annuncio> elenco = new ArrayList<>();
 		
 		for (Annuncio e :repository.findAll()) {
 			elenco.add(e);

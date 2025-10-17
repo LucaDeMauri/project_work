@@ -23,20 +23,48 @@ public class Annuncio {
 	
 	private long id;
 	
-	@Getter
-	@Setter
 	@Column(name="tipo_mansione")
 	private String tipoMansione;
 	
-	@Getter
-	@Setter
 	private int durata;
-	
-	@Getter
-	@Setter
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idAzienda")
 	private Azienda azienda;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getTipoMansione() {
+		return tipoMansione;
+	}
+
+	public void setTipoMansione(String tipoMansione) {
+		this.tipoMansione = tipoMansione;
+	}
+
+	public int getDurata() {
+		return durata;
+	}
+
+	public void setDurata(int durata) {
+		this.durata = durata;
+	}
+
+	public Azienda getAzienda() {
+		return azienda;
+	}
+
+	public void setAzienda(Azienda azienda) {
+		this.azienda = azienda;
+	}
+	
+	
 	
 	
 	

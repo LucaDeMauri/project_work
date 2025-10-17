@@ -21,15 +21,6 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    
-    
-
-    
-
-
-    
-    
-    
     public String signUp(String nome, String cognome, String email, String password) {
 
         if (utenteRepository.existsByEmail(email)) {
@@ -42,9 +33,6 @@ public class AuthService {
         nuovo.setEmail(email.trim().toLowerCase());
         nuovo.setPassword(passwordEncoder.encode(password));
 
-        String token = UUID.randomUUID().toString();
-        nuovo.setToken(token);
-
         Utente salvato = utenteRepository.save(nuovo);
 
 
@@ -55,8 +43,5 @@ public class AuthService {
         session.invalidate();
     }
 
-    public Utente validaToken(String token) {
-        return utenteRepository.findByToken(token).orElse(null);
-    }
 
 }
