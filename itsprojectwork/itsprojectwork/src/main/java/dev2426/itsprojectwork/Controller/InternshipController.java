@@ -12,24 +12,24 @@ import dev2426.itsprojectwork.Services.AnnunciService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/internship/")
+@RequestMapping("/internship")
 public class InternshipController {
 	
 	@Autowired
 	private AnnunciService servizioAnnunci;
 	
-	@GetMapping("")
+	@GetMapping("/")
     public String sessionControl(HttpSession session) {
         Object utente = session.getAttribute("utenteLoggato");
 
         if (utente == null) {
-            return "redirect:/login";
+            return "redirect:/auth/login";
         }
 
         return "redirect:/internship/dashboard";
     }
 	
-	@GetMapping("dashboard")
+	@GetMapping("/dashboard")
 	public String dashboard(Model modelloDB) {
 		
 		modelloDB.addAttribute("listaAnnunci", servizioAnnunci.getAll());

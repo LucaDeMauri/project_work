@@ -9,27 +9,34 @@ import dev2426.itsprojectwork.Services.AuthService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller
-@RequestMapping("/auth/")
+@RequestMapping("/auth")
 public class AuthController {
 	
 	@Autowired
 	private AuthService authService;
 
-	@GetMapping("login")
-	public String loginPage(@RequestParam String email,
-				            @RequestParam String password,
-				            HttpSession session) {   
-		authService.login(email, password, session);
+	@GetMapping("/login")
+	public String loginPage() {   
 		return "/Auth/login";
 	}
 	
-	@GetMapping("signup")
+	@PostMapping("/login")
+	public void loginPage(@RequestParam String email,
+            				@RequestParam String password,
+            				HttpSession session) {
+		authService.login(email, password, session);
+		
+	}
+	
+	@GetMapping("/signup")
 	public void signupPage(@RequestParam String email, @RequestParam String password) {
 	
 		authService.signUp(email, password);
 			
+	
 	}
 }
