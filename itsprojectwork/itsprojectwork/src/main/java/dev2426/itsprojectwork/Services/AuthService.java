@@ -26,30 +26,22 @@ public class AuthService {
 
     public String login(String email, String password, HttpSession session) {
 
-        Optional<Utente> utenteOpt = utenteRepository.findByEmail(email);
-
-        if (utenteOpt.isPresent()) {
-            Utente utente = utenteOpt.get();
-
-            if (passwordEncoder.matches(password, utente.getPassword())) {
-                session.setAttribute("utenteLoggato", utente);
-                return "redirect:/dashboard";
-            }
-        }
-        return "redirect:/login?error=true";
+        
     }
 
 
     
     
     
-    public String signUp(String email, String password) {
+    public String signUp(String nome, String cognome, String email, String password) {
 
         if (utenteRepository.existsByEmail(email)) {
             return "redirect:/register?error=emailInUso";
         }
 
         Utente nuovo = new Utente();
+        nuovo.setNome(nome);
+        nuovo.setCognome(cognome);
         nuovo.setEmail(email.trim().toLowerCase());
         nuovo.setPassword(passwordEncoder.encode(password));
 
