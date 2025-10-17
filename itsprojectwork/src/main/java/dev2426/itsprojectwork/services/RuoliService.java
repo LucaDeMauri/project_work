@@ -1,0 +1,33 @@
+package dev2426.itsprojectwork.services;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import dev2426.itsprojectwork.models.Ruolo;
+import dev2426.itsprojectwork.repository.RuoliRepository;
+
+
+@Service
+public class RuoliService {
+	@Autowired
+	private RuoliRepository repository;
+	
+	public List<Ruolo> getAll(){
+		return repository.findAll();
+	}
+	
+	public Optional<Ruolo> getOne(Long id) {
+		return repository.findById(id);
+	}
+	
+	public void insertOne(Ruolo nuovo) {
+		repository.save(nuovo);
+	}
+	
+	public void deleteOne(Long id) {
+		repository.deleteById(id);
+	}
+}
