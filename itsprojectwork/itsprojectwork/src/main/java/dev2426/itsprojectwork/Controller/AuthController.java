@@ -27,9 +27,9 @@ public class AuthController {
 	}
 	
 	@GetMapping("signup")
-	public void signupPage(@RequestParam String email, @RequestParam String password) {
+	public void signupPage(@RequestParam String email, @RequestParam String password, HttpSession session) {
 	
-		authService.signUp(email, password);
+		authService.signUp(email, password, session);
 			
 	}
 }
