@@ -1,43 +1,74 @@
+// dev2426.itsprojectwork.Services.AuthService.java
 package dev2426.itsprojectwork.Services;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dev2426.itsprojectwork.Models.Utente;
 import dev2426.itsprojectwork.Repository.UtenteRepository;
-
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class AuthService {
 
-	
-	@Autowired
-	private UtenteRepository utenteRepository;
-	
-	private String login(String email, String password) {
-		
-		Optional<Utente> utenteOpt = utenteRepository.findByEmail(email);
-		
-		if (utenteOpt.isPresent() && utenteOpt.get().getPassword().equals(password)) {
+    @Autowired
+    private UtenteRepository utenteRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    
+    
+
+    public String login(String email, String password, HttpSession session) {
+
+        Optional<Utente> utenteOpt = utenteRepository.findByEmail(email);
+
+        if (utenteOpt.isPresent()) {
             Utente utente = utenteOpt.get();
 
-            String token = UUID.randomUUID().toString();
-
-            utente.setToken(token);
-            utenteRepository.save(utente);
-
-            return token; 
+            // confronta hash
+            if (passwordEncoder.matches(password, utente.getPassword())) {
+                session.setAttribute("utenteLoggato", utente);
+                return "redirect:/dashboard";
+            }
         }
-        return null;
+        return "redirect:/login?error=true";
+    }
+
+
+    
+    
+    
+    public String signUp(String email, String password, HttpSession session) {
+
+        if (utenteRepository.existsByEmail(email)) {
+            return "redirect:/register?error=emailInUso";
+        }
+
+        Utente nuovo = new Utente();
+        nuovo.setEmail(email.trim().toLowerCase());
+        nuovo.setPassword(passwordEncoder.encode(password));
+
+        String token = UUID.randomUUID().toString();
+        nuovo.setToken(token);
+
+        Utente salvato = utenteRepository.save(nuovo);
+
+        session.setAttribute("utenteLoggato", salvato);
+
+        return "redirect:/dashboard";
+    }
+
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 
     public Utente validaToken(String token) {
         return utenteRepository.findByToken(token).orElse(null);
     }
-		
-		
 }
