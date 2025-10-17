@@ -28,5 +28,4 @@ public class InternshipController {
 		
 		return "Internship/Dashboard";
 	}
->>>>>>> 6567160bf77d4e29c7f860f6798dbce6ee769518
 }
