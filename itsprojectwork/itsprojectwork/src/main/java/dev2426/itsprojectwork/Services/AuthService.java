@@ -70,12 +70,4 @@ public class AuthService {
         return utenteRepository.findByToken(token).orElse(null);
     }
 
-
-
-
-
-    public void signUp(String email, String password, HttpSession session) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'signUp'");
-    }
 }
