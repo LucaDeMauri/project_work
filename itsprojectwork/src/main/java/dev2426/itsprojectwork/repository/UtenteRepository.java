@@ -8,6 +8,5 @@ import dev2426.itsprojectwork.models.Utente;
 
 public interface UtenteRepository extends JpaRepository<Utente, Long> {
     Optional<Utente> findByEmail(String email);
-    Optional<Utente> findByToken(String token);
     boolean existsByEmail(String email);
 }

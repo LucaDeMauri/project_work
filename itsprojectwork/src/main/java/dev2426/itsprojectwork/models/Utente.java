@@ -5,9 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 @Entity
 @Table(name="utenti")
@@ -20,8 +18,8 @@ public class Utente {
     private String cognome;
     private String email;
     private String password;
-    private String token;
-	public long getId() {
+
+    public long getId() {
 		return id;
 	}
 	public void setId(long id) {
@@ -51,12 +49,7 @@ public class Utente {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
+	
     
     
 

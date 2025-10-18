@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.ui.Model;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.UtenteRepository;
 import dev2426.itsprojectwork.services.AuthService;
@@ -23,49 +24,57 @@ public class AuthController {
 	
 	@Autowired
 	private AuthService authService;
-	
-	@Autowired
-	private UtenteRepository repository;
-	
-	@Autowired
-    private PasswordEncoder passwordEncoder;
     
 
 	@GetMapping("/login")
-	public String loginPage() {   
+	public String loginPage(@RequestParam(defaultValue = "false") Boolean registered, @RequestParam(defaultValue = "false") Boolean error, Model model) {   
+			
+		 if(registered) {
+			 model.addAttribute("message", 	"Registrazione completata!");
+		 }
+		 if(error) {
+			 model.addAttribute("message", "email o password errata");
+		 }
 		return "/Auth/login";
 	}
 	
 	@PostMapping("/login")
 	public String loginPage(@RequestParam String email,
-            				@RequestParam String password,
+            			    @RequestParam String password,
             				HttpSession session) {
-
-		Optional<Utente> utenteOpt = repository.findByEmail(email);
-
-        if (utenteOpt.isPresent()) {
-            Utente utente = utenteOpt.get();
-
-            if (passwordEncoder.matches(password, utente.getPassword())) {
-                session.setAttribute("utenteLoggato", utente);
-                return "redirect:/internship/";
-            }
+		
+		Utente utente = authService.login(email, password);
+		
+		if(utente != null) {
+			session.setAttribute("utenteLoggato", utente);
+			return "redirect:/internship/";
+			
+        } else {
+            return "redirect:/auth/login?error=true";
+            
         }
-        return "redirect:/Auth/login?error=true";
+		
 	}
 	
 	
 	@GetMapping("/signup")
 	public String signupPage() {
 		
-		
-		return "/Auth/signup";
+		return "/auth/signup";
 	}
 
 	@PostMapping("/signup")
-	public void signupPage(@RequestParam String nome, @RequestParam String cognome, @RequestParam String email, @RequestParam String password) {
+	public String signupPage(@RequestParam String nome, @RequestParam String cognome, @RequestParam String email, @RequestParam String password) {
 	
-		authService.signUp(nome, cognome, email, password);
+		Utente utente = authService.signUp(nome, cognome, email, password);
+		
+		if(utente != null) {
+			return "redirect:/auth/login?registered=true";
+			
+        } else {
+            return "redirect:/auth/signup?error=true";
+            
+        }
 		
 			
 	}
