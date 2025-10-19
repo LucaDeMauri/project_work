@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin • lavori.com</title>
+
+  <!-- Stile base dell’app (se lo usi già) -->
+
+  <!-- Stile specifico per Admin -->
+  <link rel="stylesheet" th:href="@{/css/internship/admin.css}" href="/css/admin.css"/>
+</head>
+<body>
+<header class="admin-topbar">
+  <div class="brand">
+    <span class="dot"></span> Admin • lavori.com
+  </div>
+  <nav class="right">
+    <a class="btn ghost" th:href="@{/annunci}">Torna agli Annunci</a>
+    <form method="post" th:action="@{/auth/logout}">
+      <button class="btn danger">Esci</button>
+    </form>
+  </nav>
+</header>
+
+<main class="admin-page">
+  <!-- COLONNA SINISTRA: CREAZIONE ANNUNCIO -->
+  <section class="panel">
+    <h2 class="panel-title">Crea un nuovo annuncio</h2>
+    <form class="form" method="post" th:action="@{/admin/jobs}">
+      <div class="grid">
+        <div class="field">
+          <label for="titolo">Titolo <span>*</span></label>
+          <input id="titolo" name="titolo" required placeholder="Tirocinio Backend Java"/>
+        </div>
+
+        <div class="field">
+          <label for="tipoMansione">Mansione</label>
+          <input id="tipoMansione" name="tipoMansione" placeholder="Developer / Frontend / Analyst"/>
+        </div>
+
+        <div class="field">
+          <label for="durata">Durata <span>*</span></label>
+          <input id="durata" name="durata" required placeholder="es. 6 mesi"/>
+        </div>
+
+        <div class="field">
+          <label for="location">Location</label>
+          <input id="location" name="location" placeholder="Roma (ibrido)"/>
+        </div>
+
+        <div class="field full">
+          <label for="motivazioni">Motivazioni</label>
+          <textarea id="motivazioni" name="motivazioni" rows="3" placeholder="Perché candidarsi, cosa imparerà…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="orari">Orari</label>
+          <input id="orari" name="orari" placeholder="Lun–Ven 9–17"/>
+        </div>
+
+        <div class="field">
+          <label for="aziendaId">ID Azienda</label>
+          <input id="aziendaId" name="aziendaId" type="number" min="1" placeholder="(opzionale)"/>
+        </div>
+
+        <div class="field">
+          <label for="skillsRequired">Skill richieste</label>
+          <input id="skillsRequired" name="skillsRequired" placeholder="es. Java, Spring, MySQL"/>
+          <small>Separale con la virgola</small>
+        </div>
+
+        <div class="field">
+          <label for="skillsDevelop">Skill sviluppate</label>
+          <input id="skillsDevelop" name="skillsDevelop" placeholder="es. Docker, Git"/>
+          <small>Separale con la virgola</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary">Crea annuncio</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- COLONNA DESTRA: ANNUNCI ESISTENTI -->
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Annunci esistenti</h2>
+      <div class="mini-tip">Clicca “Vedi candidature” per gestire le richieste</div>
+    </div>
+
+    <div class="cards">
+      <!-- Card annuncio -->
+      <article class="card" th:each="a : ${annunci}">
+        <div class="avatar" th:text="${#strings.substring(a.titolo,0,1)}">A</div>
+
+        <div class="content">
+          <h3 class="title" th:text="${a.titolo}">Titolo annuncio</h3>
+          <div class="meta">
+            <span class="pill" th:text="${a.azienda}">Azienda</span>
+            <span class="sep">•</span>
+            <span th:text="${a.durata}">6 mesi</span>
+            <span class="sep">•</span>
+            <span th:text="${a.location}">Roma</span>
+          </div>
+
+          <div class="skills" th:if="${a.skillsDev != null}">
+            <span class="chip" th:each="s : ${a.skillsDev}" th:text="${s}">Skill</span>
+          </div>
+
+          <div class="card-actions">
+            <a class="btn ghost" th:href="@{'/admin?(jobId=' + ${a.id} + ')'}">Vedi candidature</a>
+
+            <form method="post"
+                  th:action="@{'/admin/jobs/' + ${a.id} + '/delete'}"
+                  onsubmit="return confirmDelete(this)">
+              <button class="btn danger">Elimina</button>
+            </form>
+          </div>
+        </div>
+      </article>
+      <!-- /Card -->
+    </div>
+  </section>
+
+  <!-- SEZIONE CANDIDATURE (OPZIONALE): mostrala se il controller passa una lista -->
+  <section class="panel full" th:if="${applications != null}">
+    <div class="panel-header">
+      <h2 class="panel-title" th:text="${filterJobId != null} ? 'Candidature per annuncio #' + ${filterJobId} : 'Candidature in attesa'">
+        Candidature
+      </h2>
+    </div>
+
+    <div class="apps" th:if="${#lists.isEmpty(applications)}">
+      <div class="empty">Nessuna candidatura trovata.</div>
+    </div>
+
+    <div class="apps" th:each="c : ${applications}">
+      <div class="app-row">
+        <div class="info">
+          <div class="strong" th:text="${c.titolo}">Titolo</div>
+          <div class="muted">
+            <span th:text="${c.azienda}">Azienda</span> —
+            <span th:text="${c.userNome + ' ' + c.userCognome}">Nome Cognome</span> ·
+            <a th:href="${'mailto:' + c.userEmail}" th:text="${c.userEmail}">email</a> ·
+            <span class="status" th:text="${c.stato}">applied</span> ·
+            <span th:text="${#temporals.format(c.updatedAt, 'dd/MM/yyyy HH:mm')}">data</span>
+          </div>
+        </div>
+        <div class="row-actions">
+          <form method="post" th:action="@{'/admin/apps/' + ${c.id} + '/accept'}">
+            <input type="hidden" name="jobId" th:value="${filterJobId}"/>
+            <button class="btn primary">Accetta</button>
+          </form>
+          <form method="post" th:action="@{'/admin/apps/' + ${c.id} + '/reject'}">
+            <input type="hidden" name="jobId" th:value="${filterJobId}"/>
+            <button class="btn danger">Boccia</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  function confirmDelete(form){
+    return confirm("Sei sicuro di voler eliminare questo annuncio?");
+  }
+</script>
+</body>
+</html>
