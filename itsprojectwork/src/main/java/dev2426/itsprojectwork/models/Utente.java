@@ -1,9 +1,14 @@
 package dev2426.itsprojectwork.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -18,8 +23,19 @@ public class Utente {
     private String cognome;
     private String email;
     private String password;
-
-    public long getId() {
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ruolo", nullable = false)
+    private Ruolo ruolo;
+    
+    
+	public Ruolo getRuolo() {
+		return ruolo;
+	}
+	public void setRuolo(Ruolo ruolo) {
+		this.ruolo = ruolo;
+	}
+	public long getId() {
 		return id;
 	}
 	public void setId(long id) {

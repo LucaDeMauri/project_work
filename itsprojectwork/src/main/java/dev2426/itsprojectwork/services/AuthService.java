@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev2426.itsprojectwork.models.Ruolo;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.UtenteRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +26,7 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+        
     
     public Utente login(String email, String password) {
 
@@ -33,8 +34,7 @@ public class AuthService {
 		
 		if (utenteOpt.isPresent()) {
 			Utente utente = utenteOpt.get();
-		
-		
+			
 			if (passwordEncoder.matches(password, utente.getPassword())) {
 				return utente;
 			}
@@ -42,6 +42,8 @@ public class AuthService {
 		
         return null;
     }
+    
+    
     
     public Utente signUp(String nome, String cognome, String email, String password) {
 
@@ -54,6 +56,7 @@ public class AuthService {
         nuovo.setCognome(cognome);
         nuovo.setEmail(email.trim().toLowerCase());
         nuovo.setPassword(passwordEncoder.encode(password));
+        nuovo.setRuolo(Ruolo.user);
 
         return utenteRepository.save(nuovo);
     }

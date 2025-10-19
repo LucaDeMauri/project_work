@@ -27,11 +27,8 @@ public class AuthController {
     
 
 	@GetMapping("/login")
-	public String loginPage(@RequestParam(defaultValue = "false") Boolean registered, @RequestParam(defaultValue = "false") Boolean error, Model model) {   
+	public String loginPage(@RequestParam(defaultValue = "false") Boolean error, Model model) {   
 			
-		 if(registered) {
-			 model.addAttribute("message", 	"Registrazione completata!");
-		 }
 		 if(error) {
 			 model.addAttribute("message", "email o password errata");
 		 }
@@ -58,8 +55,14 @@ public class AuthController {
 	
 	
 	@GetMapping("/signup")
-	public String signupPage() {
+	public String signupPage(@RequestParam(defaultValue = "false") Boolean error, @RequestParam(defaultValue = "false") Boolean registered,  Model model) {
 		
+		if(registered) {
+			model.addAttribute("message", "Registrazione completata!");
+		}
+		if(error) {
+			model.addAttribute("message", "Email già in uso");
+		}
 		return "/auth/signup";
 	}
 
@@ -69,7 +72,7 @@ public class AuthController {
 		Utente utente = authService.signUp(nome, cognome, email, password);
 		
 		if(utente != null) {
-			return "redirect:/auth/login?registered=true";
+			return "redirect:/auth/signup?registered=true";
 			
         } else {
             return "redirect:/auth/signup?error=true";
