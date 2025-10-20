@@ -1,37 +1,70 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageUp</title>
-    <link rel="stylesheet" th:href="@{/css/Auth/signup.css}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrazione - StageUp</title>
+  <link rel="stylesheet" th:href="@{/css/auth/signup.css}" />
 </head>
 
 <body>
 
-    <div><a th:href="@{/auth/login}">← Torna alla pagina di LogIn</a></div>
-    
-    <div class="registrazione">
-        <h2 class="titolo">Pagina di registrazione</h2>
+  <!-- Barra superiore -->
+  <div class="top-bar">
+    <a th:href="@{/auth/login}">
+      <button class="back-button">← Torna al LogIn</button>
+    </a>
+    <button class="dark-toggle" id="darkToggle">🌓 Dark Mode</button>
+  </div>
 
-        <form th:action="@{/auth/signup}" method="POST" class="form">
+  <!-- Box registrazione -->
+  <div class="registrazione">
+    <h2 class="titolo">Crea il tuo account StageUp</h2>
+    <form th:action="@{/auth/signup}" method="POST" class="form" onsubmit="return validaPassword()">
+      <input type="text" id="name" name="nome" placeholder="Nome" required />
+      <input type="text" id="surname" name="cognome" placeholder="Cognome" required />
+      <input type="email" id="username" name="email" placeholder="Email" required />
+      <input type="password" id="password" name="password" placeholder="Password" required />
+      <input type="password" id="confirm-password" placeholder="Conferma Password" required/>
+      <p id="error-message" style="color: red; display: none;">Le password non coincidono.</p>
+      <button type="submit">Registrati</button>
+    </form>
+    <p th:text="${message}"></p>
+  </div>
 
-            <input type="text" id="name" name="nome" placeholder="Inserisci Nome" required>
+  <!-- SCRIPT -->
+  <script>
+    // Controllo password
+    function validaPassword() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm-password').value;
+      const errorMsg = document.getElementById('error-message');
 
-            <input type="text" id="surname" name="cognome" placeholder="Inserisci Cognome" required>
+      if (password !== confirm) {
+        errorMsg.style.display = 'block';
+        return false; // blocca l'invio del form
+      }
 
-            <input type="text" id="username" name="email" placeholder="Inserisci una Email" required>
+      errorMsg.style.display = 'none';
+      return true; // consente l'invio del form
+    }
 
-            <input type="password" id="password" name="password" placeholder="Scegli una Password" required>
-			
-			<button type="submit">Registrati</button>
-			<p id="messagge" th:text="${message}"></p>
-        </form>
+    // Dark Mode
+    const toggleBtn = document.getElementById('darkToggle');
 
-       
-    </div>
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('darkMode');
+      if (savedTheme === 'enabled') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+    });
+  </script>
 
 </body>
-
 </html>
