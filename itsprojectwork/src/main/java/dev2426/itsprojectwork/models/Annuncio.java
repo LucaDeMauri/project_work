@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import dev2426.itsprojectwork.dto.AziendaDTO;
+
 @Entity
 @Table(name = "annunci")
 public class Annuncio {

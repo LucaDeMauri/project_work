@@ -14,7 +14,10 @@ public class Competenza {
 
     private String descrizione;
 
+    @ManyToMany(mappedBy = "competenzeRichieste", fetch = FetchType.LAZY)
     private Set<Annuncio> annunciRichieste = new HashSet<>();
+
+    @ManyToMany(mappedBy = "competenzeAcquisite", fetch = FetchType.LAZY)
     private Set<Annuncio> annunciAcquisite = new HashSet<>();
 
     public Competenza() {}
