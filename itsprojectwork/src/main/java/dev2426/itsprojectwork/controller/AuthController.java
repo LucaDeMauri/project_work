@@ -41,7 +41,7 @@ public class AuthController {
 	public String loginPage(@RequestParam String email,
             			    @RequestParam String password,
             				HttpSession session) {
-		
+		 
 		Utente utente = authService.login(email, password);
 		
 		if(utente != null) {
@@ -84,6 +84,10 @@ public class AuthController {
 			
 	}
 	
-	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "/auth/login";
+	}
 
 }

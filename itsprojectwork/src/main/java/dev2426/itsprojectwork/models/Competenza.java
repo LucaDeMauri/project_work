@@ -14,10 +14,7 @@ public class Competenza {
 
     private String descrizione;
 
-    @ManyToMany(mappedBy = "competenzeRichieste")
     private Set<Annuncio> annunciRichieste = new HashSet<>();
-
-    @ManyToMany(mappedBy = "competenzeAcquisite")
     private Set<Annuncio> annunciAcquisite = new HashSet<>();
 
     public Competenza() {}

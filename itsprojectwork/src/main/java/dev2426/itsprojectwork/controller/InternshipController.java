@@ -35,6 +35,6 @@ public class InternshipController {
 		
 		modelloDB.addAttribute("listaAnnunci", servizioAnnunci.getAll());
 		
-		return "Internship/Dashboard";
+		return "internship/dashboard";
 	}
 }
