@@ -11,6 +11,10 @@ public class UtenteDTO {
 	private Ruolo ruolo;
 	
 	public UtenteDTO(String nome, String cognome, String email, Ruolo ruolo) {
+<<<<<<< Updated upstream
+=======
+		this.immagine = immagine;
+>>>>>>> Stashed changes
 		this.nome = nome;
 		this.cognome = cognome;
 		this.email = email;
