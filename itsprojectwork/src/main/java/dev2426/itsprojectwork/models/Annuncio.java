@@ -2,7 +2,9 @@ package dev2426.itsprojectwork.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import dev2426.itsprojectwork.dto.AziendaDTO;
@@ -43,6 +45,9 @@ public class Annuncio {
 	@ManyToMany
 	@JoinTable(name = "annuncio_competenze_acquisite", joinColumns = @JoinColumn(name = "annuncio_id"), inverseJoinColumns = @JoinColumn(name = "competenza_id"))
 	private Set<Competenza> competenzeAcquisite = new HashSet<>();
+	
+	@OneToMany(mappedBy = "annuncio")
+	private List<Candidatura> candidature = new ArrayList<>();
 
 	public Annuncio() {
 	}
