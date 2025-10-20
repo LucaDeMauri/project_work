@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - StageUp</title>
+    <link rel="stylesheet" href="/pagina-dashboard/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="/img/logo.png" alt="StageUp Logo" class="logo">
+            <h1>Stage Up</h1>
+        </div>
+        <div class="header-right">
+            <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">
+                    <span>U</span>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="/profilo" class="dropdown-item">
+                        <span class="dropdown-icon">👤</span>
+                        Profilo Utente
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="Login.html" class="dropdown-item logout">
+                        <span class="dropdown-icon">🚪</span>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="annunci-grid" id="annunciGrid">
+            <!-- Annuncio 1 -->
+            <div class="annuncio-card" data-annuncio="1">
+                <div class="annuncio-titolo">Stage in Sviluppo Frontend</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Tech Solutions S.r.l.</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">6 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">Sviluppatore Frontend</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">React</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+
+            <!-- Annuncio 2 -->
+            <div class="annuncio-card" data-annuncio="2">
+                <div class="annuncio-titolo">Stage in Graphic Design</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Creative Agency</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">4 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">Graphic Designer</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">Photoshop</span>
+                            <span class="tag">Illustrator</span>
+                            <span class="tag">Branding</span>
+                            <span class="tag">InDesign</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+
+            <!-- Annuncio 3 -->
+            <div class="annuncio-card" data-annuncio="3">
+                <div class="annuncio-titolo">Stage in Digital Marketing</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Marketing Pro</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">5 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">Digital Marketing</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">SEO</span>
+                            <span class="tag">Social Media</span>
+                            <span class="tag">Analytics</span>
+                            <span class="tag">Content</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+
+            <!-- Annuncio 4 -->
+            <div class="annuncio-card" data-annuncio="4">
+                <div class="annuncio-titolo">Stage in Data Analysis</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Data Insights</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">6 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">Data Analyst</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">SQL</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">Tableau</span>
+                            <span class="tag">Excel</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+
+            <!-- Annuncio 5 -->
+            <div class="annuncio-card" data-annuncio="5">
+                <div class="annuncio-titolo">Stage in Sviluppo Backend</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">WebTech</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">5 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">Backend Developer</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">Node.js</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">Database</span>
+                            <span class="tag">API</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+
+            <!-- Annuncio 6 -->
+            <div class="annuncio-card" data-annuncio="6">
+                <div class="annuncio-titolo">Stage in UX/UI Design</div>
+                <div class="dati-annuncio">
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore">Design Studio</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">4 mesi</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Posizione:</span>
+                        <span class="valore">UX/UI Designer</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze:</span>
+                        <div class="competence-tags">
+                            <span class="tag">Figma</span>
+                            <span class="tag">Adobe XD</span>
+                            <span class="tag">Prototipi</span>
+                            <span class="tag">Wireframe</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-candidati">Dettagli</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay per i dettagli dell'annuncio -->
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <button class="btn-close-overlay" id="btnCloseOverlay">×</button>
+            <div class="overlay-header">
+                <h2 id="overlayTitolo"></h2>
+            </div>
+            <div class="overlay-body" id="overlayBody">
+                <!-- Il contenuto verrà popolato dinamicamente -->
+            </div>
+            <div class="overlay-footer">
+                <button class="btn-conferma-candidatura" id="btnConfermaCandidatura">Conferma Candidatura</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userAvatar = document.getElementById('userAvatar');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const annunciGrid = document.getElementById('annunciGrid');
+            const overlay = document.getElementById('overlay');
+            const btnCloseOverlay = document.getElementById('btnCloseOverlay');
+            const overlayTitolo = document.getElementById('overlayTitolo');
+            const overlayBody = document.getElementById('overlayBody');
+            const btnConfermaCandidatura = document.getElementById('btnConfermaCandidatura');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // Dati delle descrizioni complete
+            const descrizioniAnnunci = {
+                1: {
+                    titolo: "Stage in Sviluppo Frontend - Tech Solutions S.r.l.",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> Tech Solutions S.r.l.</p>
+                            <p><strong>Settore:</strong> Tecnologia e Sviluppo Software</p>
+                            <p><strong>Sede:</strong> Milano, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 6 mesi</p>
+                            <p><strong>Posizione:</strong> Sviluppatore Frontend</p>
+                            <p><strong>Inizio previsto:</strong> Settembre 2023</p>
+                            <p><strong>Rimborso spese:</strong> €600/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">HTML5</span>
+                                <span class="tag">CSS3</span>
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">React</span>
+                                <span class="tag">Vue.js</span>
+                                <span class="tag">Git</span>
+                                <span class="tag">Responsive Design</span>
+                                <span class="tag">UX/UI Principles</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">React/Vue.js Apps</span>
+                                <span class="tag">Performance Optimization</span>
+                                <span class="tag">API Integration</span>
+                                <span class="tag">Testing & Debugging</span>
+                                <span class="tag">Agile/Scrum</span>
+                                <span class="tag">State Management</span>
+                                <span class="tag">CI/CD Deployment</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Laurea in Informatica o campo correlato</li>
+                                <li>Capacità di lavorare in team</li>
+                                <li>Buona conoscenza dell'inglese</li>
+                                <li>Portfolio di progetti precedenti</li>
+                            </ul>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Compiti e Responsabilità</h3>
+                            <ul>
+                                <li>Sviluppo di interfacce utente responsive</li>
+                                <li>Collaborazione con il team di design</li>
+                                <li>Ottimizzazione delle performance</li>
+                                <li>Manutenzione del codice esistente</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                2: {
+                    titolo: "Stage in Graphic Design - Creative Agency",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> Creative Agency</p>
+                            <p><strong>Settore:</strong> Marketing e Comunicazione</p>
+                            <p><strong>Sede:</strong> Roma, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 4 mesi</p>
+                            <p><strong>Posizione:</strong> Graphic Designer</p>
+                            <p><strong>Inizio previsto:</strong> Ottobre 2023</p>
+                            <p><strong>Rimborso spese:</strong> €550/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Photoshop</span>
+                                <span class="tag">Illustrator</span>
+                                <span class="tag">InDesign</span>
+                                <span class="tag">Branding</span>
+                                <span class="tag">Typography</span>
+                                <span class="tag">Layout Design</span>
+                                <span class="tag">Print Preparation</span>
+                                <span class="tag">HTML/CSS Basics</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Brand Identity</span>
+                                <span class="tag">Campaign Materials</span>
+                                <span class="tag">Project Management</span>
+                                <span class="tag">Print Preparation</span>
+                                <span class="tag">Social Media Animation</span>
+                                <span class="tag">Client Presentation</span>
+                                <span class="tag">Creative Briefs</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Diploma o Laurea in Graphic Design</li>
+                                <li>Creatività e attenzione ai dettagli</li>
+                                <li>Portfolio di lavori precedenti</li>
+                                <li>Capacità di gestire più progetti contemporaneamente</li>
+                            </ul>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Compiti e Responsabilità</h3>
+                            <ul>
+                                <li>Creazione di materiale grafico per campagne</li>
+                                <li>Design di layout per social media</li>
+                                <li>Collaborazione con il team marketing</li>
+                                <li>Preparazione di materiali per stampa</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                3: {
+                    titolo: "Stage in Digital Marketing - Marketing Pro",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> Marketing Pro</p>
+                            <p><strong>Settore:</strong> Marketing Digitale</p>
+                            <p><strong>Sede:</strong> Firenze, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 5 mesi</p>
+                            <p><strong>Posizione:</strong> Digital Marketing</p>
+                            <p><strong>Inizio previsto:</strong> Novembre 2023</p>
+                            <p><strong>Rimborso spese:</strong> €580/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">SEO</span>
+                                <span class="tag">SEM</span>
+                                <span class="tag">Social Media</span>
+                                <span class="tag">Google Analytics</span>
+                                <span class="tag">Email Marketing</span>
+                                <span class="tag">Content Creation</span>
+                                <span class="tag">Campaign Management</span>
+                                <span class="tag">Data Analysis</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Campaign Planning</span>
+                                <span class="tag">Google Analytics</span>
+                                <span class="tag">Content Strategy</span>
+                                <span class="tag">CRO Optimization</span>
+                                <span class="tag">Community Management</span>
+                                <span class="tag">Email Automation</span>
+                                <span class="tag">Marketing Automation</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Laurea in Marketing o campo correlato</li>
+                                <li>Capacità analitiche</li>
+                                <li>Buone doti comunicative</li>
+                                <li>Conoscenza della suite Google</li>
+                            </ul>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Compiti e Responsabilità</h3>
+                            <ul>
+                                <li>Gestione campagne social media</li>
+                                <li>Analisi delle performance</li>
+                                <li>Creazione di contenuti digitali</li>
+                                <li>Reportistica sui risultati</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                4: {
+                    titolo: "Stage in Data Analysis - Data Insights",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> Data Insights</p>
+                            <p><strong>Settore:</strong> Analisi Dati</p>
+                            <p><strong>Sede:</strong> Torino, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 6 mesi</p>
+                            <p><strong>Posizione:</strong> Data Analyst</p>
+                            <p><strong>Inizio previsto:</strong> Gennaio 2024</p>
+                            <p><strong>Rimborso spese:</strong> €650/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">SQL</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">Tableau</span>
+                                <span class="tag">Power BI</span>
+                                <span class="tag">Excel</span>
+                                <span class="tag">Statistics</span>
+                                <span class="tag">Data Visualization</span>
+                                <span class="tag">Machine Learning</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Python Data Analysis</span>
+                                <span class="tag">Interactive Dashboards</span>
+                                <span class="tag">SQL Optimization</span>
+                                <span class="tag">Machine Learning</span>
+                                <span class="tag">Data Storytelling</span>
+                                <span class="tag">ETL Processes</span>
+                                <span class="tag">Predictive Analysis</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Laurea in Statistica, Matematica o Informatica</li>
+                                <li>Capacità analitiche e problem solving</li>
+                                <li>Conoscenza base di statistica</li>
+                                <li>Attenzione ai dettagli</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                5: {
+                    titolo: "Stage in Sviluppo Backend - WebTech",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> WebTech</p>
+                            <p><strong>Settore:</strong> Sviluppo Web</p>
+                            <p><strong>Sede:</strong> Bologna, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 5 mesi</p>
+                            <p><strong>Posizione:</strong> Backend Developer</p>
+                            <p><strong>Inizio previsto:</strong> Dicembre 2023</p>
+                            <p><strong>Rimborso spese:</strong> €620/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Node.js</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">SQL</span>
+                                <span class="tag">MongoDB</span>
+                                <span class="tag">API Design</span>
+                                <span class="tag">Authentication</span>
+                                <span class="tag">Docker</span>
+                                <span class="tag">Security</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">RESTful/GraphQL APIs</span>
+                                <span class="tag">Database Management</span>
+                                <span class="tag">JWT/OAuth Auth</span>
+                                <span class="tag">Docker Containerization</span>
+                                <span class="tag">Automated Testing</span>
+                                <span class="tag">Microservices Arch</span>
+                                <span class="tag">Performance Optimization</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Laurea in Informatica o campo correlato</li>
+                                <li>Conoscenza dei principi di sicurezza</li>
+                                <li>Capacità di progettare sistemi scalabili</li>
+                                <li>Esperienza con sistemi di versioning</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                6: {
+                    titolo: "Stage in UX/UI Design - Design Studio",
+                    contenuto: `
+                        <div class="overlay-section">
+                            <h3>Informazioni Azienda</h3>
+                            <p><strong>Azienda:</strong> Design Studio</p>
+                            <p><strong>Settore:</strong> Design Digitale</p>
+                            <p><strong>Sede:</strong> Napoli, Italia</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Dettagli Stage</h3>
+                            <p><strong>Durata:</strong> 4 mesi</p>
+                            <p><strong>Posizione:</strong> UX/UI Designer</p>
+                            <p><strong>Inizio previsto:</strong> Febbraio 2024</p>
+                            <p><strong>Rimborso spese:</strong> €570/mese</p>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze Richieste</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">Figma</span>
+                                <span class="tag">Adobe XD</span>
+                                <span class="tag">Prototyping</span>
+                                <span class="tag">Wireframing</span>
+                                <span class="tag">User Research</span>
+                                <span class="tag">Usability</span>
+                                <span class="tag">Interaction Design</span>
+                                <span class="tag">Design Systems</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Competenze che Acquisirai</h3>
+                            <div class="competence-tags-large">
+                                <span class="tag">User-Centered Design</span>
+                                <span class="tag">User Research</span>
+                                <span class="tag">Design Systems</span>
+                                <span class="tag">Interactive Prototyping</span>
+                                <span class="tag">Team Collaboration</span>
+                                <span class="tag">Accessibility Design</span>
+                                <span class="tag">UX Metrics Analysis</span>
+                            </div>
+                        </div>
+                        <div class="overlay-section">
+                            <h3>Requisiti</h3>
+                            <ul>
+                                <li>Laurea in Design o campo correlato</li>
+                                <li>Conoscenza delle best practice di usabilità</li>
+                                <li>Portfolio di progetti UX/UI</li>
+                                <li>Capacità di lavorare in team multidisciplinare</li>
+                            </ul>
+                        </div>
+                    `
+                }
+            };
+
+            // Mostra/nascondi dropdown al click
+            userAvatar.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            // Chiudi dropdown cliccando fuori
+            document.addEventListener('click', function(e) {
+                if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+            
+            // Chiudi dropdown quando si clicca su un item
+            dropdownMenu.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            // Gestione click sui bottoni Dettagli
+            const bottoniCandidati = document.querySelectorAll('.btn-candidati');
+            
+            bottoniCandidati.forEach(bottone => {
+                bottone.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const annuncioCard = this.closest('.annuncio-card');
+                    const annuncioId = annuncioCard.getAttribute('data-annuncio');
+                    
+                    // Ottieni i dati dell'annuncio
+                    const datiAnnuncio = descrizioniAnnunci[annuncioId];
+                    
+                    if (datiAnnuncio) {
+                        // Popola l'overlay con i dati
+                        overlayTitolo.textContent = datiAnnuncio.titolo;
+                        overlayBody.innerHTML = datiAnnuncio.contenuto;
+                        
+                        // Mostra l'overlay
+                        overlay.classList.add('show');
+                        document.body.classList.add('overlay-open');
+                    }
+                });
+            });
+
+            // Chiudi overlay
+            btnCloseOverlay.addEventListener('click', function() {
+                overlay.classList.remove('show');
+                document.body.classList.remove('overlay-open');
+            });
+
+            // Chiudi overlay cliccando fuori dal contenuto
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('show');
+                    document.body.classList.remove('overlay-open');
+                }
+            });
+
+            // Gestione conferma candidatura
+            btnConfermaCandidatura.addEventListener('click', function() {
+                alert('Candidatura inviata con successo!');
+                overlay.classList.remove('show');
+                document.body.classList.remove('overlay-open');
+            });
+
+            // Chiudi overlay con tasto ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('show')) {
+                    overlay.classList.remove('show');
+                    document.body.classList.remove('overlay-open');
+                }
+            });
+        });
+
+        // Funzione per toggle dark mode
+        function toggleDarkMode() {
+            const body = document.body;
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            body.classList.toggle('dark-mode');
+            
+            // Cambia il testo e l'emoji del pulsante
+            if (body.classList.contains('dark-mode')) {
+                darkModeToggle.innerHTML = '☀️';
+            } else {
+                darkModeToggle.innerHTML = '🌓';
+            }
+        }
+    </script>
+</body>
+</html

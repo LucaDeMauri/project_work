@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev2426.itsprojectwork.dto.UtenteDTO;
 import dev2426.itsprojectwork.models.Ruolo;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.UtenteRepository;
