@@ -26,7 +26,7 @@ public class Annuncio {
 	@Column(name="tipo_mansione")
 	private String tipoMansione;
 	
-	private int durata;
+	private String durata;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idAzienda")
@@ -48,13 +48,6 @@ public class Annuncio {
 		this.tipoMansione = tipoMansione;
 	}
 
-	public int getDurata() {
-		return durata;
-	}
-
-	public void setDurata(int durata) {
-		this.durata = durata;
-	}
 
 	public Azienda getAzienda() {
 		return azienda;

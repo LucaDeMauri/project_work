@@ -13,6 +13,5 @@ import lombok.Data;
 @Repository
 public interface AnnunciRepository extends JpaRepository<Annuncio, Long>{
 	
-	@Query("SELECT a FROM Annuncio a JOIN a.azienda az WHERE az.nome = :nomeAzienda")
-    List<Annuncio> trovaAnnunciPerAzienda(@Param("nomeAzienda") String nomeAzienda);
+
 }

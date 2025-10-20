@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Data
+
 @Table(name="azienda")
 public class Azienda {
 
