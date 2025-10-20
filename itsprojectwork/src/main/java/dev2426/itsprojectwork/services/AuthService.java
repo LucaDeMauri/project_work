@@ -28,7 +28,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
         
     
-    public Utente login(String email, String password) {
+    /*public Utente login(String email, String password) {
 
 		Optional<Utente> utenteOpt = utenteRepository.findByEmail(email);
 		
@@ -41,9 +41,19 @@ public class AuthService {
 		}
 		
         return null;
+    }*/
+    
+    public Utente login(String email, String rawPassword) {
+        Optional<Utente> opt = utenteRepository.findByEmail(email);
+        if (opt.isPresent()) {
+        Utente u = opt.get();
+            if (passwordEncoder.matches(rawPassword, u.getPassword())) {
+                return u;
+            }
+        }
+        return null;
     }
-    
-    
+
     
     public Utente signUp(String nome, String cognome, String email, String password) {
 

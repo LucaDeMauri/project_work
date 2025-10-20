@@ -16,6 +16,7 @@ public class CompSviluppateService {
 	private CompSviluppateRepository compRep;
 	
 	public ArrayList<CompSviluppateDTO> elencoCompSviluppate(){
+		return null;
 		
 	}
 }
