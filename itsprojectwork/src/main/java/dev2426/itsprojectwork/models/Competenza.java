@@ -1,37 +1,61 @@
 package dev2426.itsprojectwork.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="competenze")
+@Table(name = "competenze")
 public class Competenza {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
     private String descrizione;
 
-    public Competenza(long id,String descrizione){
-        this.id=id;
-        this.descrizione=descrizione;
+    @ManyToMany(mappedBy = "competenzeRichieste")
+    private Set<Annuncio> annunciRichieste = new HashSet<>();
+
+    @ManyToMany(mappedBy = "competenzeAcquisite")
+    private Set<Annuncio> annunciAcquisite = new HashSet<>();
+
+    public Competenza() {}
+
+    public Competenza(String descrizione) {
+        this.descrizione = descrizione;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getDescrizione() {
         return descrizione;
     }
+
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
+
+    public Set<Annuncio> getAnnunciRichieste() {
+        return annunciRichieste;
+    }
+
+    public void setAnnunciRichieste(Set<Annuncio> annunciRichieste) {
+        this.annunciRichieste = annunciRichieste;
+    }
+
+    public Set<Annuncio> getAnnunciAcquisite() {
+        return annunciAcquisite;
+    }
+
+    public void setAnnunciAcquisite(Set<Annuncio> annunciAcquisite) {
+        this.annunciAcquisite = annunciAcquisite;
+    }
+
 }
