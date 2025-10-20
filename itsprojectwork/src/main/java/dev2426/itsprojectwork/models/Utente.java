@@ -32,7 +32,7 @@ public class Utente {
     
     public Utente() {}
     
-	public Utente(long id, String nome, String cognome, String email, String password, Ruolo ruolo, byte[] immagine) {
+	public Utente(long id, byte[] immagine, String nome, String cognome, String email, String password, Ruolo ruolo) {
 		super();
 		this.id = id;
 		this.nome = nome;
