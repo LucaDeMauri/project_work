@@ -22,6 +22,7 @@ public class Utente {
     private String cognome;
     private String email;
     private String password;
+    private String bio;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "ruolo", nullable = false)
@@ -32,7 +33,7 @@ public class Utente {
     
     public Utente() {}
     
-	public Utente(long id, byte[] immagine, String nome, String cognome, String email, String password, Ruolo ruolo) {
+	public Utente(long id, byte[] immagine, String bio, String nome, String cognome, String email, String password, Ruolo ruolo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -86,10 +87,14 @@ public class Utente {
 	public void setImmagine(byte[] immagine) {
 		this.immagine = immagine;
 	}
-	
-    
-    
 
-    
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+	
 
 }

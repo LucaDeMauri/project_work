@@ -3,16 +3,17 @@ package dev2426.itsprojectwork.dto;
 import dev2426.itsprojectwork.models.Ruolo;
 
 public class UtenteDTO {
-	private long id;
 	private byte[] immagine;
+	private String bio;
 	private String nome;
 	private String cognome;
 	private String email;
 	private Ruolo ruolo;
 	
-	public UtenteDTO(long id, byte[] immagine, String nome, String cognome, String email, Ruolo ruolo) {
-		this.id = id;
+	
+	public UtenteDTO(byte[] immagine, String bio, String nome, String cognome, String email, Ruolo ruolo) {
 		this.immagine = immagine;
+		this.bio = bio;
 		this.nome = nome;
 		this.cognome = cognome;
 		this.email = email;
@@ -21,13 +22,7 @@ public class UtenteDTO {
 	
 	public UtenteDTO() {}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+	
 
 	public byte[] getImmagine() {
 		return immagine;
@@ -35,6 +30,14 @@ public class UtenteDTO {
 
 	public void setImmagine(byte[] immagine) {
 		this.immagine = immagine;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
 	}
 
 	public String getNome() {

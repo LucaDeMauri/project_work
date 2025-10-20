@@ -13,9 +13,6 @@ import dev2426.itsprojectwork.repository.CompSviluppateRepository;
 public class CompSviluppateService {
 
 	@Autowired
-	private CompSviluppateRepository compRep;
+	private CompSviluppateRepository repository;
 	
-	public ArrayList<CompSviluppateDTO> elencoCompSviluppate(){
-		
-	}
 }
