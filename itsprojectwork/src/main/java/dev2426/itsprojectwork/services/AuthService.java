@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dev2426.itsprojectwork.dto.UtenteDTO;
 import dev2426.itsprojectwork.models.Ruolo;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.UtenteRepository;
@@ -29,26 +28,34 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
         
     
-    public UtenteDTO login(String email, String password) {
+    /*public Utente login(String email, String password) {
 
 		Optional<Utente> utenteOpt = utenteRepository.findByEmail(email);
 		
 		if (utenteOpt.isPresent()) {
 			Utente utente = utenteOpt.get();
 			
-			UtenteDTO userDTO = new UtenteDTO(utente.getImmagine(),utente.getBio(),utente.getNome(),utente.getCognome(),utente.getEmail(),utente.getRuolo());
-			
 			if (passwordEncoder.matches(password, utente.getPassword())) {
-				return userDTO;
+				return utente;
 			}
 		}
 		
         return null;
+    }*/
+    
+    public Utente login(String email, String rawPassword) {
+        Optional<Utente> opt = utenteRepository.findByEmail(email);
+        if (opt.isPresent()) {
+        Utente u = opt.get();
+            if (passwordEncoder.matches(rawPassword, u.getPassword())) {
+                return u;
+            }
+        }
+        return null;
     }
+
     
-    
-    
-    public UtenteDTO signUp(String nome, String cognome, String email, String password) {
+    public Utente signUp(String nome, String cognome, String email, String password) {
 
         if (utenteRepository.existsByEmail(email)) {
     		return null;
@@ -61,11 +68,7 @@ public class AuthService {
         nuovo.setPassword(passwordEncoder.encode(password));
         nuovo.setRuolo(Ruolo.user);
 
-        Utente newUser = utenteRepository.save(nuovo);
-        
-        UtenteDTO userDTO = new UtenteDTO(newUser.getImmagine(),newUser.getBio(),newUser.getNome(),newUser.getCognome(),newUser.getEmail(),newUser.getRuolo());
-        
-        return userDTO;
+        return utenteRepository.save(nuovo);
     }
 
     

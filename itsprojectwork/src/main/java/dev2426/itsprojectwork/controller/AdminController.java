@@ -12,21 +12,14 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/admin")
 public class AdminController {
 	
-	 @GetMapping("")
-	 public String adminPage(HttpSession session) {
-		 
-		 Utente utenteLoggato = (Utente) session.getAttribute("utenteLoggato");
-		 
-		 System.out.println(utenteLoggato.getRuolo());
-		 System.out.println(utenteLoggato.getRuolo().equals(Ruolo.admin));
-		 
-		 if(utenteLoggato.getRuolo().equals(Ruolo.admin)){
-			 return "/internship/admin";
-		 }
-		 
-		 return "/internship/";
-		 
-	 }
-	
+@GetMapping("")
+public String adminPage(HttpSession session) {
+    	Utente utenteLoggato = (Utente) session.getAttribute("utenteLoggato");
+    	if (utenteLoggato == null || utenteLoggato.getRuolo() != Ruolo.admin) {
+        	return "redirect:/auth/login?error=true";
+    	}
+
+    	return "internship/admin";
+	}
 
 }
