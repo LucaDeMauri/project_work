@@ -55,6 +55,21 @@
     </div>
 
     <script>
+        // Gestione candidature
+        document.addEventListener('DOMContentLoaded', function() {
+            const candidatiButtons = document.querySelectorAll('.btn-candidati');
+            
+            candidatiButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const annuncioCard = this.closest('.annuncio-card');
+                    const azienda = annuncioCard.querySelector('.dato-item .valore').innerText;
+                    const durata = annuncioCard.querySelectorAll('.dato-item .valore')[1].innerText;
+                    const tipo = annuncioCard.querySelectorAll('.dato-item .valore')[2].innerText;
+                    
+                    alert(`Candidatura inviata per:\nAzienda: ${azienda}\nDurata: ${durata}\nTipo: ${tipo}`);
+                });
+            });
+        });
         document.addEventListener('DOMContentLoaded', function() {
             const userAvatar = document.getElementById('userAvatar');
             const dropdownMenu = document.getElementById('dropdownMenu');
