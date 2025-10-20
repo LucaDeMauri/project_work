@@ -7,8 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 
@@ -28,7 +27,21 @@ public class Utente {
     @Column(name = "ruolo", nullable = false)
     private Ruolo ruolo;
     
+    @Lob
+    private byte[] immagine;
     
+    public Utente() {}
+    
+	public Utente(long id, String nome, String cognome, String email, String password, Ruolo ruolo, byte[] immagine) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.email = email;
+		this.password = password;
+		this.ruolo = ruolo;
+		this.immagine = immagine;
+	}
 	public Ruolo getRuolo() {
 		return ruolo;
 	}
@@ -64,6 +77,14 @@ public class Utente {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public byte[] getImmagine() {
+		return immagine;
+	}
+
+	public void setImmagine(byte[] immagine) {
+		this.immagine = immagine;
 	}
 	
     

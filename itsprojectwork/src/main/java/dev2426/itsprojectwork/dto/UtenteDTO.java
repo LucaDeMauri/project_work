@@ -3,14 +3,14 @@ package dev2426.itsprojectwork.dto;
 import dev2426.itsprojectwork.models.Ruolo;
 
 public class UtenteDTO {
+	private long id;
 	private String immagine;
 	private String nome;
 	private String cognome;
 	private String email;
 	private Ruolo ruolo;
 	
-	public UtenteDTO(String immagine, String nome, String cognome, String email, Ruolo ruolo) {
-		this.immagine = immagine;
+	public UtenteDTO(String nome, String cognome, String email, Ruolo ruolo) {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.email = email;
