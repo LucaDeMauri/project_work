@@ -23,7 +23,7 @@ public class UtenteService {
 		List<Utente> elenco = repository.findAll();
 		ArrayList<UtenteDTO> elencoDTO = new ArrayList<>();
 		for (Utente e : elenco) {
-			elencoDTO.add(new UtenteDTO(e.getId(),e.getImmagine(),e.getNome(),e.getCognome(),e.getEmail(),e.getRuolo()));
+			elencoDTO.add(new UtenteDTO(e.getImmagine(), e.getBio(),e.getNome(),e.getCognome(),e.getEmail(),e.getRuolo()));
 		}
 		
 		return elencoDTO;
@@ -34,17 +34,14 @@ public class UtenteService {
 
 	    if (user.isPresent()) {
 	        Utente u = user.get();
-	        return new UtenteDTO(u.getId(), u.getImmagine(), u.getNome(), u.getCognome(), u.getEmail(), u.getRuolo());
+	        return new UtenteDTO(u.getImmagine(),u.getBio(), u.getNome(), u.getCognome(), u.getEmail(), u.getRuolo());
 	    }
 
 	    return null;
 	}
 	
-	public void insertOne(UtentePasswordDTO nuovo) {
-		
-		Utente user = new Utente(nuovo.getId(),nuovo.getImmagine(), nuovo.getNome(), nuovo.getCognome(), nuovo.getEmail(), nuovo.getPassword(), nuovo.getRuolo()); 
-		
-		repository.save(user);
+	public void insertOne(Utente nuovo) {
+		repository.save(nuovo);
 	}
 	
 	public void deleteOne(Long id) {

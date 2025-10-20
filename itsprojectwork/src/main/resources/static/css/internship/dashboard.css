@@ -1,23 +1,41 @@
 body {
-    background: url("img/immagine_sfondo.png") no-repeat center/cover;
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Modalità dark */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.overlay-open {
+    overflow: hidden;
+}
+
 header {
-    background: #eaf8ff;
+    background: white;
     padding: 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    height: 120px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: 80px;
     box-sizing: border-box;
     position: relative;
+    z-index: 100;
+}
+
+/* Dark mode per header */
+body.dark-mode header {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 .header-left {
@@ -27,22 +45,53 @@ header {
 }
 
 .logo {
-    height: 100px;
+    height: 50px;
     width: auto;
-    margin-right: 25px;
+    margin-right: 20px;
 }
 
 header h1 {
-    color: #444;
-    font-size: 2em;
+    color: #0073b1;
+    font-size: 1.8rem;
     margin: 0;
-    font-weight: 600;
+    font-weight: 700;
+}
+
+/* Dark mode per titolo */
+body.dark-mode header h1 {
+    color: #6a9cff;
 }
 
 .header-right {
     display: flex;
     align-items: center;
     height: 100%;
+    gap: 15px;
+}
+
+/* Pulsante dark mode */
+.dark-mode-toggle {
+    background-color: #333;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    border: none;
+    white-space: nowrap;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #555;
+}
+
+/* Dark mode per il pulsante */
+body.dark-mode .dark-mode-toggle {
+    background-color: #444;
+    color: #e0e0e0;
 }
 
 .user-menu {
@@ -50,10 +99,10 @@ header h1 {
 }
 
 .user-avatar {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background: #4a6a66;
+    background: #0073b1;
     color: white;
     display: flex;
     align-items: center;
@@ -66,8 +115,17 @@ header h1 {
 }
 
 .user-avatar:hover {
-    background: #3b5753;
+    background: #005582;
     transform: scale(1.05);
+}
+
+/* Dark mode per avatar */
+body.dark-mode .user-avatar {
+    background: #6a9cff;
+}
+
+body.dark-mode .user-avatar:hover {
+    background: #5587e6;
 }
 
 .dropdown-menu {
@@ -75,8 +133,8 @@ header h1 {
     top: 100%;
     right: 0;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     min-width: 200px;
     padding: 8px 0;
     margin-top: 10px;
@@ -93,18 +151,34 @@ header h1 {
     transform: translateY(0);
 }
 
+/* Dark mode per dropdown */
+body.dark-mode .dropdown-menu {
+    background-color: #1e1e1e;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
 .dropdown-item {
     display: flex;
     align-items: center;
     padding: 12px 20px;
-    color: #444;
+    color: #555;
     text-decoration: none;
     transition: background 0.3s;
-    font-size: 0.95em;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .dropdown-item:hover {
     background: #f5f5f5;
+}
+
+/* Dark mode per dropdown items */
+body.dark-mode .dropdown-item {
+    color: #ccc;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background: #2b2b2b;
 }
 
 .dropdown-item.logout {
@@ -113,6 +187,11 @@ header h1 {
 
 .dropdown-item.logout:hover {
     background: #ffeaea;
+}
+
+/* Dark mode per logout */
+body.dark-mode .dropdown-item.logout:hover {
+    background: #3a1f1f;
 }
 
 .dropdown-icon {
@@ -128,6 +207,11 @@ header h1 {
     margin: 8px 0;
 }
 
+/* Dark mode per divider */
+body.dark-mode .dropdown-divider {
+    background: #444;
+}
+
 .container {
     flex: 1;
     padding: 30px;
@@ -136,29 +220,64 @@ header h1 {
     width: 100%;
     box-sizing: border-box;
     margin-top: 20px;
+    transition: filter 0.3s ease;
+}
+
+body.overlay-open .container {
+    filter: blur(5px);
 }
 
 .annunci-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
+    position: relative;
 }
 
 .annuncio-card {
-    background: #eaf8ff;
-    border-radius: 15px;
+    background: white;
+    border-radius: 16px;
     padding: 25px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     transition: transform 0.3s, box-shadow 0.3s;
-    min-height: 200px;
+    min-height: 260px;
     position: relative;
+    border: 1.8px solid #f0f0f0;
 }
 
 .annuncio-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* Dark mode per card annunci */
+body.dark-mode .annuncio-card {
+    background-color: #1e1e1e;
+    border-color: #333;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .annuncio-card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+/* Titolo dell'annuncio */
+.annuncio-titolo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0073b1;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+    text-align: center;
+}
+
+/* Dark mode per titolo annuncio */
+body.dark-mode .annuncio-titolo {
+    color: #6a9cff;
+    border-bottom-color: #333;
 }
 
 .dati-annuncio {
@@ -172,39 +291,112 @@ header h1 {
 .dato-item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #d1e7f5;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .dato-item:last-child {
     border-bottom: none;
 }
 
+/* Dark mode per dato-item */
+body.dark-mode .dato-item {
+    border-bottom-color: #333;
+}
+
 .etichetta {
-    font-weight: bold;
-    color: #4a6a66;
-    font-size: 0.95em;
+    font-weight: 600;
+    color: #0073b1;
+    font-size: 0.95rem;
+    min-width: 100px;
+}
+
+/* Dark mode per etichetta */
+body.dark-mode .etichetta {
+    color: #6a9cff;
 }
 
 .valore {
-    color: #444;
-    font-weight: normal;
+    color: #555;
+    font-weight: 500;
     text-align: right;
     flex: 1;
     margin-left: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Dark mode per valore */
+body.dark-mode .valore {
+    color: #ccc;
+}
+
+/* Stili per i tag delle competenze */
+.competence-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Dark mode per tag */
+body.dark-mode .tag {
+    background: #1e3a5f;
+    color: #90caf9;
+    border-color: #37474f;
+}
+
+/* Tag più grandi per l'overlay */
+.competence-tags-large {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.competence-tags-large .tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Dark mode per tag grandi */
+body.dark-mode .competence-tags-large .tag {
+    background: #1e3a5f;
+    color: #90caf9;
+    border-color: #37474f;
 }
 
 .btn-candidati {
-    padding: 12px 25px;
-    background: #4a6a66;
+    padding: 14px 25px;
+    background: #6a9cff;
     color: white;
     border: none;
-    border-radius: 30px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-weight: 700;
     cursor: pointer;
     transition: background 0.3s;
-    font-size: 1em;
+    font-size: 1.1rem;
     width: 100%;
     margin-top: auto;
     text-decoration: none;
@@ -214,103 +406,198 @@ header h1 {
 }
 
 .btn-candidati:hover {
-    background: #3b5753;
+    background: #5587e6;
 }
 
-/* Stile per la descrizione completa - ORA SOTTO L'ANNUNCIO CLICCATO */
-.descrizione-completa {
+/* Overlay per i dettagli */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.overlay-content {
     background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    border: 2px solid #4a6a66;
-    grid-column: 1 / -1; /* Occupa tutte e 3 le colonne */
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
-    z-index: 10;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    animation: fadeIn 0.3s ease-in;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    border: 1.8px solid #f0f0f0;
 }
 
-.descrizione-content {
-    position: relative;
+/* Dark mode per overlay */
+body.dark-mode .overlay-content {
+    background-color: #1e1e1e;
+    border-color: #333;
 }
 
-.btn-close {
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-close-overlay {
     position: absolute;
-    top: -15px;
-    right: -15px;
+    top: 15px;
+    right: 20px;
     background: #e74c3c;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background 0.3s;
-    z-index: 20;
+    z-index: 10;
 }
 
-.btn-close:hover {
+.btn-close-overlay:hover {
     background: #c0392b;
+    transform: scale(1.1);
 }
 
-.descrizione-content h3 {
-    color: #4a6a66;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.4em;
-    border-bottom: 2px solid #eaf8ff;
-    padding-bottom: 10px;
+.overlay-header {
+    padding: 25px 30px 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Dark mode per overlay header */
+body.dark-mode .overlay-header {
+    border-bottom-color: #333;
+}
+
+.overlay-header h2 {
+    color: #0073b1;
+    margin: 0;
+    font-size: 1.6em;
     padding-right: 40px;
+    font-weight: 700;
 }
 
-.descrizione-content p {
-    margin: 12px 0;
+/* Dark mode per titolo overlay */
+body.dark-mode .overlay-header h2 {
+    color: #6a9cff;
+}
+
+.overlay-body {
+    padding: 20px 30px;
+}
+
+.overlay-section {
+    margin-bottom: 25px;
+}
+
+.overlay-section h3 {
+    color: #0073b1;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Dark mode per sezioni overlay */
+body.dark-mode .overlay-section h3 {
+    color: #6a9cff;
+    border-bottom-color: #333;
+}
+
+.overlay-section p {
+    margin: 10px 0;
     line-height: 1.6;
-    color: #444;
+    color: #555;
+    font-weight: 500;
 }
 
-.descrizione-content ul {
-    margin: 15px 0;
-    padding-left: 25px;
+/* Dark mode per testo overlay */
+body.dark-mode .overlay-section p {
+    color: #ccc;
 }
 
-.descrizione-content li {
+.overlay-section ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.overlay-section li {
     margin-bottom: 8px;
     line-height: 1.5;
-    color: #444;
+    color: #555;
+    font-weight: 500;
 }
 
-.descrizione-content strong {
-    color: #4a6a66;
+/* Dark mode per liste overlay */
+body.dark-mode .overlay-section li {
+    color: #ccc;
+}
+
+.overlay-section strong {
+    color: #0073b1;
+}
+
+/* Dark mode per strong */
+body.dark-mode .overlay-section strong {
+    color: #6a9cff;
+}
+
+.overlay-footer {
+    padding: 20px 30px;
+    border-top: 2px solid #e0e0e0;
+    text-align: center;
+}
+
+/* Dark mode per footer overlay */
+body.dark-mode .overlay-footer {
+    border-bottom-color: #333;
 }
 
 .btn-conferma-candidatura {
-    padding: 12px 30px;
-    background: #27ae60;
+    padding: 14px 40px;
+    background: #6a9cff;
     color: white;
     border: none;
-    border-radius: 30px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 25px;
-    font-size: 1em;
+    transition: background 0.3s, transform 0.2s;
+    font-size: 1.1em;
+    box-shadow: 0 4px 8px rgba(106, 156, 255, 0.3);
 }
 
 .btn-conferma-candidatura:hover {
-    background: #219653;
+    background: #5587e6;
     transform: translateY(-2px);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    box-shadow: 0 6px 12px rgba(106, 156, 255, 0.4);
 }
 
 /* Responsive Design */
@@ -319,22 +606,30 @@ header h1 {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .descrizione-completa {
-        grid-column: 1 / -1;
-    }
-    
     header {
-        height: 110px;
+        height: 70px;
         padding: 0 20px;
     }
     
     .logo {
-        height: 90px;
-        margin-right: 20px;
+        height: 40px;
+        margin-right: 15px;
     }
     
     header h1 {
-        font-size: 1.8em;
+        font-size: 1.6rem;
+    }
+    
+    .overlay-content {
+        width: 95%;
+    }
+    
+    .header-right {
+        gap: 12px;
+    }
+    
+    .annuncio-card {
+        min-height: 280px;
     }
 }
 
@@ -349,22 +644,22 @@ header h1 {
     }
     
     header {
-        height: 100px;
+        height: 60px;
         padding: 0 15px;
     }
     
     .logo {
-        height: 80px;
-        margin-right: 15px;
+        height: 35px;
+        margin-right: 12px;
     }
     
     header h1 {
-        font-size: 1.6em;
+        font-size: 1.4rem;
     }
     
     .user-avatar {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
     }
     
     .dropdown-menu {
@@ -372,29 +667,62 @@ header h1 {
         min-width: 180px;
     }
     
-    .descrizione-completa {
-        padding: 20px;
+    .overlay-content {
+        width: 98%;
+        max-height: 95vh;
+    }
+    
+    .overlay-header, .overlay-body, .overlay-footer {
+        padding: 15px 20px;
+    }
+    
+    .annuncio-card {
+        min-height: 240px;
+    }
+    
+    .competence-tags {
+        gap: 4px;
+    }
+    
+    .tag {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    .dark-mode-toggle {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .annuncio-titolo {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
     }
 }
 
 @media (max-width: 480px) {
     header {
-        height: 90px;
+        height: 50px;
         padding: 0 10px;
     }
     
     .logo {
-        height: 70px;
-        margin-right: 12px;
+        height: 30px;
+        margin-right: 10px;
     }
     
     header h1 {
-        font-size: 1.4em;
+        font-size: 1.2rem;
     }
     
     .user-avatar {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
     
     .container {
@@ -407,15 +735,70 @@ header h1 {
         min-width: 160px;
     }
     
-    .descrizione-completa {
-        padding: 15px;
+    .overlay-content {
+        border-radius: 12px;
     }
     
-    .btn-close {
-        top: -10px;
-        right: -10px;
-        width: 25px;
-        height: 25px;
-        font-size: 16px;
+    .overlay-header h2 {
+        font-size: 1.4em;
+    }
+    
+    .btn-close-overlay {
+        top: 10px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+    
+    .annuncio-card {
+        padding: 20px;
+        min-height: 220px;
+    }
+    
+    .dati-annuncio {
+        gap: 12px;
+    }
+    
+    .etichetta {
+        font-size: 0.9rem;
+        min-width: 90px;
+    }
+    
+    .valore {
+        font-size: 0.9rem;
+    }
+    
+    .competence-tags {
+        gap: 3px;
+    }
+    
+    .tag {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+    
+    .competence-tags-large {
+        gap: 6px;
+    }
+    
+    .competence-tags-large .tag {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+    }
+    
+    .header-right {
+        gap: 8px;
+    }
+    
+    .dark-mode-toggle {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .annuncio-titolo {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
     }
 }
