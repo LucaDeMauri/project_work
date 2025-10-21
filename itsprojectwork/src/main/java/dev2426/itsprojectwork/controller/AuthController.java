@@ -1,92 +1,125 @@
 package dev2426.itsprojectwork.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.ui.Model;
-
+import org.springframework.web.bind.annotation.*;
 import dev2426.itsprojectwork.dto.UtenteDTO;
-import dev2426.itsprojectwork.models.Utente;
-import dev2426.itsprojectwork.repository.UtenteRepository;
 import dev2426.itsprojectwork.services.AuthService;
 import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
 
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-	
-	@Autowired
-	private AuthService authService;
     
+    // Regex per Nome: Consente lettere, spazi e punti.
+    private static final String NOME_REGEX = "^[\\p{L} .]+$"; 
+    // Regex per Cognome: Consente lettere, spazi, punti e apostrofi.
+    private static final String COGNOME_REGEX = "^[\\p{L} '.\\-]+$";
 
+    @Autowired
+    private AuthService authService;
+
+    private boolean isValidNameFormat(String value, String regex) {
+        if (value == null || value.isBlank()) return false;
+        return value.matches(regex);
+    }
+
+    // --- LOGIN (Ometto per brevità, focalizziamoci sul signup) ---
 	@GetMapping("/login")
-	public String loginPage(@RequestParam(defaultValue = "false") Boolean error, Model model) {   
-			
-		 if(error) {
-			 model.addAttribute("message", "email o password errata");
-		 }
-		return "/Auth/login";
+	public String loginPage(@RequestParam(defaultValue = "false") Boolean registered, 
+                            Model model) {	
+        if(registered) {
+            model.addAttribute("message", "Registrazione completata! Puoi accedere ora.");
+            model.addAttribute("alertType", "success");
+        }
+        return "/Auth/login";
 	}
 	
 	@PostMapping("/login")
-	public String loginPage(@RequestParam String email,
-            			    @RequestParam String password,
-            				HttpSession session) {
-		 
+	public String processLogin(@RequestParam String email,
+							@RequestParam String password,
+                            Model model, 
+							HttpSession session) {
+
+        if (email == null || email.isBlank() || password == null || password.isBlank()) {
+            model.addAttribute("message", "Compila tutti i campi obbligatori.");
+            model.addAttribute("alertType", "error");
+            return "/Auth/login";
+        }
+		
 		UtenteDTO utente = authService.login(email, password);
 		
 		if(utente != null) {
 			session.setAttribute("utenteLoggato", utente);
 			return "redirect:/internship/";
-			
-        } else {
-            return "redirect:/auth/login?error=true";
-            
-        }
-		
+		} else {
+            model.addAttribute("message", "Email o password errata.");
+            model.addAttribute("alertType", "error");
+            return "/Auth/login";
+		}
 	}
-	
-	
+    
+    // --- SIGNUP ---
 	@GetMapping("/signup")
-	public String signupPage(@RequestParam(defaultValue = "false") Boolean error, @RequestParam(defaultValue = "false") Boolean registered,  Model model) {
-		
-		if(registered) {
-			model.addAttribute("message", "Registrazione completata!");
-		}
-		if(error) {
-			model.addAttribute("message", "Email già in uso");
-		}
-		return "/auth/signup";
+	public String signupPage(Model model) {
+		return "/Auth/signup";
 	}
 
 	@PostMapping("/signup")
-	public String signupPage(@RequestParam String nome, @RequestParam String cognome, @RequestParam String email, @RequestParam String password) {
-	
-		UtenteDTO utente = authService.signUp(nome, cognome, email, password);
-		
-		if(utente != null) {
-			return "redirect:/auth/signup?registered=true";
-			
-        } else {
-            return "redirect:/auth/signup?error=true";
+	public String processSignup(@RequestParam(required = false) String nome, 
+                                @RequestParam(required = false) String cognome, 
+                                @RequestParam(required = false) String email,
+                                @RequestParam(required = false) String password, 
+                                @RequestParam(required = false) String confirmPassword, 
+                                Model model) {
+
+        // Ripopolamento dei campi in caso di errore
+        model.addAttribute("nome", nome);
+        model.addAttribute("cognome", cognome);
+        model.addAttribute("email", email);
+
+        // 1. Validazione Campi Vuoti (Manuale)
+        if (nome == null || nome.isBlank() || cognome == null || cognome.isBlank() || 
+            email == null || email.isBlank() || password == null || password.isBlank() || 
+            confirmPassword == null || confirmPassword.isBlank()) {
             
+            model.addAttribute("message", "Tutti i campi sono obbligatori.");
+            model.addAttribute("alertType", "error");
+            return "/Auth/signup";
         }
-	
+        
+        // 2. Validazione Caratteri (Backend - Ultima Sicurezza)
+        if (!isValidNameFormat(nome, NOME_REGEX) || !isValidNameFormat(cognome, COGNOME_REGEX)) {
+            model.addAttribute("message", "Nome o Cognome contengono caratteri non validi.");
+            model.addAttribute("alertType", "error");
+            return "/Auth/signup";
+        }
+
+        // 3. Validazione Password (Backend - Ultima sicurezza)
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("message", "Le password non coincidono.");
+            model.addAttribute("alertType", "error");
+            return "/Auth/signup";
+        }
+        
+        // 4. Controllo Email (Business Logic)
+		UtenteDTO utente = authService.signUp(nome, cognome, email, password);
+
+		if (utente != null) {
+			return "redirect:/auth/login?registered=true";
+		} else {
+			// ERRORE: Email già presente nel DB
+			model.addAttribute("message", "Email già in uso. Prova il login.");
+			model.addAttribute("alertType", "error");
+			return "/Auth/signup";
+		}
 	}
-	
+
+	// --- LOGOUT ---
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "/auth/login";
+		return "redirect:/auth/login";
 	}
-
 }

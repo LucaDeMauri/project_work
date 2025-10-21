@@ -5,12 +5,19 @@ body {
   font-family: 'Inter', sans-serif;
   color: #1a1a1a;
   transition: background-color 0.3s, color 0.3s;
+  
+  /* CHIAVE: Spinge il contenuto verso destra */
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; 
+  align-items: flex-end; /* Allinea il box a destra */
+  justify-content: center; /* Centra verticalmente */
+  
   min-height: 100vh;
-  padding: 20px;
+  padding: 20px 0; 
   box-sizing: border-box;
+  
+  /* Impedisce lo scroll */
+  overflow: hidden; 
 }
 
 body.dark-mode {
@@ -18,7 +25,7 @@ body.dark-mode {
   color: #e0e0e0;
 }
 
-/* Pulsante dashboard */
+/* Pulsanti Fissi (Back, Dark Mode) */
 .back-button {
   position: fixed;
   top: 20px;
@@ -28,14 +35,26 @@ body.dark-mode {
   padding: 10px 16px;
   border-radius: 8px;
   font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 3px 10px rgba(0, 115, 177, 0.3);
   z-index: 9999;
   font-size: 10px;
 }
-
 .back-button:hover {
   background-color: #005582;
+}
+.dark-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  z-index: 9999;
+}
+.dark-toggle:hover {
+  background-color: #555;
 }
 
 /* Link normali */
@@ -45,10 +64,6 @@ a {
   font-weight: 600;
   margin-bottom: 20px;
   display: inline-block;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 
 /* Contenitore principale */
@@ -63,6 +78,11 @@ a:hover {
   border: 1px solid #e0e0e0;
   transition: background-color 0.3s;
   text-align: center;
+  position: relative; 
+  
+  /* CHIAVE: Sposta il box a destra */
+  margin-right: 15%; 
+  margin-left: auto; 
 }
 
 body.dark-mode .registrazione {
@@ -76,37 +96,17 @@ body.dark-mode .registrazione {
   font-size: 1.8rem;
   font-weight: 700;
   color: #0073b1;
-  margin-bottom: 30px;
+  margin-bottom: 20px; 
 }
 
 /* Form */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px; /* Ridotto gap per inserire gli errori tra i campi */
 }
 
-/*.form input[type="text"],
-.form input[type="password"] {
-  padding: 12px 16px;
-  border: 1.5px solid #ccc;
-  border-radius: 10px;
-  font-size: 1rem;
-  background-color: #fff;
-  color: #000;
-  font-weight: 500;
-  transition: border-color 0.3s, background-color 0.3s;
-}
-
-.form input[type="text"]:focus,
-.form input[type="password"]:focus,
-.form input[type="password"]:focus
- {
-  outline: none;
-  border-color: #6a9cff;
-  box-shadow: 0 0 8px rgba(106, 156, 255, 0.3);
-}*/
-
+/* Input Generici */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -118,10 +118,11 @@ input[type="password"] {
   color: #000;
   font-weight: 500;
   transition: border-color 0.3s, background-color 0.3s;
+  margin-bottom: 20px; /* Spazio standard */
 }
 
-body.dark-mode .form input[type="text"],
-body.dark-mode .form input[type="password"] {
+/* Dark Mode Input */
+body.dark-mode .registrazione input {
   background-color: #2b2b2b;
   color: #fff;
   border-color: #444;
@@ -139,54 +140,110 @@ body.dark-mode .form input[type="password"] {
   border-radius: 10px;
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.3s, transform 0.1s;
 }
 
-.form button[type="submit"]:hover {
-  background-color: #005582;
-  transform: scale(1.02);
+/* --- STILI ALERT E VALIDAZIONE --- */
+
+/* Contenitore Alert Globale (per messaggi di Backend) */
+#statusAlertContainer {
+    width: 90%; 
+    max-width: 400px;
+    margin: 0 auto 20px;
 }
 
-body.dark-mode label {
-  color: #ccc;
-}
-body.dark-mode textarea {
-  background-color: #2b2b2b;
-  color: #fff;
-  border-color: #444;
-}
-body.dark-mode input {
-  background-color: #2b2b2b;
-  color: #fff;
-  border-color: #444;
-}
-/* Pulsante dark mode */
-.dark-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #333;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-  font-size: 1rem;
-  z-index: 9999;
+/* Stile base del messaggio di errore/successo (Il riquadro colorato) */
+.custom-alert {
+    padding: 10px 15px; 
+    border-radius: 8px;
+    text-align: left;
+    font-weight: 600;
+    position: relative; 
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.dark-toggle:hover {
-  background-color: #555;
+.custom-alert-error {
+    background-color: #f8d7da; 
+    color: #b10000; 
+    border: 1px solid #f5c6cb;
 }
-body.dark-mode .profile-container {
-  background-color: #1e1e1e;
-  border-color: #333;
+
+.custom-alert-success {
+    background-color: #d8edf7; 
+    color: #004d70; 
+    border: 1px solid #c2e2f0;
+}
+
+/* NUOVO STILE: Errore Caratteri in linea (sotto Nome/Cognome) */
+.js-format-error-text {
+    display: block;
+    margin-top: -15px; /* Avvicina l'errore al campo sopra */
+    margin-bottom: 5px; 
+    font-size: 0.85em;
+    font-weight: 600;
+    text-align: left; 
+    color: red;
+}
+
+/* Messaggio in tempo reale (Validazione Password) */
+.js-password-alert {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-align: left;
+    margin-top: -15px; 
+    margin-bottom: 5px; 
+}
+
+/* Colore Successo (Password Match) */
+.js-password-alert-success {
+    background-color: #e6ffed; 
+    color: #00703c; 
+    border: 1px solid #c8e6c9;
+}
+
+/* Colore Errore (Password Mismatch) */
+.js-password-alert-error {
+    background-color: #fce4e4;
+    color: #b71c1c;
+    border: 1px solid #ffcdd2;
 }
 
 /* Responsive */
-@media (max-width: 450px) {
+@media (max-width: 850px) {
+  
+  body {
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+  }
+  
   .registrazione {
-    padding: 20px;
+    max-width: 100%;
+    width: 100%;
+    padding: 30px 20px;
+    margin: 0; 
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  
+  .titolo {
+      font-size: 1.6rem;
+  }
+  
+  .back-button, .dark-toggle {
+      font-size: 0.9rem;
+      padding: 8px 12px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  .form button[type="submit"] {
+      padding: 12px;
+      font-size: 1em;
   }
 }

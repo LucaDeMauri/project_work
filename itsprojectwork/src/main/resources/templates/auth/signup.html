@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registrazione - StageUp</title>
-  <link rel="stylesheet" th:href="@{/css/auth/signup.css}" />
+  <link rel="stylesheet" th:href="@{/css/auth/signup.css}" /> 
 </head>
 
 <body>
 
-  <!-- Barra superiore -->
+  <input type="hidden" id="alertMessage" th:value="${message ?: ''}">
+  <input type="hidden" id="alertType" th:value="${alertType ?: ''}">
+
   <div class="top-bar">
     <a th:href="@{/auth/login}">
       <button class="back-button">← Torna al LogIn</button>
@@ -17,46 +19,147 @@
     <button class="dark-toggle" id="darkToggle">🌓 Dark Mode</button>
   </div>
 
-  <!-- Box registrazione -->
   <div class="registrazione">
     <h2 class="titolo">Crea il tuo account StageUp</h2>
+    
+    <div id="statusAlertContainer">
+    </div>
+    
     <form th:action="@{/auth/signup}" method="POST" class="form" onsubmit="return validaPassword()">
-      <input type="text" id="name" name="nome" placeholder="Nome" required />
-      <input type="text" id="surname" name="cognome" placeholder="Cognome" required />
-      <input type="email" id="username" name="email" placeholder="Email" required />
-      <input type="password" id="password" name="password" placeholder="Password" required />
-      <input type="password" id="confirm-password" placeholder="Conferma Password" required/>
-      <p id="error-message" style="color: red; display: none;">Le password non coincidono.</p>
-      <button type="submit">Registrati</button>
+      
+      <input type="text" id="name" name="nome" placeholder="Nome" required th:value="${nome}" onkeyup="checkPasswordMatch(); validateFormatUX('name', /^[A-Za-z\s.]+$/, 'Nome')" onblur="validateFormatUX('name', /^[A-Za-z\s.]+$/, 'Nome')"/>
+      <span id="error-name" class="js-format-error-text"></span> <input type="text" id="surname" name="cognome" placeholder="Cognome" required th:value="${cognome}" onkeyup="checkPasswordMatch(); validateFormatUX('surname', /^[A-Za-z\s.'-]+$/, 'Cognome')" onblur="validateFormatUX('surname', /^[A-Za-z\s.'-]+$/, 'Cognome')"/>
+      <span id="error-surname" class="js-format-error-text"></span> <input type="email" id="email" name="email" placeholder="Email" required th:value="${email}" />
+      
+      <input type="password" id="password" name="password" placeholder="Password" required onkeyup="checkPasswordMatch();" />
+      
+      <input type="password" id="confirm-password" name="confirmPassword" placeholder="Conferma Password" required onkeyup="checkPasswordMatch();" />
+      
+      <span id="passwordMatchMessage" class="js-password-alert" style="display: none;"></span>
+      
+      <button type="submit" id="submitButton" disabled>Registrati</button>
     </form>
-    <p th:text="${message}"></p>
   </div>
 
-  <!-- SCRIPT -->
   <script>
-    // Controllo password
-    function validaPassword() {
-      const password = document.getElementById('password').value;
-      const confirm = document.getElementById('confirm-password').value;
-      const errorMsg = document.getElementById('error-message');
+    const toggleBtn = document.getElementById('darkToggle');
+    const msg = document.getElementById('alertMessage').value;
+    const type = document.getElementById('alertType').value;
+    const container = document.getElementById('statusAlertContainer');
 
-      if (password !== confirm) {
-        errorMsg.style.display = 'block';
-        return false; // blocca l'invio del form
-      }
-
-      errorMsg.style.display = 'none';
-      return true; // consente l'invio del form
+    /* --- Funzione Alert (Backend) --- */
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'custom-alert custom-alert-' + type;
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        alertDiv.appendChild(messageSpan);
+        container.innerHTML = '';
+        container.appendChild(alertDiv);
     }
 
-    // Dark Mode
-    const toggleBtn = document.getElementById('darkToggle');
+    /* --- Validazione Nomi/Cognomi (Frontend UX) --- */
+    function validateFormatUX(fieldId, regex, fieldName) {
+        const inputField = document.getElementById(fieldId);
+        const errorSpan = document.getElementById('error-' + fieldId); // CHIAVE: Riferimento specifico
+        const value = inputField.value;
+        let isValid = true;
 
+        if (value.length === 0) {
+            errorSpan.textContent = ''; // Pulisce il messaggio di errore
+            inputField.style.borderColor = '#ccc';
+            return true;
+        }
+
+        if (!regex.test(value)) {
+            errorSpan.textContent = `⚠️ Il campo ${fieldName} contiene caratteri non ammessi.`;
+            errorSpan.style.color = 'red';
+            inputField.style.borderColor = 'red';
+            isValid = false;
+        } else {
+            errorSpan.textContent = '';
+            inputField.style.borderColor = '#ccc';
+        }
+        return isValid;
+    }
+
+    /* --- Funzione Validazione Password (Real-Time) --- */
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const messageSpan = document.getElementById('passwordMatchMessage');
+        const submitButton = document.getElementById('submitButton');
+
+        // Esegue anche la validazione del formato sui campi nome/cognome per determinare lo stato del pulsante
+        const isNameFormatValid = validateFormatUX('name', /^[A-Za-z\s.]+$/, 'Nome');
+        const isSurnameFormatValid = validateFormatUX('surname', /^[A-Za-z\s.'-]+$/, 'Cognome');
+
+
+        if (password.length === 0 || confirmPassword.length === 0) {
+            messageSpan.style.display = 'none';
+            submitButton.disabled = true;
+            return;
+        }
+
+        messageSpan.style.display = 'block';
+
+        if (password !== confirmPassword) {
+            messageSpan.textContent = "⚠️ Le password non corrispondono!";
+            messageSpan.classList.remove('js-password-alert-success');
+            messageSpan.classList.add('js-password-alert-error');
+            submitButton.disabled = true; 
+        } else {
+            messageSpan.textContent = "✅ Le password corrispondono.";
+            messageSpan.classList.remove('js-password-alert-error');
+            messageSpan.classList.add('js-password-alert-success');
+            
+            // Abilita solo se le password matchano E i formati Nome/Cognome sono validi
+            submitButton.disabled = !(isNameFormatValid && isSurnameFormatValid);
+        }
+    }
+
+    /* --- Funzione di validazione finale (Blocco Submit) --- */
+    function validaPassword() {
+        const password = document.getElementById('password').value;
+        const confirm = document.getElementById('confirm-password').value;
+        
+        // Esegui la validazione del formato finale su tutti i campi
+        const isNameValid = validateFormatUX('name', /^[A-Za-z\s.]+$/, 'Nome');
+        const isSurnameValid = validateFormatUX('surname', /^[A-Za-z\s.'-]+$/, 'Cognome');
+        
+        // 1. Controllo Corrispondenza Password
+        if (password !== confirm) {
+            showAlert("⚠️ Le password devono coincidere.", 'error');
+            return false;
+        }
+
+        // 2. Controllo validazione dei nomi (Blocco submit se c'è un errore di formato)
+        if (!isNameValid || !isSurnameValid) {
+             showAlert("⚠️ Correggi gli errori evidenziati nel Nome e/o Cognome.", 'error');
+             return false;
+        }
+        
+        // 3. Controllo Campi Vuoti (anche se required è attivo)
+        if (password.length === 0 || document.getElementById('email').value.length === 0) {
+             showAlert("⚠️ Compila tutti i campi obbligatori.", 'error');
+             return false;
+        }
+        
+        return true;
+    }
+    
+    /* --- Esecuzione Principale --- */
     window.addEventListener('DOMContentLoaded', () => {
+      if (msg) {
+           showAlert(msg, type);
+      }
+
       const savedTheme = localStorage.getItem('darkMode');
       if (savedTheme === 'enabled') {
         document.body.classList.add('dark-mode');
       }
+      
+      checkPasswordMatch();
     });
 
     toggleBtn.addEventListener('click', () => {

@@ -1,68 +1,187 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Lista Candidature Dettagliata</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .candidature-table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
-        .candidature-table th, .candidature-table td { border: 1px solid #ecf0f1; padding: 12px 15px; text-align: left; }
-        .candidature-table th { background-color: #3498db; color: white; text-transform: uppercase; }
-        .candidature-table tr:nth-child(even) { background-color: #f8f8f8; }
-        .candidature-table tr:hover { background-color: #f0f0f0; }
-        .stato-PENDING { color: #f39c12; font-weight: bold; }
-        .stato-ACCEPTED { color: #2ecc71; font-weight: bold; }
-        .stato-REJECTED { color: #e74c3c; font-weight: bold; }
-        .dati-utente { font-size: 0.9em; color: #7f8c8d; }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Profilo Utente</title>
+    <link rel="stylesheet" th:href="@{/css/user/style.css}" /> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
 </head>
+
 <body>
 
-    <h1>Riepilogo delle Candidature</h1>
+    <a th:href="@{/dashboard}" class="dashboard-btn" title="Torna alla dashboard">← Dashboard</a>
+    
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="theme-toggle-btn" title="Attiva/Disattiva modalità scura">
+        <span class="slider">
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+        </span> 
+    </button>
+    
+    <div class="profile-container">
 
-    <table class="candidature-table">
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Stato</th>
-                <th>Annuncio Dettagliato</th>
-                <th>Candidato (Utente)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:if="${candidature.empty}">
-                <td colspan="4" style="text-align: center;">Nessuna candidatura trovata.</td>
-            </tr>
+        <div class="header-row">
+            <h2>Profilo utente</h2>
             
-            <tr th:each="candidatura : ${candidature}">
-                <td>
-                    <span th:text="${#temporals.format(candidatura.dataCandidatura, 'dd/MM/yyyy')}">20/10/2025</span>
-                    <br><small>ID: <span th:text="${candidatura.id}"></span></small>
-                </td>
-                
-                <td>
-                    <span th:classappend="'stato-' + ${candidatura.stato}" th:text="${candidatura.stato}">PENDING</span>
-                </td>
+            <div class="profile-pic-wrapper">
+                <img id="profile-image" 
+                     th:src="@{${utente.immagine != null ? utente.immagine : '/img/default_profile.svg'}}" 
+                     alt="Immagine Profilo" />
+                <label for="upload-image" title="Cambia immagine profilo">📷</label>
+                <input type="file" id="upload-image" accept="image/*" />
+            </div>
+        </div>
 
-                <td>
-                    <strong><span th:text="${candidatura.annuncio.titolo}">Titolo Annuncio</span></strong>
-                    <div class="dati-utente">
-                        Azienda: <span th:text="${candidatura.annuncio.azienda.nome}">Azienda Fittizia</span>
-                        <br>Mansione: <span th:text="${candidatura.annuncio.tipoMansione}">Tipo Mansione</span>
-                        <br>Location: <span th:text="${candidatura.annuncio.location}">Città/Remoto</span>
+        <form> 
+            <div class="form-group-row">
+                <div class="form-group half">
+                    <h1 th:text="'Ciao, ' + ${utente.nome} + '!'">Ciao, Cristina!</h1> 
+                </div>
+            </div>
+            
+            <a th:href="@{/users/profilo/modifica}" class="btnModifica" title="modifica">Modifica Profilo</a>
+            
+            <div class="form-group">
+                <label for="bio">Biografia</label>
+                <textarea name="bio" id="bio" th:text="${utente.bio}" readonly></textarea>
+            </div>
+        </form>
+
+        <div class="candidature">
+            <h2>Le mie candidature</h2>
+            <div class="button-container">
+                <button class="btn btn-attesa">ATTESA</button>
+                <button class="btn btn-accettate">ACCETTATE</button>
+                <button class="btn btn-rifiutate">RIFIUTATE</button>
+                <button class="btn btn-altro">TUTTE</button>
+            </div>
+        </div>
+
+        <div class="annunci-grid">
+
+            <div class="annuncio-card" th:each="candidatura : ${candidature}">
+                
+                <div class="annuncio-titolo" th:text="${candidatura.annuncio.titolo}">Titolo</div>
+
+                <div class="dati-annuncio">
+                    
+                    <div class="dato-item stato-candidatura">
+                        <span class="etichetta">Stato:</span>
+                        <span class="valore" th:text="${candidatura.stato}">PENDING</span>
                     </div>
-                </td>
-                
-                <td>
-                    <strong><span th:text="${candidatura.utente.nome} + ' ' + ${candidatura.utente.cognome}">Nome Cognome</span></strong>
-                    <div class="dati-utente">
-                        Email: <span th:text="${candidatura.utente.email}">email@esempio.com</span>
-                        </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
+                    <div class="dato-item">
+                        <span class="etichetta">Azienda:</span>
+                        <span class="valore" th:text="${candidatura.annuncio.azienda != null ? candidatura.annuncio.azienda.nome : '—'}">—</span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="etichetta">Durata:</span>
+                        <span class="valore">
+                            <span th:text="${candidatura.annuncio.data_inizio}">2025-01-01</span> -
+                            <span th:text="${candidatura.annuncio.data_fine}">2025-03-31</span>
+                        </span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="etichetta">Mansione:</span>
+                        <span class="valore" th:text="${candidatura.annuncio.tipoMansione}">—</span>
+                    </div>
+
+                    <div class="dato-item">
+                        <span class="etichetta">Competenze Richieste:</span>
+                        <div class="competence-tags">
+                            <span class="tag" th:each="comp, iStat : ${candidatura.annuncio.competenzeRichieste}" th:if="${iStat.index < 4}"
+                                th:text="${comp.descrizione}">Skill</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${candidature.empty}">
+                <p>Non hai ancora candidature attive.</p>
+            </div>
+
+        </div>
+
+        <div class="pagination">
+            <button onclick="prevPage()"><i class="fas fa-chevron-left"></i></button>
+            <span id="page-indicator">1</span>
+            <button onclick="nextPage()"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+    </div>
+
+    <script>
+        // ****** Logica Dark Mode ******
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', isDark);
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const prefersDark = localStorage.getItem('dark-mode') === 'true';
+            if (prefersDark) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+        // ****** Fine Logica Dark Mode ******
+
+
+        // Anteprima immagine profilo
+        const imageInput = document.getElementById('upload-image');
+        const profileImg = document.getElementById('profile-image');
+
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profileImg.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert("Seleziona un file immagine valido.");
+            }
+        });
+
+        // Paginazione annunci (logica JavaScript per il client)
+        const annunciPerPagina = 3;
+        let paginaCorrente = 1;
+
+        const tutteLeCard = Array.from(document.querySelectorAll('.annuncio-card'));
+        const indicatorePagina = document.getElementById('page-indicator');
+
+        function mostraPagina(pagina) {
+            const start = (pagina - 1) * annunciPerPagina;
+            const end = start + annunciPerPagina;
+
+            tutteLeCard.forEach((card, index) => {
+                card.style.display = (index >= start && index < end) ? 'block' : 'none';
+            });
+
+            indicatorePagina.textContent = pagina;
+        }
+
+        function nextPage() {
+            if (paginaCorrente * annunciPerPagina < tutteLeCard.length) {
+                paginaCorrente++;
+                mostraPagina(paginaCorrente);
+            }
+        }
+
+        function prevPage() {
+            if (paginaCorrente > 1) {
+                paginaCorrente--;
+                mostraPagina(paginaCorrente);
+            }
+        }
+
+        mostraPagina(paginaCorrente);
+    </script>
 </body>
+
 </html>

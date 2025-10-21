@@ -1,32 +1,75 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageUp</title>
-    <link rel="stylesheet" th:href="@{/css/Auth/login.css}"> </head>
+    <title>StageUp - Login</title>
+    <link rel="stylesheet" th:href="@{/css/auth/login.css}"> 
+</head>
 
 <body>
+    
+    <input type="hidden" id="alertMessage" th:value="${message ?: ''}">
+    <input type="hidden" id="alertType" th:value="${alertType ?: ''}">
 
-        <div class="login">
-            <h2 class="titolo">Login</h2>
-            
-            <form th:action="@{/auth/login}" method="POST" class="form">
-                <input type="email" id="username" name="email" placeholder="Email" required>
-                
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                
-                <button type="submit" class="accedi-button">Accedi</button>
-				<p id="message" th:text="${message}"></p>
-            </form>
-
-            <p class="registrazione">
-                <a th:href="@{/auth/signup}">Registrati</a>
-            </p>
+    <div class="login">
+        <h2 class="titolo">Login</h2>
+        
+        <div id="statusAlertContainer">
         </div>
+        
+        <form th:action="@{/auth/login}" method="POST" class="form">
+            <input type="text" id="email" name="email" placeholder="Email" required>
+            
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            
+            <button type="submit" class="accedi-button">Accedi</button>
+        </form>
 
-        <img th:src="@{/img/logo.png}" alt="logo" class="logo" />
+        <p class="registrazione">
+            <a th:href="@{/auth/signup}">Registrati</a>
+        </p>
+    </div>
 
+    <script>
+        // Legge i dati dai campi nascosti
+        const msg = document.getElementById('alertMessage').value;
+        const type = document.getElementById('alertType').value;
+        const container = document.getElementById('statusAlertContainer');
+
+        // Mostra l'alert se il controller ha passato un messaggio
+        if (msg) {
+             showAlert(msg, type);
+        }
+
+        /**
+         * Crea e visualizza l'elemento alert con il pulsante di chiusura.
+         */
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            // Assegna le classi CSS (es. custom-alert-error)
+            alertDiv.className = 'custom-alert custom-alert-' + type;
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.textContent = message;
+            
+            const closeButton = document.createElement('span');
+            closeButton.className = 'close-btn';
+            closeButton.innerHTML = '&times;'; 
+            
+            // Logica per chiudere l'alert al click sulla 'X'
+            closeButton.onclick = function() {
+                alertDiv.remove();
+            };
+
+            alertDiv.appendChild(messageSpan);
+            alertDiv.appendChild(closeButton);
+            
+            // Pulisce il contenitore e aggiunge il nuovo alert
+            container.innerHTML = '';
+            container.appendChild(alertDiv);
+        }
+    </script>
 
 </body>
 </html>

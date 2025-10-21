@@ -1,0 +1,1021 @@
+body {
+  background: url("/img/foto_sfondo.png") no-repeat center/cover;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+
+
+.profile-container {
+  max-width: 1000px;
+  background: white;
+  margin: 40px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 30px 40px 30px 40px;
+  box-sizing: border-box;
+  border: 1px solid #e0e0e0;
+  /* MODIFICA: Aggiunta transizione e colore base */
+  transition: background-color 0.3s, color 0.3s;
+  color: #1a1a1a;
+}
+
+/* MODIFICA: Il container (e il suo testo) cambia colore in dark mode */
+body.dark-mode .profile-container {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: #e0e0e0; /* Testo di base del container in dark mode */
+}
+
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.header-row h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0073b1;
+  margin: 0;
+}
+
+.candidature h2{
+    font-size: 1.8rem;
+  font-weight: 700;
+  color: #0073b1;
+  margin: 50px auto;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 4%;
+  flex-wrap: wrap;
+}
+
+.form-group.half {
+  flex: 1 1 48%;
+}
+
+
+h1{
+  font-size: 40px;
+  font-weight: 600;
+  color: #0073b1;
+  margin: 0;
+}
+
+.profile-pic-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid #6a9cff;
+  overflow: hidden;
+  background-color: #eee;
+  box-shadow: 0 4px 15px rgba(0, 115, 177, 0.2);
+  margin-top: 10px;
+}
+
+.profile-pic-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-pic-wrapper label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #6a9cff;
+  color: white;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.profile-pic-wrapper label:hover {
+  background: #5587e6;
+}
+
+#upload-image {
+  display: none;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+/* Questa regola è ancora necessaria per sovrascrivere il colore di .profile-container */
+body.dark-mode label {
+  color: #ccc;
+}
+
+.dashboard-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #0073b1;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0, 115, 177, 0.3);
+  z-index: 9999;
+  font-size: 10px;
+}
+
+.dashboard-btn:hover {
+  background-color: #005582;
+}
+
+
+/* ****** MODIFICA CSS QUI ****** */
+/* Sostituiti i vecchi stili .dark-mode-toggle con questi */
+
+/* Il contenitore/binario del toggle */
+.dark-mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px; /* Larghezza del binario */
+  height: 30px; /* Altezza del binario */
+  background-color: #ccc; /* Colore binario (light mode) */
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  
+  /* Rimuove stili bottone di default */
+  border: none;
+  
+  /* Aggiungo padding per distanziare lo slider dai bordi */
+  padding: 3px; 
+  
+  /* Per posizionare lo slider */
+  display: flex;
+  align-items: center;
+  /* Sposta lo slider a sinistra (light) o destra (dark) */
+  justify-content: flex-start; /* Default (light mode) */
+  
+  box-sizing: border-box;
+  /* Animiamo il colore e lo spostamento (justify-content) */
+  transition: background-color 0.3s ease, justify-content 0.3s ease;
+}
+
+/* Colore del binario in dark mode E SPOSTAMENTO */
+body.dark-mode .dark-mode-toggle {
+  background-color: #444;
+  justify-content: flex-end; /* Sposta il cursore a destra (dark mode) */
+}
+
+.dark-mode-toggle:hover {
+    opacity: 0.8;
+}
+
+/* Lo "slider" (il cerchio) che contiene le icone */
+.dark-mode-toggle .slider {
+  /* Calcolo dimensione: Altezza (30) - (Padding (3) * 2) = 24 */
+  width: 24px; 
+  height: 24px;
+  background-color: white; /* Colore del cursore */
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  
+  /* Per centrare le icone sole/luna */
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  
+  /* Necessario per posizionare le icone absolute */
+  position: relative; 
+  /* Nasconde le icone mentre svaniscono/appaiono */
+  overflow: hidden; 
+}
+
+/* Icone sole e luna all'interno dello slider */
+.dark-mode-toggle .slider .icon {
+    position: absolute; /* Per sovrapporli nel cursore */
+    font-size: 0.9rem; /* Dimensione delle icone */
+    /* Animazione di entrata/uscita */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Il sole (visibile in light mode) */
+.dark-mode-toggle .slider .icon.sun {
+    opacity: 1;
+    transform: scale(1);
+}
+body.dark-mode .dark-mode-toggle .slider .icon.sun {
+    opacity: 0;
+    transform: scale(0);
+}
+
+/* La luna (visibile in dark mode) */
+.dark-mode-toggle .slider .icon.moon {
+    opacity: 0;
+    transform: scale(0);
+}
+body.dark-mode .dark-mode-toggle .slider .icon.moon {
+    opacity: 1;
+    transform: scale(1);
+}
+/* ****** FINE MODIFICA CSS ****** */
+
+
+textarea {
+  padding: 12px 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #000;
+  font-weight: 500;
+  resize: vertical;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #6a9cff;
+  box-shadow: 0 0 8px rgba(106, 156, 255, 0.3);
+}
+
+/* Regola ancora necessaria per i figli del container */
+body.dark-mode textarea {
+  background-color: #2b2b2b;
+  color: #fff;
+  border-color: #444;
+}
+
+.button-container {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-attesa {
+      background-color: #f0ad4e;
+    }
+
+    .btn-accettate {
+      background-color: #5cb85c;
+    }
+
+    .btn-rifiutate {
+      background-color: #d9534f;
+    }
+
+    .btn-altro {
+      background-color: #6a9cff; 
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+
+
+.annuncio-card {
+    margin-top: 40px;
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-height: 260px;
+    position: relative;
+    border: 1.8px solid #f0f0f0;
+}
+
+.annuncio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* Dark mode per card annunci (ancora necessaria) */
+body.dark-mode .annuncio-card {
+    background-color: #1e1e1e;
+    border-color: #333;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .annuncio-card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+/* Titolo dell'annuncio */
+.annuncio-titolo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0073b1;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+    text-align: center;
+}
+
+/* Dark mode per titolo annuncio (ancora necessaria) */
+body.dark-mode .annuncio-titolo {
+    color: #6a9cff;
+    border-bottom-color: #333;
+}
+
+.dati-annuncio {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.dato-item {
+    flex: 1 1 calc(50% - 15px); /* 2 per riga con gap */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+
+.dato-item:last-child {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Dark mode per dato-item (ancora necessaria) */
+body.dark-mode .dato-item {
+    border-bottom-color: #333;
+}
+
+.etichetta {
+    font-weight: 600;
+    color: #0073b1;
+    font-size: 0.95rem;
+    min-width: 100px;
+}
+
+/* Dark mode per etichetta (ancora necessaria) */
+body.dark-mode .etichetta {
+    color: #6a9cff;
+}
+
+.valore {
+    color: #555;
+    font-weight: 500;
+    text-align: right;
+    flex: 1;
+    margin-left: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Dark mode per valore (ancora necessaria) */
+body.dark-mode .valore {
+    color: #ccc;
+}
+
+/* Stili per i tag delle competenze */
+.competence-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Dark mode per tag (ancora necessaria) */
+body.dark-mode .tag {
+    background: #1e3a5f;
+    color: #90caf9;
+    border-color: #37474f;
+}
+
+/* Tag più grandi per l'overlay */
+.competence-tags-large {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.competence-tags-large .tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Dark mode per tag grandi (ancora necessaria) */
+body.dark-mode .competence-tags-large .tag {
+    background: #1e3a5f;
+    color: #90caf9;
+    border-color: #37474f;
+}
+
+.btn-candidati {
+    padding: 14px 25px;
+    background: #6a9cff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: auto;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn-candidati:hover {
+    background: #5587e6;
+}
+
+/* Overlay per i dettagli */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.overlay-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    border: 1.8px solid #f0f0f0;
+}
+
+/* Dark mode per overlay (ancora necessaria) */
+body.dark-mode .overlay-content {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-close-overlay {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    z-index: 10;
+}
+
+.btn-close-overlay:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+.overlay-header {
+    padding: 25px 30px 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Dark mode per overlay header (ancora necessaria) */
+body.dark-mode .overlay-header {
+    border-bottom-color: #333;
+}
+
+.overlay-header h2 {
+    color: #0073b1;
+    margin: 0;
+    font-size: 1.6em;
+    padding-right: 40px;
+    font-weight: 700;
+}
+
+/* Dark mode per titolo overlay (ancora necessaria) */
+body.dark-mode .overlay-header h2 {
+    color: #6a9cff;
+}
+
+.overlay-body {
+    padding: 20px 30px;
+}
+
+.overlay-section {
+    margin-bottom: 25px;
+}
+
+.overlay-section h3 {
+    color: #0073b1;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Dark mode per sezioni overlay (ancora necessaria) */
+body.dark-mode .overlay-section h3 {
+    color: #6a9cff;
+    border-bottom-color: #333;
+}
+
+.overlay-section p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Dark mode per testo overlay (ancora necessaria) */
+body.dark-mode .overlay-section p {
+    color: #ccc;
+}
+
+.overlay-section ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.overlay-section li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Dark mode per liste overlay (ancora necessaria) */
+body.dark-mode .overlay-section li {
+    color: #ccc;
+}
+
+.overlay-section strong {
+    color: #0073b1;
+}
+
+/* Dark mode per strong (ancora necessaria) */
+body.dark-mode .overlay-section strong {
+    color: #6a9cff;
+}
+
+.overlay-footer {
+    padding: 20px 30px;
+    border-top: 2px solid #e0e0e0;
+    text-align: center;
+}
+
+/* Dark mode per footer overlay (ancora necessaria) */
+body.dark-mode .overlay-footer {
+    border-bottom-color: #333;
+}
+
+.btn-conferma-candidatura {
+    padding: 14px 40px;
+    background: #6a9cff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    font-size: 1.1em;
+    box-shadow: 0 4px 8px rgba(106, 156, 255, 0.3);
+}
+
+.btn-conferma-candidatura:hover {
+    background: #5587e6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(106, 156, 255, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .annunci-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    header {
+        height: 70px;
+        padding: 0 20px;
+    }
+    
+    .logo {
+        height: 40px;
+        margin-right: 15px;
+    }
+    
+    header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .overlay-content {
+        width: 95%;
+    }
+    
+    .header-right {
+        gap: 12px;
+    }
+    
+    .annuncio-card {
+        min-height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .annunci-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    header {
+        height: 60px;
+        padding: 0 15px;
+    }
+    
+    .logo {
+        height: 35px;
+        margin-right: 12px;
+    }
+    
+    header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .dropdown-menu {
+        right: -10px;
+        min-width: 180px;
+    }
+    
+    .overlay-content {
+        width: 98%;
+        max-height: 95vh;
+    }
+    
+    .overlay-header, .overlay-body, .overlay-footer {
+        padding: 15px 20px;
+    }
+    
+    .annuncio-card {
+        min-height: 240px;
+    }
+    
+    .competence-tags {
+        gap: 4px;
+    }
+    
+    .tag {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    /* Le vecchie regole per il toggle responsive non servono più */
+    
+    .annuncio-titolo {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        height: 50px;
+        padding: 0 10px;
+    }
+    
+    .logo {
+        height: 30px;
+        margin-right: 10px;
+    }
+    
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .container {
+        padding: 15px;
+        margin-top: 10px;
+    }
+    
+    .dropdown-menu {
+        right: -20px;
+        min-width: 160px;
+    }
+    
+    .overlay-content {
+        border-radius: 12px;
+    }
+    
+    .overlay-header h2 {
+        font-size: 1.4em;
+    }
+    
+    .btn-close-overlay {
+        top: 10px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+    
+    .annuncio-card {
+        padding: 20px;
+        min-height: 220px;
+    }
+    
+    .dati-annuncio {
+        gap: 12px;
+    }
+    
+    .etichetta {
+        font-size: 0.9rem;
+        min-width: 90px;
+    }
+    
+    .valore {
+        font-size: 0.9rem;
+    }
+    
+    .competence-tags {
+        gap: 3px;
+    }
+    
+    .tag {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+    
+    .competence-tags-large {
+        gap: 6px;
+    }
+    
+    .competence-tags-large .tag {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+    }
+    
+    .header-right {
+        gap: 8px;
+    }
+        
+    .annuncio-titolo {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+    }
+}
+
+.candidature {
+    padding: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Colori dei bottoni */
+.btn-attesa {
+    background-color: #ffcc00;
+}
+
+.btn-accettate {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-rifiutate {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-altro {
+    background-color: #2196F3;
+    color: white;
+}
+
+
+
+/*media btn*/
+
+/* Mobile: meno di 600px */
+@media (max-width: 600px) {
+    .button-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .annuncio-card {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+        .dato-item {
+        flex: 1 1 100%;
+    }
+}
+
+/* Tablet: tra 600px e 900px */
+@media (min-width: 601px) and (max-width: 900px) {
+    .button-container {
+        justify-content: space-around;
+    }
+
+    .btn {
+        flex: 1 1 45%;
+    }
+
+    .annuncio-card {
+        padding: 18px;
+        font-size: 1rem;
+    }
+}
+
+/* Desktop: oltre 900px */
+@media (min-width: 901px) {
+    .button-container {
+        justify-content: center;
+    }
+
+    .btn {
+        flex: 0 0 auto;
+    }
+
+    .annuncio-card {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}
+
+.container {
+    flex: 1;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+    transition: filter 0.3s ease;
+}
+
+body.overlay-open .container {
+    filter: blur(5px);
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pagination button {
+
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+
+#page-indicator {
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+}
+
+.btnModifica{
+    color: #2196F3;
+    text-decoration: none;
+    padding-left: 0;
+}
