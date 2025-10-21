@@ -4,24 +4,14 @@ import dev2426.itsprojectwork.models.Ruolo;
 
 public class UtentePasswordDTO extends UtenteDTO{
 
-	private long id;
 	private String password;
 	
 	public UtentePasswordDTO(long id, byte[] immagine, String bio ,String nome, String cognome, String email, String password, Ruolo ruolo) {
-		super(immagine, bio, nome, cognome, email, ruolo);
-		this.id = id;
+		super(id, immagine, bio, nome, cognome, email, ruolo);
 		this.password = password;
 	}
 	
 	public UtentePasswordDTO() {}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 	
 	public String getPassword() {
 		return password;

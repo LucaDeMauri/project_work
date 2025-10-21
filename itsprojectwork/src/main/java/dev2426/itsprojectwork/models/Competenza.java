@@ -14,7 +14,17 @@ public class Competenza {
 
     private String descrizione;
 
+<<<<<<< Updated upstream
+    @ManyToMany(mappedBy = "competenzeRichieste", fetch = FetchType.LAZY)
     private Set<Annuncio> annunciRichieste = new HashSet<>();
+
+    @ManyToMany(mappedBy = "competenzeAcquisite", fetch = FetchType.LAZY)
+=======
+    @ManyToMany(mappedBy = "competenzeRichieste")
+    private Set<Annuncio> annunciRichieste = new HashSet<>();
+
+    @ManyToMany(mappedBy = "competenzeAcquisite")
+>>>>>>> Stashed changes
     private Set<Annuncio> annunciAcquisite = new HashSet<>();
 
     public Competenza() {}
@@ -55,4 +65,5 @@ public class Competenza {
         this.annunciAcquisite = annunciAcquisite;
     }
 
+    
 }

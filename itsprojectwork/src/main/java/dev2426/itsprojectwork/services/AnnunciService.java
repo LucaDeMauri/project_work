@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev2426.itsprojectwork.dto.AnnuncioDTO;
+import dev2426.itsprojectwork.dto.AziendaDTO;
 import dev2426.itsprojectwork.models.Annuncio;
 import dev2426.itsprojectwork.repository.AnnunciRepository;
 
@@ -16,16 +18,28 @@ public class AnnunciService {
 	@Autowired
 	private AnnunciRepository repository;
 	
-	public ArrayList<Annuncio> getAll(){
-		
-		ArrayList<Annuncio> elenco = new ArrayList<>();
-		
-		for (Annuncio e :repository.findAll()) {
-			elenco.add(e);
-		}
-		
-		return elenco;
+	public List<AnnuncioDTO> getAll() {
+
+	    List<AnnuncioDTO> elenco = new ArrayList<>();
+
+	    for (Annuncio e : repository.findAll()) {
+	        elenco.add(new AnnuncioDTO(
+	            e.getTipoMansione(),
+	            e.getDataInizio(),
+	            e.getDataFine(),
+	            new AziendaDTO(e.getAzienda().getNome(), null),
+	            e.getLocation(),
+	            e.getDescrizione(),
+	            e.getOrari(),
+	            e.getTitolo(),
+	            e.getCompetenzeRichieste(),
+	            e.getCompetenzeAcquisite()
+	        ));
+	    }
+	    
+	    return elenco;
 	}
+
 	
 	public Optional<Annuncio> getOne(Long id) {
 		
