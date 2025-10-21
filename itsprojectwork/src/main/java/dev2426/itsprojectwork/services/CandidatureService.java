@@ -37,7 +37,7 @@ public class CandidatureService {
 	public List<CandidaturaDTO> getCandidaturaUtente(Utente candidato){
 		ArrayList<CandidaturaDTO> elenco = new ArrayList<>();
 		
-		repository.findByCandidatoAndIsActiveTrue(candidato);
+		repository.findByUtenteAndIsActiveTrue(candidato);
 		
 		for(CandidaturaDTO e: elenco) {
 			elenco.add(new CandidaturaDTO(e.getId(),e.getStato(), e.getUtente(), e.getAnnuncio()));

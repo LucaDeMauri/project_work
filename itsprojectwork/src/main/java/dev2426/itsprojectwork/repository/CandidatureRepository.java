@@ -11,5 +11,5 @@ import dev2426.itsprojectwork.models.Utente;
 @Repository
 public interface CandidatureRepository extends JpaRepository<Candidatura, Long> {
 	
-	List<Candidatura> findByCandidatoAndIsActiveTrue(Utente candidato);
+	List<Candidatura> findByUtenteAndIsActiveTrue(Utente candidato);
 }
