@@ -35,6 +35,8 @@ public class CandidatureService {
 	public List<CandidaturaDTO> getByIdUtente(Long id){
 		List<Candidatura> candidature = repository.findByUtenteId(id);
 		
+		
+		
 		return null;
 	}
 }
