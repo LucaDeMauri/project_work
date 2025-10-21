@@ -37,11 +37,7 @@ public class CandidatureService {
 	public List<CandidaturaDTO> getCandidatureUtente(UtenteDTO candidatoDTO){
 		ArrayList<CandidaturaDTO> elenco = new ArrayList<>();
 		
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
+
 		Utente candidato = new Utente();
 		candidato.setId(candidatoDTO.getId());
 		candidato.setNome(candidatoDTO.getNome());
@@ -50,10 +46,6 @@ public class CandidatureService {
 		candidato.setBio(candidatoDTO.getBio());
 		
 		
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 		repository.findByUtenteAndIsActiveTrue(candidato);
 		
 		for(CandidaturaDTO e: elenco) {
