@@ -34,9 +34,20 @@ public class CandidatureService {
 		repository.deleteById(id);
 	}
 	
-	public List<CandidaturaDTO> getCandidaturaUtente(Utente candidato){
+	public List<CandidaturaDTO> getCandidatureUtente(UtenteDTO candidatoDTO){
 		ArrayList<CandidaturaDTO> elenco = new ArrayList<>();
 		
+<<<<<<< Updated upstream
+=======
+		Utente candidato = new Utente();
+		candidato.setId(candidatoDTO.getId());
+		candidato.setNome(candidatoDTO.getNome());
+		candidato.setCognome(candidatoDTO.getCognome());
+		candidato.setEmail(candidatoDTO.getEmail());
+		candidato.setBio(candidatoDTO.getBio());
+		
+		
+>>>>>>> Stashed changes
 		repository.findByUtenteAndIsActiveTrue(candidato);
 		
 		for(CandidaturaDTO e: elenco) {

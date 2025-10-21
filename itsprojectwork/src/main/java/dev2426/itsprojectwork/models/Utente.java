@@ -25,7 +25,7 @@ public class Utente {
     private String nome;
     private String cognome;
     private String email;
-    private String password;
+    private String password = null;
     private String bio;
     
     @Enumerated(EnumType.STRING)

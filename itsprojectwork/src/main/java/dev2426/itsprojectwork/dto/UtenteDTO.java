@@ -21,7 +21,13 @@ public class UtenteDTO {
 		this.email = email;
 		this.ruolo = ruolo;
 	}
-	
+	public UtenteDTO(long id, String nome, String cognome, String email, Ruolo ruolo) {
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.email = email;
+		this.ruolo = ruolo;
+	}
 	public UtenteDTO() {}
 
 	public long getId() {

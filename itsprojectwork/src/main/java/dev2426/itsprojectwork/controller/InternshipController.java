@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dev2426.itsprojectwork.dto.UtenteDTO;
 import dev2426.itsprojectwork.services.AnnunciService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class InternshipController {
 	
 	@GetMapping("/")
     public String sessionControl(HttpSession session) {
-        Object utente = session.getAttribute("utenteLoggato");
+        UtenteDTO utente = (UtenteDTO) session.getAttribute("utenteLoggato");
 
         if (utente == null) {
             return "redirect:/auth/login";

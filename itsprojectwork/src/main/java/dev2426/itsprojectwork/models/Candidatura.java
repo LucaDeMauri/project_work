@@ -36,7 +36,8 @@ public class Candidatura {
 	@Column(name = "data_candidatura")
 	private LocalDate dataCandidatura;
 	
-	private boolean is_active = true;
+	@Column(name = "is_active")
+	private boolean isActive = true;
 
 	//Costruttori
 	public Candidatura() {

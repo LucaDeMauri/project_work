@@ -42,7 +42,7 @@ public class AuthController {
             			    @RequestParam String password,
             				HttpSession session) {
 		 
-		Utente utente = authService.login(email, password);
+		UtenteDTO utente = authService.login(email, password);
 		
 		if(utente != null) {
 			session.setAttribute("utenteLoggato", utente);
@@ -71,7 +71,7 @@ public class AuthController {
 	@PostMapping("/signup")
 	public String signupPage(@RequestParam String nome, @RequestParam String cognome, @RequestParam String email, @RequestParam String password) {
 	
-		Utente utente = authService.signUp(nome, cognome, email, password);
+		UtenteDTO utente = authService.signUp(nome, cognome, email, password);
 		
 		if(utente != null) {
 			return "redirect:/auth/signup?registered=true";
@@ -80,8 +80,7 @@ public class AuthController {
             return "redirect:/auth/signup?error=true";
             
         }
-		
-			
+	
 	}
 	
 	@GetMapping("/logout")
