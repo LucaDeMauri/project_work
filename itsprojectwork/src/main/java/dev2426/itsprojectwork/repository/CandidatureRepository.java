@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import dev2426.itsprojectwork.models.Candidatura;
+import dev2426.itsprojectwork.models.Utente;
 
 @Repository
 public interface CandidatureRepository extends JpaRepository<Candidatura, Long> {
-	List<Candidatura> findByUtenteId(Long utenteId);
 	
-	List<Candidatura> findByCandidatoAndIsActiveTrue(UtenteDTO candidato);
+	List<Candidatura> findByCandidatoAndIsActiveTrue(Utente candidato);
 }
