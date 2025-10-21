@@ -36,14 +36,13 @@ public class Candidatura {
 	@Column(name = "data_candidatura")
 	private LocalDate dataCandidatura;
 	
-	@Column(name = "is_active")
-	private boolean isActive = true;
-
+	@Column(name = "is_active")   // <-- nome colonna DB rimane is_active
+    private boolean active = true; // <-- property Java CAMEL CASE
 	//Costruttori
 	public Candidatura() {
 	}
 
-	public Candidatura(long id, StatoCandidatura stato, Annuncio annuncio, Utente utente, LocalDate dataCandidatura) {
+	public Candidatura(StatoCandidatura stato, Annuncio annuncio, Utente utente) {
 		super();
 		this.id = id;
 		this.stato = stato;

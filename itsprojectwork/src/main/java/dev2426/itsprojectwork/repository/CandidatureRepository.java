@@ -8,8 +8,11 @@ import org.springframework.stereotype.Repository;
 import dev2426.itsprojectwork.models.Candidatura;
 import dev2426.itsprojectwork.models.Utente;
 
+//CandidatureRepository.java
 @Repository
 public interface CandidatureRepository extends JpaRepository<Candidatura, Long> {
-	
-	List<Candidatura> findByUtenteAndIsActiveTrue(Utente candidato);
+
+    List<Candidatura> findByUtenteAndActiveTrue(Utente candidato);
+
+    boolean existsByUtente_IdAndAnnuncio_IdAndActiveTrue(Long utenteId, Long annuncioId);
 }

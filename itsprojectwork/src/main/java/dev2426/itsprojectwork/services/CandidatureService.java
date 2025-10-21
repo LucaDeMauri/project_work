@@ -7,9 +7,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev2426.itsprojectwork.dto.AnnuncioDTO;
+import dev2426.itsprojectwork.dto.AziendaDTO;
 import dev2426.itsprojectwork.dto.CandidaturaDTO;
 import dev2426.itsprojectwork.dto.UtenteDTO;
+import dev2426.itsprojectwork.mapper.DtoMapper;
+import dev2426.itsprojectwork.models.Annuncio;
 import dev2426.itsprojectwork.models.Candidatura;
+import dev2426.itsprojectwork.models.StatoCandidatura;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.CandidatureRepository;
 
@@ -17,6 +22,12 @@ import dev2426.itsprojectwork.repository.CandidatureRepository;
 public class CandidatureService {
 	@Autowired
 	private CandidatureRepository repository;
+	
+	@Autowired
+	private AnnunciService servizioAnnunci;
+	
+	@Autowired
+	private UtenteService servizioUtente;
 	
 	public List<Candidatura> getAll(){
 		return repository.findAll();
@@ -26,8 +37,20 @@ public class CandidatureService {
 		return repository.findById(id);
 	}
 	
-	public void insertOne(Candidatura nuovo) {
-		repository.save(nuovo);
+	public void insertOne(Long idAnnuncio, Long idUtente) {
+		
+		AnnuncioDTO annuncioDTO = (AnnuncioDTO) servizioAnnunci.getOne(idAnnuncio);
+		UtenteDTO utenteDTO = servizioUtente.getOne(idUtente);
+		
+		Annuncio annuncio = DtoMapper.toAnnuncioEntity(annuncioDTO);
+		Utente utente = DtoMapper.toUtenteEntity(utenteDTO);
+		
+		Candidatura candidatura = new Candidatura(StatoCandidatura.PENDING, annuncio, utente);
+		System.out.println(candidatura.getStato());
+		System.out.println(candidatura.getAnnuncio());
+		
+		repository.save(candidatura);
+		
 	}
 	
 	public void deleteOne(Long id) {
@@ -46,7 +69,7 @@ public class CandidatureService {
 		candidato.setBio(candidatoDTO.getBio());
 		
 		
-		repository.findByUtenteAndIsActiveTrue(candidato);
+		repository.findByUtenteAndActiveTrue(candidato);
 		
 		for(CandidaturaDTO e: elenco) {
 			elenco.add(new CandidaturaDTO(e.getId(),e.getStato(), e.getUtente(), e.getAnnuncio()));

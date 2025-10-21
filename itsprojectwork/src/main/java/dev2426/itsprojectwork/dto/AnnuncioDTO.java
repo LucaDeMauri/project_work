@@ -7,6 +7,7 @@ import java.util.Set;
 import dev2426.itsprojectwork.models.Competenza;
 
 public class AnnuncioDTO {
+	private Long id;
 	private String tipoMansione;
 	private LocalDate data_inizio;
 	private LocalDate data_fine;
@@ -22,10 +23,11 @@ public class AnnuncioDTO {
 	public AnnuncioDTO() {}
 	
 	
-	public AnnuncioDTO(String tipoMansione, LocalDate data_inizio, LocalDate data_fine, AziendaDTO azienda,
+	public AnnuncioDTO(Long id, String tipoMansione, LocalDate data_inizio, LocalDate data_fine, AziendaDTO azienda,
 			String location, String descrizione, String orari, String titolo, Set<Competenza> competenzeRichieste,
 			Set<Competenza> competenzeAcquisite) {
 		super();
+		this.id = id;
 		this.tipoMansione = tipoMansione;
 		this.data_inizio = data_inizio;
 		this.data_fine = data_fine;
@@ -37,6 +39,19 @@ public class AnnuncioDTO {
 		this.competenzeRichieste = competenzeRichieste;
 		this.competenzeAcquisite = competenzeAcquisite;
 	}
+
+	
+	
+	
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 
 	public String getTipoMansione() {
 		return tipoMansione;

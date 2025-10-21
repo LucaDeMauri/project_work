@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import dev2426.itsprojectwork.dto.AnnuncioDTO;
 import dev2426.itsprojectwork.dto.AziendaDTO;
+import dev2426.itsprojectwork.mapper.DtoMapper;
 import dev2426.itsprojectwork.models.Annuncio;
 import dev2426.itsprojectwork.repository.AnnunciRepository;
 
@@ -23,30 +24,22 @@ public class AnnunciService {
 	    List<AnnuncioDTO> elenco = new ArrayList<>();
 
 	    for (Annuncio e : repository.findAll()) {
-	        elenco.add(new AnnuncioDTO(
-	            e.getTipoMansione(),
-	            e.getDataInizio(),
-	            e.getDataFine(),
-	            new AziendaDTO(e.getAzienda().getNome(), null),
-	            e.getLocation(),
-	            e.getDescrizione(),
-	            e.getOrari(),
-	            e.getTitolo(),
-	            e.getCompetenzeRichieste(),
-	            e.getCompetenzeAcquisite()
-	        ));
+	        elenco.add( DtoMapper.toAnnuncioDTO(e));
+	        
 	    }
 	    
 	    return elenco;
 	}
 
 	
-	public Optional<Annuncio> getOne(Long id) {
+	public AnnuncioDTO getOne(Long id) {
 		
-		Optional<Annuncio> elemento = null;
-		elemento = repository.findById(id);
+		Optional<Annuncio> annuncio = null;
+		annuncio = repository.findById(id);
 		
-		return elemento;
+		Annuncio a = annuncio.get();
+		return DtoMapper.toAnnuncioDTO(a);
+		
 	}
 	
 	public void insertOne(Annuncio nuovo) {
