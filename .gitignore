@@ -3,3 +3,4 @@ itsprojectwork/src/main/java/dev2426/itsprojectwork/dto/UtenteDTO.java
 itsprojectwork/src/main/java/dev2426/itsprojectwork/services/CandidatureService.java
 itsprojectwork/src/main/resources/application.properties
 *.properties
+itsprojectwork/src/main/resources/application.properties

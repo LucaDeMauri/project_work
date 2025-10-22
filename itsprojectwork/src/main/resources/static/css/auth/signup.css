@@ -1,15 +1,15 @@
 /* Base */
 body {
-  background: url("/img/foto_sfondo.png") no-repeat center/cover;
+  background: url("/img/registrazione.jpeg") no-repeat center/cover;
   margin: 0;
   font-family: 'Inter', sans-serif;
   color: #1a1a1a;
   transition: background-color 0.3s, color 0.3s;
   
-  /* CHIAVE: Spinge il contenuto verso destra */
+  /* CHIAVE: Spinge il contenuto verso SINISTRA */
   display: flex;
   flex-direction: column; 
-  align-items: flex-end; /* Allinea il box a destra */
+  align-items: flex-start; /* MODIFICATO: Allinea il box a sinistra */
   justify-content: center; /* Centra verticalmente */
   
   min-height: 100vh;
@@ -66,23 +66,23 @@ a {
   display: inline-block;
 }
 
-/* Contenitore principale */
+/* Contenitore principale (Registrazione) */
 .registrazione {
   max-width: 400px;
   width: 100%;
   background: white;
-  padding: 10px 40px 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px 40px 20px; /* Padding modificato per un look pulito */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   border: 1px solid #e0e0e0;
   transition: background-color 0.3s;
   text-align: center;
   position: relative; 
   
-  /* CHIAVE: Sposta il box a destra */
-  margin-right: 15%; 
-  margin-left: auto; 
+  /* CHIAVE: Sposta il box a sinistra */
+  margin-right: auto; 
+  margin-left: 15%; /* Spazio dal bordo sinistro */
 }
 
 body.dark-mode .registrazione {
@@ -103,22 +103,22 @@ body.dark-mode .registrazione {
 .form {
   display: flex;
   flex-direction: column;
-  gap: 5px; /* Ridotto gap per inserire gli errori tra i campi */
+  gap: 5px; 
 }
 
 /* Input Generici */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-  padding: 12px 16px;
+  padding: 15px; 
   border: 1.5px solid #ccc;
-  border-radius: 10px;
+  border-radius: 30px; 
   font-size: 1rem;
   background-color: #fff;
   color: #000;
   font-weight: 500;
   transition: border-color 0.3s, background-color 0.3s;
-  margin-bottom: 20px; /* Spazio standard */
+  margin-bottom: 20px; 
 }
 
 /* Dark Mode Input */
@@ -144,14 +144,12 @@ body.dark-mode .registrazione input {
 
 /* --- STILI ALERT E VALIDAZIONE --- */
 
-/* Contenitore Alert Globale (per messaggi di Backend) */
 #statusAlertContainer {
     width: 90%; 
     max-width: 400px;
     margin: 0 auto 20px;
 }
 
-/* Stile base del messaggio di errore/successo (Il riquadro colorato) */
 .custom-alert {
     padding: 10px 15px; 
     border-radius: 8px;
@@ -167,22 +165,10 @@ body.dark-mode .registrazione input {
     color: #b10000; 
     border: 1px solid #f5c6cb;
 }
-
 .custom-alert-success {
     background-color: #d8edf7; 
     color: #004d70; 
     border: 1px solid #c2e2f0;
-}
-
-/* NUOVO STILE: Errore Caratteri in linea (sotto Nome/Cognome) */
-.js-format-error-text {
-    display: block;
-    margin-top: -15px; /* Avvicina l'errore al campo sopra */
-    margin-bottom: 5px; 
-    font-size: 0.85em;
-    font-weight: 600;
-    text-align: left; 
-    color: red;
 }
 
 /* Messaggio in tempo reale (Validazione Password) */
@@ -197,24 +183,32 @@ body.dark-mode .registrazione input {
     margin-top: -15px; 
     margin-bottom: 5px; 
 }
-
-/* Colore Successo (Password Match) */
 .js-password-alert-success {
     background-color: #e6ffed; 
     color: #00703c; 
     border: 1px solid #c8e6c9;
 }
-
-/* Colore Errore (Password Mismatch) */
 .js-password-alert-error {
     background-color: #fce4e4;
     color: #b71c1c;
     border: 1px solid #ffcdd2;
 }
 
+/* Messaggio di errore in linea (Nome/Cognome) */
+.js-format-error-text {
+    display: block;
+    margin-top: -15px; 
+    margin-bottom: 5px; 
+    font-size: 0.85em;
+    font-weight: 600;
+    text-align: left; 
+    color: red;
+}
+
 /* Responsive */
 @media (max-width: 850px) {
   
+  /* Rimuove l'allineamento a sinistra e centra */
   body {
       align-items: center;
       justify-content: flex-start;
@@ -225,18 +219,13 @@ body.dark-mode .registrazione input {
     max-width: 100%;
     width: 100%;
     padding: 30px 20px;
-    margin: 0; 
+    margin: 0; /* Rimuove i margini di spostamento laterali */
     border-radius: 0;
     min-height: 100vh;
   }
   
   .titolo {
       font-size: 1.6rem;
-  }
-  
-  .back-button, .dark-toggle {
-      font-size: 0.9rem;
-      padding: 8px 12px;
   }
 
   input[type="text"],

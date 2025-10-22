@@ -32,6 +32,7 @@ public class AuthService {
             	UtenteDTO nuovoDTO = new UtenteDTO();
                 nuovoDTO.setId(u.getId());
                 nuovoDTO.setNome(u.getNome());
+                nuovoDTO.setImmagine(u.getImmagine());
                 nuovoDTO.setCognome(u.getCognome());
                 nuovoDTO.setEmail(u.getEmail());
             	

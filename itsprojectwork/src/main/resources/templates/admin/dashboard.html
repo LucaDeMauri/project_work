@@ -1,23 +1,145 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Pannello Admin</title>
-  <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin • StageUp</title>
+
+  <link rel="stylesheet" th:href="@{/css/internship/admin.css}" href="/css/admin.css"/>
+  <style>
+      /* Stili minimali per evidenziare lo stato */
+      .status-active { color: green; font-weight: bold; }
+      .status-inactive { color: red; font-weight: bold; }
+      .status-pending { color: orange; font-weight: bold; }
+      .pill { 
+          background: #eee; 
+          padding: 3px 6px; 
+          border-radius: 4px; 
+          font-size: 0.8em; 
+          margin-right: 5px; 
+          display: inline-block;
+      }
+      .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; font-weight: bold; }
+      .alert-success { background-color: #d4edda; color: #155724; }
+      .btn { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 2px; text-decoration: none; display: inline-block; }
+      .btn-red { background-color: #e74c3c; color: white; }
+      .btn-yellow { background-color: #f1c40f; color: #333; }
+      .btn-blue { background-color: #3498db; color: white; }
+      /* Layout base */
+      .admin-page { 
+          display: flex; 
+          flex-wrap: wrap; 
+          gap: 20px; 
+          max-width: 1200px; 
+          margin: 20px auto;
+      }
+      .panel { padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      .cards { display: flex; flex-direction: column; gap: 15px; }
+      .card { display: flex; border: 1px solid #eee; padding: 15px; border-radius: 8px; }
+      .cards .avatar { 
+          width: 40px; 
+          height: 40px; 
+          background: #0073b1; 
+          color: white; 
+          border-radius: 50%; 
+          text-align: center; 
+          line-height: 40px; 
+          font-weight: bold; 
+          margin-right: 15px; 
+      }
+      .card-actions { margin-top: 10px; }
+      .panel:nth-child(1) { flex: 0 0 300px; }
+      .panel:nth-child(2) { flex: 1; min-width: 600px; }
+
+  </style>
 </head>
 <body>
-<header>
-  <h1>⚙️ Pannello di Controllo</h1>
-  <a th:href="@{/internship/dashboard}" class="btn-back">← Torna alla Dashboard</a>
+<header class="admin-topbar">
+  <div class="brand">
+    <span class="dot"></span> Admin • StageUp
+  </div>
+  <nav class="right">
+    <a class="btn ghost" th:href="@{/dashboard}">Torna agli Annunci</a>
+    <form method="post" th:action="@{/auth/logout}">
+      <button class="btn danger">Esci</button>
+    </form>
+  </nav>
 </header>
 
-<main class="container">
-  <section class="actions">
-    <h2>Gestione Annunci</h2>
-    <a th:href="@{/admin/annunci/nuovo}" class="btn primary">+ Nuovo Annuncio</a>
+<main class="admin-page">
+    
+  <div th:if="${message}" class="alert alert-success" style="flex: 0 0 100%;">
+      <span th:text="${message}">Operazione eseguita con successo.</span>
+  </div>
+
+  <section class="panel">
+    <h2 class="panel-title">Crea un nuovo annuncio</h2>
+    <form class="form" method="post" th:action="@{/admin/annunci/salva}">
+      <div class="grid" style="padding: 20px 0;">
+        <p>Form di creazione annuncio omesso per il test.</p>
+        <button class="btn primary" disabled>Crea annuncio</button>
+      </div>
+    </form>
   </section>
 
-  <p>Qui potrai aggiungere, modificare o eliminare annunci e gestire le candidature.</p>
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Annunci esistenti</h2>
+      <div class="mini-tip">Testare la disattivazione logica.</div>
+    </div>
+
+    <div class="cards">
+      <article class="card" th:each="a : ${listaAnnunci}">
+        <div class="avatar" th:text="${#strings.substring(a.titolo,0,1)}">A</div>
+
+        <div class="content">
+          <h3 class="title" th:text="${a.titolo}">Titolo annuncio</h3>
+          <div class="meta">
+            <span class="pill" th:text="${a.azienda != null ? a.azienda.nome : 'N/A'}">Azienda</span>
+            <span class="sep">•</span>
+            <span th:text="${a.data_inizio} + ' - ' + ${a.data_fine}">Date</span> 
+            <span class="sep">•</span>
+            <span th:text="${a.location}">Location</span>
+          </div>
+
+          <div class="status-indicator">
+            <span th:if="${a.isActive}" class="status-active">Attivo</span>
+            <span th:unless="${a.isActive}" class="status-inactive">Disattivo</span>
+          </div>
+
+          <div class="card-actions">
+            <a class="btn ghost" th:href="@{'/admin/candidature/annuncio?id=' + ${a.id}}">Vedi candidati</a>
+
+            <form method="post"
+                  th:action="@{'/admin/annunci/disattiva/' + ${a.id}}"
+                  onsubmit="return confirm('Sei sicuro di voler disattivare l\'annuncio?');"
+                  style="display:inline;">
+                
+                <th:block th:if="${a.isActive}">
+                    <button type="submit" class="btn btn-red">
+                        Disattiva
+                    </button>
+                </th:block>
+                
+                <th:block th:unless="${a.isActive}">
+                    <button type="button" class="btn" disabled style="background-color: #7f8c8d;">
+                        Disattivato
+                    </button>
+                </th:block>
+            </form>
+          </div>
+        </div>
+      </article>
+      
+      <div th:if="${#lists.isEmpty(listaAnnunci)}" class="empty">Nessun annuncio da gestire.</div>
+    </div>
+  </section>
+  
 </main>
+<script>
+  function confirmDelete(form){
+    return confirm("Sei sicuro di voler eliminare questo annuncio?");
+  }
+</script>
 </body>
 </html>
