@@ -36,9 +36,9 @@ public class Candidatura {
 	@Column(name = "data_candidatura", insertable = false, updatable = false)
 	private LocalDate dataCandidatura;
 	
-	@Column(name = "is_active")   // <-- nome colonna DB rimane is_active
-    private boolean active = true; // <-- property Java CAMEL CASE
-	//Costruttori
+	@Column(name = "is_active")
+    private boolean active = true;
+
 	public Candidatura() {
 	}
 
@@ -51,7 +51,6 @@ public class Candidatura {
 		this.dataCandidatura = dataCandidatura;
 	}
 
-	//Getters e setters
 	public long getId() {
 		return id;
 	}

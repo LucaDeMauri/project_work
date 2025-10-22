@@ -1,145 +1,479 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Admin • StageUp</title>
-
-  <link rel="stylesheet" th:href="@{/css/internship/admin.css}" href="/css/admin.css"/>
-  <style>
-      /* Stili minimali per evidenziare lo stato */
-      .status-active { color: green; font-weight: bold; }
-      .status-inactive { color: red; font-weight: bold; }
-      .status-pending { color: orange; font-weight: bold; }
-      .pill { 
-          background: #eee; 
-          padding: 3px 6px; 
-          border-radius: 4px; 
-          font-size: 0.8em; 
-          margin-right: 5px; 
-          display: inline-block;
-      }
-      .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; font-weight: bold; }
-      .alert-success { background-color: #d4edda; color: #155724; }
-      .btn { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 2px; text-decoration: none; display: inline-block; }
-      .btn-red { background-color: #e74c3c; color: white; }
-      .btn-yellow { background-color: #f1c40f; color: #333; }
-      .btn-blue { background-color: #3498db; color: white; }
-      /* Layout base */
-      .admin-page { 
-          display: flex; 
-          flex-wrap: wrap; 
-          gap: 20px; 
-          max-width: 1200px; 
-          margin: 20px auto;
-      }
-      .panel { padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-      .cards { display: flex; flex-direction: column; gap: 15px; }
-      .card { display: flex; border: 1px solid #eee; padding: 15px; border-radius: 8px; }
-      .cards .avatar { 
-          width: 40px; 
-          height: 40px; 
-          background: #0073b1; 
-          color: white; 
-          border-radius: 50%; 
-          text-align: center; 
-          line-height: 40px; 
-          font-weight: bold; 
-          margin-right: 15px; 
-      }
-      .card-actions { margin-top: 10px; }
-      .panel:nth-child(1) { flex: 0 0 300px; }
-      .panel:nth-child(2) { flex: 1; min-width: 600px; }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Annunci</title>
+    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}"> 
 </head>
 <body>
-<header class="admin-topbar">
-  <div class="brand">
-    <span class="dot"></span> Admin • StageUp
-  </div>
-  <nav class="right">
-    <a class="btn ghost" th:href="@{/dashboard}">Torna agli Annunci</a>
-    <form method="post" th:action="@{/auth/logout}">
-      <button class="btn danger">Esci</button>
-    </form>
-  </nav>
-</header>
-
-<main class="admin-page">
-    
-  <div th:if="${message}" class="alert alert-success" style="flex: 0 0 100%;">
-      <span th:text="${message}">Operazione eseguita con successo.</span>
-  </div>
-
-  <section class="panel">
-    <h2 class="panel-title">Crea un nuovo annuncio</h2>
-    <form class="form" method="post" th:action="@{/admin/annunci/salva}">
-      <div class="grid" style="padding: 20px 0;">
-        <p>Form di creazione annuncio omesso per il test.</p>
-        <button class="btn primary" disabled>Crea annuncio</button>
-      </div>
-    </form>
-  </section>
-
-  <section class="panel">
-    <div class="panel-header">
-      <h2 class="panel-title">Annunci esistenti</h2>
-      <div class="mini-tip">Testare la disattivazione logica.</div>
+    <div class="header">
+        <a th:href="@{/admin}" class="btn btn-dashboard"> 
+            <span>←</span> 
+            <span class="testo-dashboard">Dashboard</span>
+        </a>
+        
+        <button id="btn-tema" class="btn btn-tema" onclick="cambiaTema()">🌙</button>
     </div>
 
-    <div class="cards">
-      <article class="card" th:each="a : ${listaAnnunci}">
-        <div class="avatar" th:text="${#strings.substring(a.titolo,0,1)}">A</div>
-
-        <div class="content">
-          <h3 class="title" th:text="${a.titolo}">Titolo annuncio</h3>
-          <div class="meta">
-            <span class="pill" th:text="${a.azienda != null ? a.azienda.nome : 'N/A'}">Azienda</span>
-            <span class="sep">•</span>
-            <span th:text="${a.data_inizio} + ' - ' + ${a.data_fine}">Date</span> 
-            <span class="sep">•</span>
-            <span th:text="${a.location}">Location</span>
-          </div>
-
-          <div class="status-indicator">
-            <span th:if="${a.isActive}" class="status-active">Attivo</span>
-            <span th:unless="${a.isActive}" class="status-inactive">Disattivo</span>
-          </div>
-
-          <div class="card-actions">
-            <a class="btn ghost" th:href="@{'/admin/candidature/annuncio?id=' + ${a.id}}">Vedi candidati</a>
-
-            <form method="post"
-                  th:action="@{'/admin/annunci/disattiva/' + ${a.id}}"
-                  onsubmit="return confirm('Sei sicuro di voler disattivare l\'annuncio?');"
-                  style="display:inline;">
+    <div class="container">
+        <div class="form-box">
+            <h2>Nuovo Annuncio (Tirocinio)</h2>
+            <form id="form-tirocinio">
                 
-                <th:block th:if="${a.isActive}">
-                    <button type="submit" class="btn btn-red">
-                        Disattiva
-                    </button>
-                </th:block>
+                <label for="titolo">Titolo dell'Annuncio</label>
+                <input type="text" id="titolo" required>
+
+                <div class="form-row">
+                    <div class="form-field-split">
+                        <label for="azienda">Azienda</label>
+                        <select id="azienda" required>
+                            <option value="">Seleziona Azienda...</option>
+                            <option th:each="azienda : ${listaAziende}" 
+                                    th:value="${azienda.nome}" 
+                                    th:text="${azienda.nome}">Nome Azienda</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-field-split">
+                        <label>Date del Periodo</label>
+                        <div class="date-fields-group">
+                            <input type="date" id="data_inizio" required>
+                            <input type="date" id="data_fine" required>
+                        </div>
+                    </div>
+                </div>
                 
-                <th:block th:unless="${a.isActive}">
-                    <button type="button" class="btn" disabled style="background-color: #7f8c8d;">
-                        Disattivato
-                    </button>
-                </th:block>
+                <label for="mansione">Tipo di Mansione</label>
+                <input type="text" id="mansione" placeholder="Tipo di Mansione (tipoMansione)" required>
+                
+                <div class="form-row">
+                    <div class="form-field-split">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" required>
+                    </div>
+                    <div class="form-field-split">
+                        <label for="orari">Orari</label>
+                        <input type="text" id="orari" required>
+                    </div>
+                </div>
+                
+                <label for="descrizione">Descrizione</label>
+                <textarea id="descrizione" rows="4" required></textarea>
+                
+                <label for="input-richieste">Competenze Richieste</label>
+                <div class="comp-input-group">
+                    <input type="hidden" id="competenze_richieste" name="competenze_richieste" value="">
+                    <input type="text" id="input-richieste" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
+                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('richieste')">+</button>
+                </div>
+                <div class="comp-tag-container" id="tag-richieste"></div>
+
+                <label for="input-acquisite">Competenze Acquisite</label>
+                <div class="comp-input-group">
+                    <input type="hidden" id="competenze_acquisite" name="competenze_acquisite" value="">
+                    <input type="text" id="input-acquisite" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
+                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('acquisite')">+</button>
+                </div>
+                <div class="comp-tag-container" id="tag-acquisite"></div>
+                
+                <datalist id="lista-competenze"></datalist>
+                
+                <button type="submit">Aggiungi Annuncio</button>
+                <button type="button" th:onclick="|window.location.href='@{/admin/candidature}'|">
+                    Gestione Candidature
+                </button>
             </form>
-          </div>
         </div>
-      </article>
-      
-      <div th:if="${#lists.isEmpty(listaAnnunci)}" class="empty">Nessun annuncio da gestire.</div>
+
+        <h2 class="tirocini">Annunci Attivi:</h2>
+        <div class="lista" id="lista-tirocini"></div>
     </div>
-  </section>
-  
-</main>
-<script>
-  function confirmDelete(form){
-    return confirm("Sei sicuro di voler eliminare questo annuncio?");
-  }
-</script>
+
+    <div id="modal-modifica" class="modal">
+        <div class="modal-content">
+            <h3>Modifica Annuncio</h3>
+            <form id="form-modifica">
+                <input type="hidden" id="edit-id">
+                
+                <label for="edit-titolo">Titolo dell'Annuncio</label>
+                <input type="text" id="edit-titolo" required>
+                
+                <div class="form-row">
+                    <div class="form-field-split">
+                        <label for="edit-azienda">Azienda</label>
+                        <select id="edit-azienda" required>
+                            <option value="">Seleziona Azienda...</option>
+                            <option th:each="azienda : ${listaAziende}" 
+                                    th:value="${azienda.nome}" 
+                                    th:text="${azienda.nome}">Nome Azienda</option>
+                        </select>
+                    </div>
+                    <div class="form-field-split">
+                        <label>Date del Periodo</label>
+                        <div class="date-fields-group">
+                            <input type="date" id="edit-data_inizio" required>
+                            <input type="date" id="edit-data_fine" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <label for="edit-mansione">Tipo di Mansione</label>
+                <input type="text" id="edit-mansione" required>
+                
+                <div class="form-row">
+                    <div class="form-field-split">
+                        <label for="edit-location">Location</label>
+                        <input type="text" id="edit-location" required>
+                    </div>
+                    <div class="form-field-split">
+                        <label for="edit-orari">Orari</label>
+                        <input type="text" id="edit-orari" required>
+                    </div>
+                </div>
+                
+                <label for="edit-descrizione">Descrizione</label>
+                <textarea id="edit-descrizione" rows="4" required></textarea>
+                
+                <label for="edit-input-richieste">Competenze Richieste</label>
+                <div class="comp-input-group">
+                    <input type="hidden" id="edit-competenze_richieste" name="competenze_richieste" value="">
+                    <input type="text" id="edit-input-richieste" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
+                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('edit-richieste')">+</button>
+                </div>
+                <div class="comp-tag-container" id="edit-tag-richieste"></div>
+
+                <label for="edit-input-acquisite">Competenze Acquisite</label>
+                <div class="comp-input-group">
+                    <input type="hidden" id="edit-competenze_acquisite" name="competenze_acquisite" value="">
+                    <input type="text" id="edit-input-acquisite" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
+                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('edit-acquisite')">+</button>
+                </div>
+                <div class="comp-tag-container" id="edit-tag-acquisite"></div>
+                
+                <div class="btn-group">
+                    <button type="submit">Salva</button>
+                    <button type="button" onclick="chiudiModal()">Annulla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        
+        // La lista di tutte le competenze dal DB
+        const competenzeDB = /*[[${listaCompetenze}]]*/ ['Mock Competenza A', 'Mock Competenza B', 'Mock Competenza C'].map(c => (typeof c === 'object' && c !== null && c.nome) ? c : { nome: c });
+
+        // Mappa per tenere traccia delle competenze aggiunte (Tag attivi)
+        let activeTags = {
+            'richieste': new Set(),
+            'acquisite': new Set(),
+            'edit-richieste': new Set(),
+            'edit-acquisite': new Set()
+        };
+
+        let tirocini = [];
+        let editId = null;
+
+        
+        // --- LOGICA PER LA GESTIONE DEI TAG ---
+        
+        /** * Aggiunge una competenza dal campo di input all'elenco dei tag attivi.
+         * La logica di verifica è qui: se la competenza non è trovata nel DB, NON viene aggiunta.
+         */
+        function aggiungiCompetenza(tipo) {
+            const isEdit = tipo.includes('edit');
+            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
+            const inputId = `${isEdit ? 'edit-input' : 'input'}-${baseTipo}`;
+            const inputElement = document.getElementById(inputId);
+            let competenza = inputElement.value.trim();
+            
+            if (competenza === "") { 
+                mostraMsg("Inserisci una competenza valida."); 
+                return; 
+            }
+            
+            // CONTROLLO RIGOROSO: Cerca la competenza nel DB (case insensitive)
+            const competenzaTrovata = competenzeDB.find(c => c.nome.toLowerCase() === competenza.toLowerCase());
+            
+            if (!competenzaTrovata) {
+                // Se non è trovata, non la aggiunge e mostra un messaggio
+                mostraMsg(`ERRORE: La competenza "${competenza}" non è presente nel database e non può essere aggiunta.`);
+                return; 
+            }
+            
+            const nomeCompetenza = competenzaTrovata.nome;
+
+            // Verifica se è già stata aggiunta (controllo interno)
+            if (activeTags[tipo].has(nomeCompetenza)) { 
+                mostraMsg(`La competenza "${nomeCompetenza}" è già stata aggiunta.`); 
+                inputElement.value = ''; 
+                return; 
+            }
+
+            // Procedi con l'aggiunta solo se è stata trovata nel DB
+            activeTags[tipo].add(nomeCompetenza);
+            createTagElement(nomeCompetenza, tipo);
+            updateHiddenField(tipo);
+            inputElement.value = '';
+        }
+
+        function rimuoviCompetenza(nomeCompetenza, tipo, tagElement) {
+            activeTags[tipo].delete(nomeCompetenza);
+            tagElement.remove();
+            updateHiddenField(tipo);
+        }
+
+        function updateHiddenField(tipo) {
+            const isEdit = tipo.includes('edit');
+            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
+            const hiddenId = `${isEdit ? 'edit-' : ''}competenze_${baseTipo}`;
+            const hiddenElement = document.getElementById(hiddenId);
+            hiddenElement.value = Array.from(activeTags[tipo]).join(', ');
+        }
+        
+        function createTagElement(nomeCompetenza, tipo) {
+            const isEdit = tipo.includes('edit');
+            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
+            const tagContainerId = `${isEdit ? 'edit-' : ''}tag-${baseTipo}`;
+            const tagContainer = document.getElementById(tagContainerId);
+            if (!tagContainer) return;
+            
+            const tag = document.createElement('span');
+            tag.className = 'comp-tag';
+            tag.textContent = nomeCompetenza;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'x';
+            removeBtn.type = 'button';
+            removeBtn.onclick = function() {
+                rimuoviCompetenza(nomeCompetenza, tipo, tag);
+            };
+            
+            tag.appendChild(removeBtn);
+            tagContainer.appendChild(tag);
+        }
+        
+        function resetTags() {
+            Object.keys(activeTags).forEach(key => {
+                activeTags[key].clear();
+                const containerId = key.includes('edit') ? `edit-tag-${key.replace('edit-', '')}` : `tag-${key}`;
+                const hiddenId = key.includes('edit') ? `edit-competenze_${key.replace('edit-', '')}` : `competenze_${key}`;
+                document.getElementById(containerId)?. (innerHTML = '');
+                document.getElementById(hiddenId)?. (value = '');
+            });
+        }
+        
+        function loadEditTags(tirocinio) {
+            resetTags();
+            
+            const richieste = tirocinio.competenzeRichieste ? tirocinio.competenzeRichieste.split(',').map(s => s.trim()).filter(s => s) : [];
+            richieste.forEach(nome => {
+                activeTags['edit-richieste'].add(nome);
+                createTagElement(nome, 'edit-richieste');
+            });
+            updateHiddenField('edit-richieste');
+
+            const acquisite = tirocinio.competenzeAcquisite ? tirocinio.competenzeAcquisite.split(',').map(s => s.trim()).filter(s => s) : [];
+            acquisite.forEach(nome => {
+                activeTags['edit-acquisite'].add(nome);
+                createTagElement(nome, 'edit-acquisite');
+            });
+            updateHiddenField('edit-acquisite');
+        }
+
+        function initDatalist() {
+            const datalist = document.getElementById('lista-competenze');
+            datalist.innerHTML = '';
+            
+            competenzeDB.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.nome;
+                datalist.appendChild(option);
+            });
+        }
+        
+        // --- FUNZIONI PRINCIPALI ---
+
+        async function caricaTirocini() {
+            try {
+                const response = await fetch(/*[[@{/api/tirocini}]]*/ '/api/tirocini');
+                tirocini = await response.json();
+                mostraTirocini();
+            } catch (error) {
+                mostraMsg('Errore caricamento');
+            }
+        }
+
+        document.getElementById('form-tirocinio').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const tirocinio = {
+                titolo: document.getElementById('titolo').value, 
+                azienda: document.getElementById('azienda').value, 
+                data_inizio: document.getElementById('data_inizio').value,
+                data_fine: document.getElementById('data_fine').value,
+                tipoMansione: document.getElementById('mansione').value, 
+                location: document.getElementById('location').value,     
+                orari: document.getElementById('orari').value,           
+                descrizione: document.getElementById('descrizione').value, 
+                competenzeRichieste: document.getElementById('competenze_richieste').value, 
+                competenzeAcquisite: document.getElementById('competenze_acquisite').value  
+            };
+
+            try {
+                await fetch(/*[[@{/api/tirocini}]]*/ '/api/tirocini', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(tirocinio)
+                });
+                
+                document.getElementById('form-tirocinio').reset();
+                document.getElementById('azienda').value = ''; 
+                resetTags(); 
+                
+                caricaTirocini();
+                mostraMsg('Annuncio aggiunto!');
+            } catch (error) {
+                mostraMsg('Errore');
+            }
+        });
+
+        document.getElementById('form-modifica').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const tirocinio = {
+                titolo: document.getElementById('edit-titolo').value, 
+                azienda: document.getElementById('edit-azienda').value, 
+                data_inizio: document.getElementById('edit-data_inizio').value,
+                data_fine: document.getElementById('edit-data_fine').value,
+                tipoMansione: document.getElementById('edit-mansione').value, 
+                location: document.getElementById('edit-location').value,     
+                orari: document.getElementById('edit-orari').value,           
+                descrizione: document.getElementById('edit-descrizione').value, 
+                competenzeRichieste: document.getElementById('edit-competenze_richieste').value, 
+                competenzeAcquisite: document.getElementById('edit-competenze_acquisite').value  
+            };
+
+            try {
+                await fetch(/*[[@{/api/tirocini/}]]*/ '/api/tirocini/' + editId, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(tirocinio)
+                });
+                
+                chiudiModal();
+                caricaTirocini();
+                mostraMsg('Modificato!');
+            } catch (error) {
+                mostraMsg('Errore modifica');
+            }
+        });
+
+        function mostraTirocini() {
+            const lista = document.getElementById('lista-tirocini');
+            lista.innerHTML = '';
+
+            if (tirocini.length === 0) {
+                lista.innerHTML = '<p class="vuoto">Nessun annuncio</p>';
+                return;
+            }
+
+            tirocini.forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-content">
+                        <div><strong>Titolo:</strong> ${t.titolo}</div>
+                        <div><strong>Azienda:</strong> ${t.azienda}</div>
+                        <div><strong>Mansione:</strong> ${t.tipoMansione}</div>
+                        <div><strong>Location:</strong> ${t.location}</div>
+                        <div><strong>Orari:</strong> ${t.orari}</div>
+                        <div><strong>Inizio:</strong> ${t.data_inizio}</div>
+                        <div><strong>Fine:</strong> ${t.data_fine}</div>
+                        <div class="competenze"><strong>Richieste:</strong> ${t.competenzeRichieste}</div>
+                        <div class="competenze"><strong>Acquisite:</strong> ${t.competenzeAcquisite}</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn" onclick="apriModifica(${t.id})">Modifica</button>
+                        <button class="btn btn-elimina" onclick="eliminaTirocinio(${t.id})">Elimina</button>
+                    </div>
+                `;
+                lista.appendChild(card);
+            });
+        }
+
+        function apriModifica(id) {
+            const t = tirocini.find(t => t.id === id);
+            if (!t) return;
+            
+            editId = id;
+            
+            document.getElementById('edit-titolo').value = t.titolo; 
+            document.getElementById('edit-azienda').value = t.azienda; 
+            document.getElementById('edit-data_inizio').value = t.data_inizio;
+            document.getElementById('edit-data_fine').value = t.data_fine;     
+            document.getElementById('edit-mansione').value = t.tipoMansione;
+            document.getElementById('edit-location').value = t.location;     
+            document.getElementById('edit-orari').value = t.orari;           
+            document.getElementById('edit-descrizione').value = t.descrizione; 
+            
+            loadEditTags(t); 
+
+            document.getElementById('modal-modifica').style.display = 'block';
+        }
+
+        async function eliminaTirocinio(id) {
+            try {
+                await fetch(/*[[@{/api/tirocini/}]]*/ `/api/tirocini/${id}`, { method: 'DELETE' });
+                caricaTirocini();
+                mostraMsg('Eliminato!');
+            } catch (error) {
+                mostraMsg('Errore eliminazione');
+            }
+        }
+
+        function chiudiModal() { 
+            document.getElementById('modal-modifica').style.display = 'none';
+            editId = null;
+            resetTags(); 
+        }
+
+        function cambiaTema() {
+            const isScuro = document.body.classList.toggle('tema-scuro');
+            const btnTema = document.getElementById('btn-tema');
+            if (isScuro) {
+                btnTema.textContent = '☀️';
+            } else {
+                btnTema.textContent = '🌙';
+            }
+        }
+
+        function mostraMsg(testo) {
+            alert(testo);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDatalist(); 
+            caricaTirocini(); 
+            
+            const btnTema = document.getElementById('btn-tema');
+            if (document.body.classList.contains('tema-scuro')) {
+                btnTema.textContent = '☀️';
+            }
+            
+            document.querySelectorAll('input[list="lista-competenze"]').forEach(input => {
+                input.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault(); 
+                        const type = input.id.includes('edit') ? (input.id.includes('richieste') ? 'edit-richieste' : 'edit-acquisite') : (input.id.includes('richieste') ? 'richieste' : 'acquisite');
+                        aggiungiCompetenza(type);
+                    }
+                });
+            });
+        });
+        /*]]>*/
+    </script>
 </body>
 </html>

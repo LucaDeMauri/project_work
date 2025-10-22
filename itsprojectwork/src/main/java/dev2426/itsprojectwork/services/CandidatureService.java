@@ -19,6 +19,7 @@ import dev2426.itsprojectwork.models.Candidatura;
 import dev2426.itsprojectwork.models.EsitoCandidatura;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.CandidatureRepository;
+import jakarta.transaction.Transactional;
 import dev2426.itsprojectwork.models.StatoCandidatura;
 
 @Service
@@ -31,9 +32,7 @@ public class CandidatureService {
     
     @Autowired
     private UtenteService servizioUtente;
-    
-    // --- Metodi CRUD Base ---
-    
+
     public List<CandidaturaDTO> getAll() {
         return repository.findAll().stream()
                          .map(DtoMapper::toCandidaturaDTO)
@@ -68,42 +67,22 @@ public class CandidatureService {
         repository.deleteById(id);
     }
     
-    // --- Nuovi Metodi Derivati dalla Repository ---
-
-    /**
-     * Verifica l'esistenza di una candidatura attiva per l'utente e l'annuncio specifici.
-     */
     public boolean isAlreadyCandidato(Long utenteId, Long annuncioId) {
         return repository.existsByUtente_IdAndAnnuncio_IdAndActiveTrue(utenteId, annuncioId);
     }
 
-    /**
-     * Restituisce tutte le candidature ATTIVE per un utente specifico (Candidato).
-     */
+
     public List<CandidaturaDTO> getActiveCandidaturesByUtente(Long utenteId) {
-        // 1. Carico l'Utente Entity
         UtenteDTO utenteDTO = servizioUtente.getOne(utenteId);
         Utente candidato = DtoMapper.toUtenteEntity(utenteDTO);
         
-        // 2. Chiamata alla repository e mappatura
         return repository.findByUtenteAndActiveTrue(candidato).stream()
                          .map(DtoMapper::toCandidaturaDTO)
                          .collect(Collectors.toList());
     }
     
-    /**
-     * Restituisce tutte le candidature ATTIVE per un annuncio specifico (Azienda).
-     * Recupera l'Annuncio tramite la repository locale per ottenere l'Entity.
-     */
     public List<CandidaturaDTO> getActiveCandidaturesByAnnuncio(Long annuncioId) {
         
-        // 1. Dobbiamo recuperare l'Entity Annuncio direttamente dalla repository Annunci
-        //    (Dato che AnnunciService non restituisce l'Entity, lavoriamo qui)
-        
-        // ATTENZIONE: Questo richiede l'iniezione della AnnunciRepository. 
-        // Se non la vuoi iniettare qui, l'unico modo è che AnnunciService esponga l'Entity.
-        
-        // SOLUZIONE ALTERNATIVA (Migliore): Recuperiamo il DTO e lo convertiamo in Entity
         AnnuncioDTO annuncioDTO = servizioAnnunci.getOne(annuncioId);
         
         if (annuncioDTO == null) {
@@ -112,7 +91,6 @@ public class CandidatureService {
         
         Annuncio annuncio = DtoMapper.toAnnuncioEntity(annuncioDTO);
         
-        // 2. Chiamata alla repository e mappatura
         return repository.findByAnnuncioAndActiveTrue(annuncio).stream()
                          .map(DtoMapper::toCandidaturaDTO)
                          .collect(Collectors.toList());
@@ -121,7 +99,6 @@ public class CandidatureService {
     public Set<Long> idsAnnunciGiaCandidato(long utenteId) {
         if (utenteId <= 0) return Collections.emptySet();
 
-        // via query ottimizzata
         Set<Long> ids = repository.findAnnuncioIdsByUtenteAndActiveTrue(utenteId);
         if (ids != null && !ids.isEmpty()) return ids;
         return null;
@@ -138,5 +115,14 @@ public class CandidatureService {
         }
         
         return elencoDTO;
+    }
+    
+    public void updateStato(Long candidaturaId, StatoCandidatura nuovoStato) {
+        
+        Optional<Candidatura> candidatura = repository.findById(candidaturaId);
+           
+        candidatura.get().setStato(nuovoStato);
+ 
+        repository.save(candidatura.get());
     }
 }
