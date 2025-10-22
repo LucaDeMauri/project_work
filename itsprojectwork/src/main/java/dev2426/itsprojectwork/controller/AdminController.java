@@ -82,7 +82,6 @@ public class AdminController {
             @RequestParam(required = false) java.util.List<String> skillsDevelop) {
     	
     	
-    	AnnuncioDTO nuovoAnnuncio = new (tipoMansione,data_inizio,data_fine,)
     	
     	return null;
     }

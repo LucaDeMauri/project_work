@@ -44,9 +44,7 @@ public class AnnunciService {
 
 	public void insertOne(AnnuncioDTO nuovo) {
 		
-		Annuncio 
-		
-		repository.save(nuovo);
+		repository.save(DtoMapper.toAnnuncioEntity(nuovo));
 	}
 
 	public void deleteOne(Long id) {
