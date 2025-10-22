@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - StageUp</title>
   <link rel="stylesheet" th:href="@{/css/internship/dashboard.css}"/>
+
+  <!-- Applica SUBITO il tema salvato per evitare flicker -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme'); // "dark" | "light" | null
+        const prefersDark = window.matchMedia &&
+                            window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = saved ? saved === 'dark' : prefersDark;
+
+        if (useDark) {
+          document.documentElement.classList.add('dark-mode');
+        } else {
+          document.documentElement.classList.remove('dark-mode');
+        }
+      } catch (e) {
+        // Non bloccare il render se localStorage non è disponibile
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -61,7 +81,6 @@
     </div>
   </div>
 </header>
-
 
 <div class="container">
 
@@ -142,11 +161,11 @@
         </div>
       </div>
 
-	  <button class="btn-candidati"
-	          type="button"
-	          th:if="${utente == null or utente.ruolo != 'admin'}">
-	    Dettagli
-	  </button>
+      <button class="btn-candidati"
+              type="button"
+              th:if="${utente == null or utente.ruolo != 'admin'}">
+        Dettagli
+      </button>
 
       <!-- Template per overlay -->
       <div class="overlay-template" style="display:none">
@@ -226,20 +245,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // Dropdown utente
+  // ----- Dropdown utente -----
   const userAvatar = document.getElementById('userAvatar');
   const dropdownMenu = document.getElementById('dropdownMenu');
-  userAvatar.addEventListener('click', e => {
-    e.preventDefault(); e.stopPropagation();
-    dropdownMenu.classList.toggle('show');
-  });
-  document.addEventListener('click', e => {
-    if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
-      dropdownMenu.classList.remove('show');
-    }
-  });
+  const btn = document.getElementById('darkModeToggle');
 
-  // Overlay
+  if (userAvatar && dropdownMenu) {
+    userAvatar.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    });
+    document.addEventListener('click', e => {
+      if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('show');
+      }
+    });
+  }
+
+  // ----- Overlay -----
   const grid = document.getElementById('annunciGrid');
   const overlay = document.getElementById('overlay');
   const overlayTitolo = document.getElementById('overlayTitolo');
@@ -247,83 +270,101 @@ document.addEventListener('DOMContentLoaded', function () {
   const btnCloseOverlay = document.getElementById('btnCloseOverlay');
   const annuncioIdInput = document.getElementById('annuncioIdInput');
 
-  grid.addEventListener('click', e => {
-    const btn = e.target.closest('.btn-candidati');
-    if (!btn) return;
+  if (grid) {
+    grid.addEventListener('click', e => {
+      const k = e.target.closest('.btn-candidati');
+      if (!k) return;
 
-    const card = btn.closest('.annuncio-card');
-    const tmpl = card && card.querySelector('.overlay-template');
-    if (!card || !tmpl) return;
+      const card = k.closest('.annuncio-card');
+      const tmpl = card && card.querySelector('.overlay-template');
+      if (!card || !tmpl) return;
 
-    // id annuncio
-    const annuncioId = card.getAttribute('data-annuncio-id');
-    annuncioIdInput.value = annuncioId;
+      const annuncioId = card.getAttribute('data-annuncio-id');
+      if (annuncioIdInput) annuncioIdInput.value = annuncioId;
 
-    // copia contenuto nello scalpo overlay
-    const titleEl = tmpl.querySelector('.overlay-title');
-    const bodyEl  = tmpl.querySelector('.overlay-body-content');
-    overlayTitolo.textContent = titleEl ? titleEl.textContent : 'Dettagli';
-    overlayBody.innerHTML = bodyEl ? bodyEl.innerHTML : '';
+      const titleEl = tmpl.querySelector('.overlay-title');
+      const bodyEl  = tmpl.querySelector('.overlay-body-content');
+      if (overlayTitolo) overlayTitolo.textContent = titleEl ? titleEl.textContent : 'Dettagli';
+      if (overlayBody) overlayBody.innerHTML = bodyEl ? bodyEl.innerHTML : '';
 
-    // CTA in base a 'gia'
-    const gia = card.getAttribute('data-gia') === 'true';
-    const form = document.getElementById('formCandidatura');
-    // rimuovi bottoni precedenti
-    form.querySelectorAll('.btn-conferma-candidatura').forEach(b => b.remove());
+      const gia = card.getAttribute('data-gia') === 'true';
+      const form = document.getElementById('formCandidatura');
+      if (form) {
+        form.querySelectorAll('.btn-conferma-candidatura').forEach(b => b.remove());
+        if (gia) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'btn-conferma-candidatura is-disabled';
+          b.disabled = true;
+          b.setAttribute('aria-disabled', 'true');
+          b.title = 'Sei già candidato a questo annuncio';
+          b.textContent = 'Già candidato';
+          form.appendChild(b);
+        } else {
+          const b = document.createElement('button');
+          b.type = 'submit';
+          b.className = 'btn-conferma-candidatura';
+          b.textContent = 'Conferma Candidatura';
+          form.appendChild(b);
+        }
+      }
 
-    if (gia) {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'btn-conferma-candidatura is-disabled';
-      b.disabled = true;
-      b.setAttribute('aria-disabled', 'true');
-      b.title = 'Sei già candidato a questo annuncio';
-      b.textContent = 'Già candidato';
-      form.appendChild(b);
-    } else {
-      const b = document.createElement('button');
-      b.type = 'submit';
-      b.className = 'btn-conferma-candidatura';
-      b.textContent = 'Conferma Candidatura';
-      form.appendChild(b);
-    }
-
-    // mostra overlay
-    overlay.classList.add('show');
-    document.body.classList.add('overlay-open');
-  });
+      if (overlay) overlay.classList.add('show');
+      document.body.classList.add('overlay-open');
+    });
+  }
 
   function closeOverlay() {
-    overlay.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
     document.body.classList.remove('overlay-open');
   }
-  btnCloseOverlay.addEventListener('click', closeOverlay);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+  if (btnCloseOverlay) btnCloseOverlay.addEventListener('click', closeOverlay);
+  if (overlay) overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('show')) closeOverlay();
+    if (e.key === 'Escape' && overlay && overlay.classList.contains('show')) closeOverlay();
   });
 
-  // Blocca click su CTA disabilitata (safety)
   document.addEventListener('click', e => {
-    const disabledBtn = e.target.closest('.btn-conferma-candidatura.is-disabled');
+    const disabledBtn = e.target.closest && e.target.closest('.btn-conferma-candidatura.is-disabled');
     if (disabledBtn) { e.preventDefault(); e.stopPropagation(); }
   });
 
-  // Flash auto-hide + close
   const alerts = document.querySelectorAll('.alert.is-visible');
   alerts.forEach(alert => {
     const closeBtn = alert.querySelector('.alert-close');
     if (closeBtn) closeBtn.addEventListener('click', () => alert.classList.remove('is-visible'));
     setTimeout(() => alert.classList.remove('is-visible'), 4000);
   });
+
+  // ====== DARK MODE: allineo <body> a <html> e imposto l'icona ======
+  const root = document.documentElement;
+  if (root.classList.contains('dark-mode')) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+  if (btn) {
+    btn.textContent = (root.classList.contains('dark-mode') || document.body.classList.contains('dark-mode')) ? '☀️' : '🌓';
+  }
 });
 
-// Dark mode
+// Toggle globale usato dal tuo onclick="toggleDarkMode()"
 function toggleDarkMode() {
-  const body = document.body;
+  const root = document.documentElement;
+  const willBeDark = !(root.classList.contains('dark-mode'));
+
+  // Metti/togli su <html> e su <body> per compatibilità CSS
+  root.classList.toggle('dark-mode', willBeDark);
+  document.body.classList.toggle('dark-mode', willBeDark);
+
+  // Persistenza
+  try {
+    localStorage.setItem('theme', willBeDark ? 'dark' : 'light');
+  } catch (e) {}
+
+  // Icona
   const btn = document.getElementById('darkModeToggle');
-  body.classList.toggle('dark-mode');
-  btn.innerHTML = body.classList.contains('dark-mode') ? '☀️' : '🌓';
+  if (btn) btn.textContent = willBeDark ? '☀️' : '🌓';
 }
 </script>
 </body>

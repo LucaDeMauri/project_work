@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Area Personale - StageUp</title>
   <link rel="stylesheet" th:href="@{/css/internship/areapersonale.css}"/>
+
+  <!-- Early apply tema per evitare flicker -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme'); // "dark" | "light" | null
+        const prefersDark = window.matchMedia &&
+                            window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = saved ? saved === 'dark' : prefersDark;
+
+        if (useDark) {
+          document.documentElement.classList.add('dark-mode');
+        } else {
+          document.documentElement.classList.remove('dark-mode');
+        }
+      } catch (_) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -30,30 +48,30 @@
   </div>
 
   <div class="header-right">
-	<a th:href="@{/internship/dashboard}" class="link-back" title="Torna alla dashboard">
-	  <span class="icon-left" aria-hidden="true">←</span>
-	  <span class="label">Dashboard</span>
-	</a>    
-	
-	<button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+    <a th:href="@{/internship/dashboard}" class="link-back" title="Torna alla dashboard">
+      <span class="icon-left" aria-hidden="true">←</span>
+      <span class="label">Dashboard</span>
+    </a>
 
-	<div class="user-menu">
-	  <div class="user-avatar" id="userAvatar">
-	    <img th:src="@{${avatarUrl}}" alt="Avatar utente"/>
-	    <span th:text="${#strings.substring((utente != null ? utente.nome : 'U'),0,1).toUpperCase()}">U</span>
-	  </div>
-	  <div class="dropdown-menu" id="dropdownMenu">
-	    <a th:href="@{/internship/areapersonale}" class="dropdown-item"><span class="dropdown-icon">👤</span> Area personale</a>
-	    <div class="dropdown-divider"></div>
-	    <a th:href="@{/auth/logout}" class="dropdown-item logout"><span class="dropdown-icon">🚪</span> Logout</a>
-	  </div>
-	</div>
+    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+
+    <div class="user-menu">
+      <div class="user-avatar" id="userAvatar">
+        <img th:src="@{${avatarUrl}}" alt="Avatar utente"/>
+        <span th:text="${#strings.substring((utente != null ? utente.nome : 'U'),0,1).toUpperCase()}">U</span>
+      </div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a th:href="@{/internship/areapersonale}" class="dropdown-item"><span class="dropdown-icon">👤</span> Area personale</a>
+        <div class="dropdown-divider"></div>
+        <a th:href="@{/auth/logout}" class="dropdown-item logout"><span class="dropdown-icon">🚪</span> Logout</a>
+      </div>
+    </div>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- HERO PROFILO (avatar grande ~ metà schermo) -->
+  <!-- HERO PROFILO -->
   <section class="profile-hero">
     <div class="avatar-hero">
       <img th:src="@{${avatarUrl}}" alt="Immagine profilo"/>
@@ -130,24 +148,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // dark mode
-  const btn = document.getElementById('darkModeToggle');
-  function setBtn(){ btn.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌓'; }
-  if (localStorage.getItem('dark-mode') === 'true') document.body.classList.add('dark-mode');
-  setBtn();
-  window.toggleDarkMode = function (){
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-    setBtn();
-  };
-
-  // menu utente
+  // --- Menu utente ---
   const userAvatar = document.getElementById('userAvatar');
   const dropdown = document.getElementById('dropdownMenu');
-  userAvatar.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
-  document.addEventListener('click', () => dropdown.classList.remove('show'));
+  if (userAvatar && dropdown) {
+    userAvatar.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+    document.addEventListener('click', () => dropdown.classList.remove('show'));
+  }
 
-  // filtri candidature
+  // --- Filtri candidature ---
   const filters = document.querySelectorAll('.filter');
   const cards = document.querySelectorAll('.annuncio-card[data-status]');
   filters.forEach(f => {
@@ -161,7 +170,31 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   });
+
+  // --- Dark mode: allinea body allo stato applicato su <html>, imposta icona ---
+  const root = document.documentElement;
+  if (root.classList.contains('dark-mode')) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+  const btn = document.getElementById('darkModeToggle');
+  if (btn) btn.textContent = (root.classList.contains('dark-mode') || document.body.classList.contains('dark-mode')) ? '☀️' : '🌓';
 });
+
+// Toggle globale richiamato dal bottone
+function toggleDarkMode() {
+  const root = document.documentElement;
+  const willBeDark = !(root.classList.contains('dark-mode'));
+
+  root.classList.toggle('dark-mode', willBeDark);
+  document.body.classList.toggle('dark-mode', willBeDark);
+
+  try { localStorage.setItem('theme', willBeDark ? 'dark' : 'light'); } catch (_) {}
+
+  const btn = document.getElementById('darkModeToggle');
+  if (btn) btn.textContent = willBeDark ? '☀️' : '🌓';
+}
 </script>
 </body>
 </html>
