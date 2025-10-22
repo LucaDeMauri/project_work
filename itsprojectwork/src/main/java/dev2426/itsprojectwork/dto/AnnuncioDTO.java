@@ -23,6 +23,22 @@ public class AnnuncioDTO {
 	public AnnuncioDTO() {}
 	
 	
+	public AnnuncioDTO(String tipoMansione, LocalDate data_inizio, LocalDate data_fine, AziendaDTO azienda,
+			String location, String descrizione, String orari, String titolo, Set<Competenza> competenzeRichieste,
+			Set<Competenza> competenzeAcquisite) {
+		super();
+		this.tipoMansione = tipoMansione;
+		this.data_inizio = data_inizio;
+		this.data_fine = data_fine;
+		this.azienda = azienda;
+		this.location = location;
+		this.descrizione = descrizione;
+		this.orari = orari;
+		this.titolo = titolo;
+		this.competenzeRichieste = competenzeRichieste;
+		this.competenzeAcquisite = competenzeAcquisite;
+	}
+	
 	public AnnuncioDTO(Long id, String tipoMansione, LocalDate data_inizio, LocalDate data_fine, AziendaDTO azienda,
 			String location, String descrizione, String orari, String titolo, Set<Competenza> competenzeRichieste,
 			Set<Competenza> competenzeAcquisite) {

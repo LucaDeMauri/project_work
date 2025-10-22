@@ -1,5 +1,6 @@
 package dev2426.itsprojectwork.controller;
 
+import dev2426.itsprojectwork.dto.AnnuncioDTO;
 import dev2426.itsprojectwork.models.Ruolo;
 import dev2426.itsprojectwork.models.StatoCandidatura;
 import dev2426.itsprojectwork.models.Utente;
@@ -11,6 +12,7 @@ import dev2426.itsprojectwork.services.UtenteService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute; // Aggiunto impor
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -54,21 +57,45 @@ public class AdminController {
         return "admin/dashboard";
     }
     
-    @PostMapping("/disattiva/{id}")
+    @PostMapping("disattiva/{id}")
     public String disattivaAnnuncio(@PathVariable Long id, RedirectAttributes ra) {
     	servizioAnnunci.deactivate(id); 
         ra.addFlashAttribute("message", "Annuncio disattivato con successo!");
         return "redirect:/admin/";
     }
     
-    @GetMapping("/candidature")
+    
+    @PostMapping("aggiungi/")
+    public String aggiungiAnnuncio(@RequestParam(required = false) Long aziendaId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            java.time.LocalDate data_inizio,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            java.time.LocalDate data_fine,
+            @RequestParam(required = false) String tipoMansione,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String orari,
+            @RequestParam(required = false) String descrizione,
+
+            @RequestParam(required = false) java.util.List<String> skillsRequired,
+            @RequestParam(required = false) java.util.List<String> skillsDevelop) {
+    	
+    	
+    	AnnuncioDTO nuovoAnnuncio = new (tipoMansione,data_inizio,data_fine,)
+    	
+    	return null;
+    }
+    
+    
+    @GetMapping("candidature")
     public String paginaCandidature(Model model) {
         // I dati comuni sono già stati aggiunti al Model dal metodo @ModelAttribute
         return "admin/candidature";
     }
     
     
-    @PostMapping("/candidature/accetta/{id}")
+    @PostMapping("candidature/accetta/{id}")
     public String accettaCandidatura(@PathVariable Long id, RedirectAttributes ra) {
         try {
             servizioCandidature.updateStato(id, StatoCandidatura.ACCETTATO);

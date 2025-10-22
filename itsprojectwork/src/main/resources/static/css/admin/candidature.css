@@ -1,0 +1,370 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+/* Pulsanti */
+.btn {
+  padding: 8px 15px;
+  background: #0073b1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* Spazio tra freccia e testo */
+}
+.btn:hover {
+  background: #005582;
+}
+
+/* Stile per il bottone tema */
+.btn-tema {
+  width: 44px; /* Larghezza fissa */
+  height: 44px; /* Altezza fissa */
+  font-size: 20px;
+  padding: 0; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  gap: 0; 
+}
+
+/* Container */
+.container {
+  max-width: 800px;
+  margin: auto auto 50px;
+  padding: 20px;
+}
+
+/* Tema Scuro */
+.tema-scuro { color: #f4f4f4; }
+.tema-scuro .form-box,
+.tema-scuro .card,
+.tema-scuro .modal-content {
+  background: #444;
+  border-color: #555;
+  color: #f4f4f4;
+}
+.tema-scuro input,
+.tema-scuro textarea,
+.tema-scuro select {
+  background: #555;
+  color: #f4f4f4;
+  border-color: #666;
+}
+.tema-scuro .competenze { color: #ccc; }
+.tema-scuro .tirocini { color: #f4f4f4; }
+.tema-scuro label { color: #f4f4f4; }
+
+/* Form box */
+.form-box {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+.tirocini {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+.form-box h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Label generale */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Applica a input, select, textarea e button generici */
+form input[type="text"],
+form input[type="date"],
+form select,
+form textarea,
+form button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Regola per SELECT MULTIPLE */
+form select[multiple] {
+    padding: 0; 
+}
+form select[multiple] option {
+    padding: 8px 10px;
+}
+
+
+/* Regole per layout a colonne e label */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.form-field-split { 
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+/* Assicura che input/select abbiano margine 0 all'interno di un form-field-split */
+.form-field-split input,
+.form-field-split select,
+.form-field-split textarea {
+    margin-bottom: 0;
+}
+
+/* Regole per Date Group (Input Inizio e Fine) */
+.date-fields-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px; 
+}
+.date-fields-group input[type="date"] {
+    flex: 1;
+}
+
+form button {
+  background: #0073b1;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+form button:hover { background:  #005582; }
+form button[type="button"] { background:  #0073b1; }
+form button[type="button"]:hover { background: #005582; }
+
+/* Lista */
+.lista h2 { text-align: center; margin-bottom: 15px; }
+.vuoto {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 5px;
+}
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.card-content div { margin-bottom: 8px; }
+.competenze {
+  color: #666;
+  font-size: 14px;
+}
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.card-actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+.btn-elimina { background: #dc3545; }
+.btn-elimina:hover { background: #c82333; }
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+.modal-content {
+  background: white;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+}
+.modal h3 { margin-bottom: 15px; }
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.btn-group button { flex: 1; }
+
+
+/* AGGIUNTE PER LE CANDIDATURE */
+
+/* Table Layout */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden; 
+}
+.tema-scuro table {
+    background: #444;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+.tema-scuro table th, .tema-scuro table td {
+    border-bottom: 1px solid #555;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+.tema-scuro table th {
+    background-color: #555;
+    color: #f4f4f4;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+}
+.tema-scuro table tr:hover {
+    background-color: #4a4a4a;
+}
+
+/* Status Styling */
+.status-accettato {
+    color: #155724;
+    background-color: #d4edda;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 2px 5px;
+    text-align: center;
+}
+.status-rifiutato {
+    color: #721c24;
+    background-color: #f8d7da;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 2px 5px;
+    text-align: center;
+}
+.status-pending {
+    color: #856404;
+    background-color: #fff3cd;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 2px 5px;
+    text-align: center;
+}
+.tema-scuro .status-accettato { background-color: #285a30; color: #d4edda; }
+.tema-scuro .status-rifiutato { background-color: #863038; color: #f8d7da; }
+.tema-scuro .status-pending { background-color: #8c7638; color: #fff3cd; }
+
+/* Alert Messages (Flash Attributes) */
+.alert-success, .alert-error {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.tema-scuro .alert-success { background-color: #285a30; color: #d4edda; }
+.tema-scuro .alert-error { background-color: #863038; color: #f8d7da; }
+
+
+/* Action Buttons in Table */
+.btn-group-actions {
+    display: flex;
+    gap: 5px;
+}
+.btn-group-actions form {
+    margin: 0; 
+}
+.btn-group-actions button {
+    padding: 6px 12px;
+    font-size: 13px;
+    margin: 0;
+    width: auto;
+}
+.btn-action-accept {
+    background-color: #28a745; 
+}
+.btn-action-accept:hover {
+    background-color: #218838;
+}
+.btn-action-reject {
+    background-color: #dc3545; 
+}
+.btn-action-reject:hover {
+    background-color: #c82333;
+}
+
+
+/* Media query responsive */
+@media (max-width: 600px) {
+  
+  /* Nasconde il testo "Dashboard" */
+  .btn-dashboard .testo-dashboard {
+    display: none;
+  }
+
+  /* Rende il bottone dashboard quadrato (44x44) */
+  .btn-dashboard {
+    font-size: 20px; 
+    width: 44px;
+    height: 44px;
+    padding: 0; 
+    justify-content: center; 
+    gap: 0; 
+  }
+}

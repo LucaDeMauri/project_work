@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev2426.itsprojectwork.dto.AziendaDTO;
 import dev2426.itsprojectwork.models.Azienda;
 import dev2426.itsprojectwork.repository.AziendeRepository;
 
@@ -19,9 +20,14 @@ public class AziendeService {
 		return repository.findAll();
 	}
 	
-	public Optional<Azienda> getOne(Long id) {
-		return repository.findById(id);
-	}
+//	public Optional<AziendaDTO> getOne(Long id) {
+//		
+//		Optional<Azienda> a = repository.findById(id);
+//		
+//		AziendaDTO aDTO = new AziendaDTO(a.get().getId(),a.get().getNome(), a.get().getAnnunci());
+//		
+//		return aDTO;
+//	}
 	
 	public void insertOne(Azienda nuovo) {
 		repository.save(nuovo);

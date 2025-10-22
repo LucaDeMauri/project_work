@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import dev2426.itsprojectwork.dto.UtenteDTO;
+import dev2426.itsprojectwork.models.Ruolo;
 import dev2426.itsprojectwork.services.AuthService;
 import jakarta.servlet.http.HttpSession;
 
@@ -25,7 +26,7 @@ public class AuthController {
         return value.matches(regex);
     }
 
-    // --- LOGIN (Ometto per brevità, focalizziamoci sul signup) ---
+    // --- LOGIN ---
 	@GetMapping("/login")
 	public String loginPage(@RequestParam(defaultValue = "false") Boolean registered, 
                             Model model) {	
@@ -33,6 +34,7 @@ public class AuthController {
             model.addAttribute("message", "Registrazione completata! Puoi accedere ora.");
             model.addAttribute("alertType", "success");
         }
+        // Il percorso del template è in /Auth/login, ma i percorsi sono case-sensitive. Lo mantengo come nel tuo codice.
         return "/Auth/login";
 	}
 	
@@ -52,7 +54,15 @@ public class AuthController {
 		
 		if(utente != null) {
 			session.setAttribute("utenteLoggato", utente);
-			return "redirect:/internship/";
+			
+            // CORREZIONE CHIAVE (Linea 56 originale): Aggiunto controllo null
+            // Verifichiamo prima se il ruolo è admin. Se nullo, va nel ramo else (utente standard)
+			if(utente.getRuolo() != null && utente.getRuolo() == Ruolo.admin) {
+				return "redirect:/admin/";
+			}
+			else {
+				return "redirect:/internship/";
+			}
 		} else {
             model.addAttribute("message", "Email o password errata.");
             model.addAttribute("alertType", "error");

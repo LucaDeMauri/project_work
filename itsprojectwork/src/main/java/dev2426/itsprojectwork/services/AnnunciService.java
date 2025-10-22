@@ -42,7 +42,10 @@ public class AnnunciService {
 
 	}
 
-	public void insertOne(Annuncio nuovo) {
+	public void insertOne(AnnuncioDTO nuovo) {
+		
+		Annuncio 
+		
 		repository.save(nuovo);
 	}
 

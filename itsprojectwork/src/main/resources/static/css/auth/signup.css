@@ -1,5 +1,6 @@
 /* Base */
 body {
+  /* Mantenuto: Immagine di sfondo */
   background: url("/img/registrazione.jpeg") no-repeat center/cover;
   margin: 0;
   font-family: 'Inter', sans-serif;
@@ -9,7 +10,7 @@ body {
   /* CHIAVE: Spinge il contenuto verso SINISTRA */
   display: flex;
   flex-direction: column; 
-  align-items: flex-start; /* MODIFICATO: Allinea il box a sinistra */
+  align-items: flex-start; /* Allinea il box a sinistra */
   justify-content: center; /* Centra verticalmente */
   
   min-height: 100vh;
@@ -20,12 +21,9 @@ body {
   overflow: hidden; 
 }
 
-body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
-}
+/* Rimosso: body.dark-mode */
 
-/* Pulsanti Fissi (Back, Dark Mode) */
+/* Pulsanti Fissi (Back) */
 .back-button {
   position: fixed;
   top: 20px;
@@ -41,21 +39,8 @@ body.dark-mode {
 .back-button:hover {
   background-color: #005582;
 }
-.dark-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #333;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  z-index: 9999;
-}
-.dark-toggle:hover {
-  background-color: #555;
-}
+
+/* Rimosso: .dark-toggle */
 
 /* Link normali */
 a {
@@ -71,7 +56,7 @@ a {
   max-width: 400px;
   width: 100%;
   background: white;
-  padding: 40px 40px 20px; /* Padding modificato per un look pulito */
+  padding: 40px 40px 20px; 
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -85,11 +70,7 @@ a {
   margin-left: 15%; /* Spazio dal bordo sinistro */
 }
 
-body.dark-mode .registrazione {
-  background-color: #1e1e1e;
-  border-color: #333;
-  color: #e0e0e0;
-}
+/* Rimosso: body.dark-mode .registrazione */
 
 /* Titolo */
 .titolo {
@@ -121,12 +102,7 @@ input[type="password"] {
   margin-bottom: 20px; 
 }
 
-/* Dark Mode Input */
-body.dark-mode .registrazione input {
-  background-color: #2b2b2b;
-  color: #fff;
-  border-color: #444;
-}
+/* Rimosso: Dark Mode Input */
 
 /* Pulsante registrati */
 .form button[type="submit"] {

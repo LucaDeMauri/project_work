@@ -35,7 +35,7 @@ public class AuthService {
                 nuovoDTO.setImmagine(u.getImmagine());
                 nuovoDTO.setCognome(u.getCognome());
                 nuovoDTO.setEmail(u.getEmail());
-            	
+            	nuovoDTO.setRuolo(u.getRuolo());
                 return nuovoDTO;
             }
         }

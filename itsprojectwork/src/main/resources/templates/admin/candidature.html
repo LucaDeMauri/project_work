@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Candidature</title>
+    <link rel="stylesheet" th:href="@{/css/admin/candidature.css}"> 
+</head>
+<body>
+    <div class="header">
+        <a th:href="@{/admin/}" class="btn btn-dashboard"> 
+            <span>←</span> 
+            <span class="testo-dashboard">Dashboard</span>
+        </a>
+        
+        <button id="btn-tema" class="btn btn-tema" onclick="cambiaTema()">🌙</button>
+    </div>
+
+    <div class="container">
+        <h2>Gestione Candidature in Attesa</h2>
+        
+        <div th:if="${message} and !${error}" class="alert-success">
+            <p th:text="${message}"></p>
+        </div>
+        
+        <div th:if="${message} and ${error}" class="alert-error">
+            <p th:text="${message}"></p>
+        </div>
+        
+        <div th:if="${listaCandidature.isEmpty()}" class="vuoto">
+            <p>Nessuna candidatura trovata nel sistema.</p>
+        </div>
+
+        <div th:unless="${listaCandidature.isEmpty()}" class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Stato</th>
+                        <th>Utente</th>
+                        <th>Annuncio</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="candidatura : ${listaCandidature}" 
+                        th:if="${candidatura.stato.name() == 'PENDING'}">
+                        
+                        <td th:text="${candidatura.id}">123</td>
+                        
+                        <td th:text="${candidatura.stato.name()}"
+                            th:classappend="status-pending">
+                            PENDING
+                        </td>
+                        
+                        <td th:if="${candidatura.utente}" th:text="${candidatura.utente.email}">user@example.com</td>
+                        <td th:unless="${candidatura.utente}">Utente non disponibile</td>
+
+                        <td th:if="${candidatura.annuncio}" th:text="${candidatura.annuncio.titolo}">Titolo Annuncio</td>
+                        <td th:unless="${candidatura.annuncio}">Annuncio non disponibile</td>
+                            
+                        <td>
+                            <div class="btn-group-actions">
+                                <form th:action="@{/admin/candidature/accetta/{id}(id=${candidatura.id})}" 
+                                      method="post">
+                                    <button type="submit" class="btn btn-action-accept">Accetta</button>
+                                </form>
+                                
+                                <form th:action="@{/admin/candidature/rifiuta/{id}(id=${candidatura.id})}" 
+                                      method="post">
+                                    <button type="submit" class="btn btn-action-reject">Rifiuta</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <th:block th:if="${#lists.isEmpty(listaCandidature.?[stato.name() == 'PENDING']) and !#lists.isEmpty(listaCandidature)}">
+                <div class="vuoto">
+                    <p>Non ci sono candidature in attesa. Tutte le candidature sono state processate (Accettate/Rifiutate).</p>
+                </div>
+            </th:block>
+            
+        </div>
+        
+    </div>
+    
+    <script>
+        function cambiaTema() {
+            const isScuro = document.body.classList.toggle('tema-scuro');
+            const btnTema = document.getElementById('btn-tema');
+            if (isScuro) {
+                btnTema.textContent = '☀️';
+            } else {
+                btnTema.textContent = '🌙';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+             const btnTema = document.getElementById('btn-tema');
+             if (document.body.classList.contains('tema-scuro')) {
+                 btnTema.textContent = '☀️';
+             }
+        });
+    </script>
+</body>
+</html>
