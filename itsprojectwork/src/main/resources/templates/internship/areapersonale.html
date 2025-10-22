@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Area Personale - StageUp</title>
+  <link rel="stylesheet" th:href="@{/css/internship/areapersonale.css}"/>
+</head>
+<body>
+
+<!-- Sprite icone (riutilizzabili nelle card) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="ic-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M3 21h18"/><path d="M9 21V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14"/>
+    <path d="M9 10h6M9 14h6M9 18h6"/><path d="M5 21V10a2 2 0 0 1 2-2h2"/>
+  </symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>
+  </symbol>
+  <symbol id="ic-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M4 7h16a2 2 0 0 1 2 2v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V9a2 2 0 0 1 2-2z"/>
+    <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M12 12v2"/>
+  </symbol>
+</svg>
+
+<header>
+  <div class="header-left">
+    <img src="/img/logo.png" alt="StageUp Logo" class="logo"/>
+    <h1>Stage Up</h1>
+  </div>
+
+  <div class="header-right">
+	<a th:href="@{/internship/dashboard}" class="link-back" title="Torna alla dashboard">
+	  <span class="icon-left" aria-hidden="true">←</span>
+	  <span class="label">Dashboard</span>
+	</a>    
+	
+	<button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+
+	<div class="user-menu">
+	  <div class="user-avatar" id="userAvatar">
+	    <img th:src="@{${avatarUrl}}" alt="Avatar utente"/>
+	    <span th:text="${#strings.substring((utente != null ? utente.nome : 'U'),0,1).toUpperCase()}">U</span>
+	  </div>
+	  <div class="dropdown-menu" id="dropdownMenu">
+	    <a th:href="@{/internship/areapersonale}" class="dropdown-item"><span class="dropdown-icon">👤</span> Area personale</a>
+	    <div class="dropdown-divider"></div>
+	    <a th:href="@{/auth/logout}" class="dropdown-item logout"><span class="dropdown-icon">🚪</span> Logout</a>
+	  </div>
+	</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- HERO PROFILO (avatar grande ~ metà schermo) -->
+  <section class="profile-hero">
+    <div class="avatar-hero">
+      <img th:src="@{${avatarUrl}}" alt="Immagine profilo"/>
+    </div>
+
+    <div class="greeting">
+      <h2 class="hello">
+        Ciao, <span th:text="${utente != null ? utente.nome : 'Utente'}">Utente</span>!
+      </h2>
+      <p class="sub" th:text="${utente != null ? utente.email : ''}">email@example.com</p>
+
+      <div class="actions">
+        <a class="btn primary" th:href="@{/internship/modificaprofilo}">Modifica profilo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CANDIDATURE -->
+  <section class="section">
+    <div class="section-header">
+      <h3 class="section-title">Le mie candidature</h3>
+      <div class="filters">
+        <button class="chip filter is-active" data-filter="ALL">Tutte</button>
+        <button class="chip filter" data-filter="PENDING">Attesa</button>
+        <button class="chip filter" data-filter="ACCETTATO">Accettate</button>
+        <button class="chip filter" data-filter="RIFIUTATO">Rifiutate</button>
+      </div>
+    </div>
+
+    <div class="empty-state"
+         th:if="${candidature == null or #lists.isEmpty(candidature)}">
+      Non hai ancora candidature.
+    </div>
+
+    <div class="annunci-grid"
+         th:if="${candidature != null and !#lists.isEmpty(candidature)}">
+      <div class="annuncio-card"
+           th:each="cand : ${candidature}"
+           th:with="a=${cand.annuncio}"
+           th:attr="data-status=${cand.stato}">
+        <div class="annuncio-titolo" th:text="${a != null ? a.titolo : 'Annuncio'}">Annuncio</div>
+
+        <div class="dati-annuncio">
+          <div class="dato-item">
+            <span class="etichetta"><svg class="icon"><use href="#ic-building"/></svg>Azienda</span>
+            <span class="valore" th:text="${a != null && a.azienda != null ? a.azienda.nome : '—'}">—</span>
+          </div>
+
+          <div class="dato-item">
+            <span class="etichetta"><svg class="icon"><use href="#ic-calendar"/></svg>Durata</span>
+            <span class="valore">
+              <span th:text="${a != null && a.data_inizio != null ? a.data_inizio : (a != null ? a.data_inizio : '')}">2025-01-01</span>
+              –
+              <span th:text="${a != null && a.data_fine != null ? a.data_fine : (a != null ? a.data_fine : '')}">2025-03-31</span>
+            </span>
+          </div>
+
+          <div class="dato-item">
+            <span class="etichetta"><svg class="icon"><use href="#ic-briefcase"/></svg>Mansione</span>
+            <span class="valore" th:text="${a != null ? a.tipoMansione : '—'}">—</span>
+          </div>
+        </div>
+
+        <div class="cand-status" th:switch="${cand.stato}">
+          <span class="pill pending"  th:case="'PENDING'">In attesa</span>
+          <span class="pill accepted" th:case="'ACCETTATO'">Accettata</span>
+          <span class="pill rejected" th:case="'RIFIUTATO'">Rifiutata</span>
+          <span class="pill neutral"  th:case="*" th:text="${cand.stato}">—</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // dark mode
+  const btn = document.getElementById('darkModeToggle');
+  function setBtn(){ btn.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌓'; }
+  if (localStorage.getItem('dark-mode') === 'true') document.body.classList.add('dark-mode');
+  setBtn();
+  window.toggleDarkMode = function (){
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+    setBtn();
+  };
+
+  // menu utente
+  const userAvatar = document.getElementById('userAvatar');
+  const dropdown = document.getElementById('dropdownMenu');
+  userAvatar.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+  document.addEventListener('click', () => dropdown.classList.remove('show'));
+
+  // filtri candidature
+  const filters = document.querySelectorAll('.filter');
+  const cards = document.querySelectorAll('.annuncio-card[data-status]');
+  filters.forEach(f => {
+    f.addEventListener('click', () => {
+      filters.forEach(x => x.classList.remove('is-active'));
+      f.classList.add('is-active');
+      const val = f.getAttribute('data-filter');
+      cards.forEach(card => {
+        const s = card.getAttribute('data-status');
+        card.style.display = (val === 'ALL' || s === val) ? '' : 'none';
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>

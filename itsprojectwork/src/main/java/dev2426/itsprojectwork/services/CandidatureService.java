@@ -1,7 +1,10 @@
 package dev2426.itsprojectwork.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import dev2426.itsprojectwork.dto.UtenteDTO;
 import dev2426.itsprojectwork.mapper.DtoMapper;
 import dev2426.itsprojectwork.models.Annuncio;
 import dev2426.itsprojectwork.models.Candidatura;
+import dev2426.itsprojectwork.models.EsitoCandidatura;
 import dev2426.itsprojectwork.models.Utente;
 import dev2426.itsprojectwork.repository.CandidatureRepository;
 import dev2426.itsprojectwork.models.StatoCandidatura;
@@ -41,30 +45,24 @@ public class CandidatureService {
                          .map(DtoMapper::toCandidaturaDTO);
     }
     
-    /**
-     * Inserisce una nuova candidatura dopo aver verificato che non ne esista già una attiva.
-     */
-    public CandidaturaDTO insertOne(Long idAnnuncio, Long idUtente) {
-        // 1. Validazione Business: Verifica se una candidatura ATTIVA esiste già
-        if (this.isAlreadyCandidato(idUtente, idAnnuncio)) {
-            throw new IllegalStateException("L'utente ha già una candidatura attiva per questo annuncio.");
-        }
-        
-        // 2. Recupero DTO usando il metodo originale di AnnunciService (che restituisce DTO)
-        AnnuncioDTO annuncioDTO = servizioAnnunci.getOne(idAnnuncio);
-        UtenteDTO utenteDTO = servizioUtente.getOne(idUtente);
-        
-        // 3. Conversione DTO a Entity
-        Annuncio annuncio = DtoMapper.toAnnuncioEntity(annuncioDTO);
-        Utente utente = DtoMapper.toUtenteEntity(utenteDTO);
-        
-        // 4. Creazione e Salvataggio 
-        Candidatura candidatura = new Candidatura(StatoCandidatura.PENDING, annuncio, utente);
-        candidatura = repository.save(candidatura);
-        
-        // 5. Mappatura e restituzione del DTO salvato
-        return DtoMapper.toCandidaturaDTO(candidatura);
+    
+    public EsitoCandidatura insertOne(Long idAnnuncio, Long idUtente) {
+    	 if (this.isAlreadyCandidato(idUtente, idAnnuncio)) return EsitoCandidatura.DUPLICATA;
+
+         AnnuncioDTO annuncioDTO = servizioAnnunci.getOne(idAnnuncio);
+         if (annuncioDTO == null) return EsitoCandidatura.ANNUNCIO_NON_TROVATO;
+
+         UtenteDTO utenteDTO = servizioUtente.getOne(idUtente);
+         if (utenteDTO == null) return EsitoCandidatura.ERRORE;
+
+         Annuncio annuncio = DtoMapper.toAnnuncioEntity(annuncioDTO);
+         Utente utente = DtoMapper.toUtenteEntity(utenteDTO);
+
+         Candidatura candidatura = new Candidatura(StatoCandidatura.PENDING, annuncio, utente);
+         repository.save(candidatura);
+         return EsitoCandidatura.INSERITA;
     }
+
     
     public void deleteOne(Long id) {
         repository.deleteById(id);
@@ -118,5 +116,27 @@ public class CandidatureService {
         return repository.findByAnnuncioAndActiveTrue(annuncio).stream()
                          .map(DtoMapper::toCandidaturaDTO)
                          .collect(Collectors.toList());
+    }
+
+    public Set<Long> idsAnnunciGiaCandidato(long utenteId) {
+        if (utenteId <= 0) return Collections.emptySet();
+
+        // via query ottimizzata
+        Set<Long> ids = repository.findAnnuncioIdsByUtenteAndActiveTrue(utenteId);
+        if (ids != null && !ids.isEmpty()) return ids;
+        return null;
+
+    }
+    
+    public List<CandidaturaDTO> findForUserWithAnnunci(long userId) {
+    	
+        ArrayList<Candidatura> elenco = (ArrayList<Candidatura>) repository.findAllByUserIdFetchAll(userId);
+        ArrayList<CandidaturaDTO> elencoDTO = new ArrayList();
+        
+        for(Candidatura c : elenco) {
+        	elencoDTO.add(DtoMapper.toCandidaturaDTO(c));
+        }
+        
+        return elencoDTO;
     }
 }

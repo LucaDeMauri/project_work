@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Pannello Admin</title>
+  <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+</head>
+<body>
+<header>
+  <h1>⚙️ Pannello di Controllo</h1>
+  <a th:href="@{/internship/dashboard}" class="btn-back">← Torna alla Dashboard</a>
+</header>
+
+<main class="container">
+  <section class="actions">
+    <h2>Gestione Annunci</h2>
+    <a th:href="@{/admin/annunci/nuovo}" class="btn primary">+ Nuovo Annuncio</a>
+  </section>
+
+  <p>Qui potrai aggiungere, modificare o eliminare annunci e gestire le candidature.</p>
+</main>
+</body>
+</html>

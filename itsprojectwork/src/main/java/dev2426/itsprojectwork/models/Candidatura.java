@@ -33,7 +33,7 @@ public class Candidatura {
 	@JoinColumn(name = "id_utente")
 	private Utente utente;
 
-	@Column(name = "data_candidatura")
+	@Column(name = "data_candidatura", insertable = false, updatable = false)
 	private LocalDate dataCandidatura;
 	
 	@Column(name = "is_active")   // <-- nome colonna DB rimane is_active

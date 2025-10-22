@@ -31,16 +31,15 @@ public class Utente {
     @Enumerated(EnumType.STRING)
     @Column(name = "ruolo", nullable = false)
     private Ruolo ruolo;
-    
-    @Lob
-    private byte[] immagine;
+ 
+    private String immagine;
     
     @OneToMany(mappedBy = "utente")
 	private List<Candidatura> candidature = new ArrayList<>();
     
     public Utente() {}
     
-	public Utente(long id, byte[] immagine, String bio, String nome, String cognome, String email, String password, Ruolo ruolo) {
+	public Utente(long id, String immagine, String bio, String nome, String cognome, String email, String password, Ruolo ruolo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -87,11 +86,11 @@ public class Utente {
 		this.password = password;
 	}
 
-	public byte[] getImmagine() {
+	public String getImmagine() {
 		return immagine;
 	}
 
-	public void setImmagine(byte[] immagine) {
+	public void setImmagine(String immagine) {
 		this.immagine = immagine;
 	}
 

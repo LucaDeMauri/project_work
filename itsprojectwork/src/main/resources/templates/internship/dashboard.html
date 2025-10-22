@@ -1,71 +1,138 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - StageUp</title>
-  <link rel="stylesheet" th:href="@{/css/internship/dashboard.css}" />
+  <link rel="stylesheet" th:href="@{/css/internship/dashboard.css}"/>
 </head>
 <body>
+
+<!-- ===== SVG SPRITE ===== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+  <symbol id="ic-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M3 21h18"/><path d="M9 21V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14"/>
+    <path d="M9 10h6M9 14h6M9 18h6"/><path d="M5 21V10a2 2 0 0 1 2-2h2"/>
+  </symbol>
+  <symbol id="ic-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>
+  </symbol>
+  <symbol id="ic-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M4 7h16a2 2 0 0 1 2 2v7a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V9a2 2 0 0 1 2-2z"/>
+    <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M12 12v2"/>
+  </symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M12 21s-7-5.4-7-10a7 7 0 1 1 14 0c0 4.6-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/>
+  </symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+  </symbol>
+  <symbol id="ic-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+    <path d="M19 13l.7 2.1L22 16l-2.3.9L19 19l-.7-2.1L16 16l2.3-.9L19 13z"/>
+  </symbol>
+</svg>
+<!-- ===== /SVG SPRITE ===== -->
+
 <header>
   <div class="header-left">
-    <img src="/img/logo.png" alt="StageUp Logo" class="logo" />
+    <img src="/img/logo.png" alt="StageUp Logo" class="logo"/>
     <h1>Stage Up</h1>
   </div>
 
   <div class="header-right">
     <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+
+    <!-- Bottone admin solo per ruolo admin -->
+    <a th:if="${utente != null and utente.ruolo == 'admin'}"
+       th:href="@{/admin/dashboard}"
+       class="admin-panel-btn">⚙️ Pannello Admin</a>
+
     <div class="user-menu">
-      <div class="user-avatar" id="userAvatar"><span>U</span></div>
+      <div class="user-avatar" id="userAvatar">
+        <img th:src="@{${avatarUrl}}" alt="Avatar utente"/>
+        <span th:text="${#strings.substring((utente != null ? utente.nome : 'U'),0,1).toUpperCase()}">U</span>
+      </div>
       <div class="dropdown-menu" id="dropdownMenu">
-        <a href="/profilo" class="dropdown-item">
-          <span class="dropdown-icon">👤</span> Profilo Utente
-        </a>
+        <a th:href="@{/internship/areapersonale}" class="dropdown-item"><span class="dropdown-icon">👤</span> Area personale</a>
         <div class="dropdown-divider"></div>
-        <a th:href="@{/auth/logout}" class="dropdown-item logout">
-          <span class="dropdown-icon">🚪</span> Logout
-        </a>
+        <a th:href="@{/auth/logout}" class="dropdown-item logout"><span class="dropdown-icon">🚪</span> Logout</a>
       </div>
     </div>
   </div>
 </header>
 
-<div class="container">
-  <!-- Messaggi Flash -->
-  <div th:if="${message}" class="alert success" th:text="${message}"></div>
-  <div th:if="${error}" class="alert error" th:text="${error}"></div>
 
+<div class="container">
+
+  <!-- ===== Flash ===== -->
+  <div class="flash-wrapper" aria-live="polite" aria-atomic="true">
+    <div th:if="${messaggioSuccesso}" class="alert alert-success is-visible" role="alert">
+      <span th:text="${messaggioSuccesso}"></span>
+      <button type="button" class="alert-close" aria-label="Chiudi">×</button>
+    </div>
+    <div th:if="${messaggioErrore}" class="alert alert-error is-visible" role="alert">
+      <span th:text="${messaggioErrore}"></span>
+      <button type="button" class="alert-close" aria-label="Chiudi">×</button>
+    </div>
+    <div th:if="${message} and ${alertType} == 'success'" class="alert alert-success is-visible" role="alert">
+      <span th:text="${message}"></span>
+      <button type="button" class="alert-close" aria-label="Chiudi">×</button>
+    </div>
+    <div th:if="${message} and ${alertType} == 'error'" class="alert alert-error is-visible" role="alert">
+      <span th:text="${message}"></span>
+      <button type="button" class="alert-close" aria-label="Chiudi">×</button>
+    </div>
+  </div>
+
+  <!-- ===== Titolo sezione ===== -->
+  <div class="section-header">
+    <h2 class="section-title">
+      Candidature disponibili
+      <span class="badge-count"
+            th:if="${listaAnnunci != null}"
+            th:text="${#lists.size(listaAnnunci)}">0</span>
+    </h2>
+    <p class="section-subtitle">Scegli lo stage che fa per te e invia la candidatura.</p>
+  </div>
+
+  <div class="empty-state"
+       th:if="${listaAnnunci == null or #lists.isEmpty(listaAnnunci)}">
+    Nessuna candidatura disponibile al momento.
+  </div>
+
+  <!-- ===== Griglia ===== -->
   <div class="annunci-grid" id="annunciGrid">
-    <!-- CARD ANNUNCI -->
-    <div class="annuncio-card" 
-         th:each="a : ${listaAnnunci}" 
-         th:attr="data-annuncio-id=${a.id}">
-      
-      <!-- Titolo -->
+    <div class="annuncio-card"
+         th:each="a : ${listaAnnunci}"
+         th:with="gia=${idsGiaCandidato != null and #lists.contains(idsGiaCandidato, a.id)}"
+         th:attr="data-annuncio-id=${a.id},data-gia=${gia}">
+
+      <!-- Titolo + badge -->
       <div class="annuncio-titolo" th:text="${a.titolo}">Titolo</div>
+      <span class="chip-giacandidato" th:if="${gia}">Già candidato</span>
 
       <!-- Dati sintetici -->
       <div class="dati-annuncio">
         <div class="dato-item">
-          <span class="etichetta">Azienda:</span>
+          <span class="etichetta"><svg class="icon"><use href="#ic-building"/></svg>Azienda:</span>
           <span class="valore" th:text="${a.azienda != null ? a.azienda.nome : '—'}">—</span>
         </div>
 
         <div class="dato-item">
-          <span class="etichetta">Durata:</span>
+          <span class="etichetta"><svg class="icon"><use href="#ic-calendar"/></svg>Durata:</span>
           <span class="valore">
-            <span th:text="${a.data_inizio}">2025-01-01</span> -
-            <span th:text="${a.data_fine}">2025-03-31</span>
+            <span th:text="${a.data_inizio}">2025-01-01</span> – <span th:text="${a.data_fine}">2025-03-31</span>
           </span>
         </div>
 
         <div class="dato-item">
-          <span class="etichetta">Mansione:</span>
+          <span class="etichetta"><svg class="icon"><use href="#ic-briefcase"/></svg>Mansione:</span>
           <span class="valore" th:text="${a.tipoMansione}">—</span>
         </div>
 
         <div class="dato-item">
-          <span class="etichetta">Competenze:</span>
+          <span class="etichetta"><svg class="icon"><use href="#ic-spark"/></svg>Competenze:</span>
           <div class="competence-tags">
             <span class="tag"
                   th:each="c, iStat : ${a.competenzeRichieste}"
@@ -75,32 +142,42 @@
         </div>
       </div>
 
-      <button class="btn-candidati" type="button">Dettagli</button>
+	  <button class="btn-candidati"
+	          type="button"
+	          th:if="${utente == null or utente.ruolo != 'admin'}">
+	    Dettagli
+	  </button>
 
-      <!-- TEMPLATE DETTAGLI NASCOSTO -->
+      <!-- Template per overlay -->
       <div class="overlay-template" style="display:none">
         <h2 class="overlay-title" th:text="${a.titolo}">Titolo</h2>
 
         <div class="overlay-body-content">
           <div class="overlay-section">
-            <h3>Informazioni Azienda</h3>
-            <p><strong>Azienda:</strong> <span th:text="${a.azienda != null ? a.azienda.nome : '—'}">—</span></p>
-            <p><strong>Sede:</strong> <span th:text="${a.location}">—</span></p>
+            <h3><svg class="icon"><use href="#ic-building"/></svg>Informazioni Azienda</h3>
+            <p><strong><svg class="icon"><use href="#ic-building"/></svg>Azienda:</strong>
+              <span th:text="${a.azienda != null ? a.azienda.nome : '—'}">—</span></p>
+            <p><strong><svg class="icon"><use href="#ic-pin"/></svg>Sede:</strong>
+              <span th:text="${a.location}">—</span></p>
           </div>
 
           <div class="overlay-section">
-            <h3>Dettagli Stage</h3>
-            <p><strong>Tipo mansione:</strong> <span th:text="${a.tipoMansione}">—</span></p>
-            <p><strong>Inizio:</strong> <span th:text="${a.data_inizio}">—</span></p>
-            <p><strong>Fine:</strong> <span th:text="${a.data_fine}">—</span></p>
+            <h3><svg class="icon"><use href="#ic-briefcase"/></svg>Dettagli Stage</h3>
+            <p><strong><svg class="icon"><use href="#ic-briefcase"/></svg>Tipo mansione:</strong>
+              <span th:text="${a.tipoMansione}">—</span></p>
+            <p><strong><svg class="icon"><use href="#ic-calendar"/></svg>Inizio:</strong>
+              <span th:text="${a.data_inizio}">—</span></p>
+            <p><strong><svg class="icon"><use href="#ic-calendar"/></svg>Fine:</strong>
+              <span th:text="${a.data_fine}">—</span></p>
             <p th:if="${a.orari != null}">
-              <strong>Orari:</strong> <span th:text="${a.orari}"></span>
+              <strong><svg class="icon"><use href="#ic-clock"/></svg>Orari:</strong>
+              <span th:text="${a.orari}"></span>
             </p>
           </div>
 
           <div class="overlay-section"
                th:if="${a.competenzeRichieste != null and !#lists.isEmpty(a.competenzeRichieste)}">
-            <h3>Competenze Richieste</h3>
+            <h3><svg class="icon"><use href="#ic-spark"/></svg>Competenze Richieste</h3>
             <div class="competence-tags-large">
               <span class="tag" th:each="c : ${a.competenzeRichieste}" th:text="${c.descrizione}">Skill</span>
             </div>
@@ -108,7 +185,7 @@
 
           <div class="overlay-section"
                th:if="${a.competenzeAcquisite != null and !#lists.isEmpty(a.competenzeAcquisite)}">
-            <h3>Competenze che Acquisirai</h3>
+            <h3><svg class="icon"><use href="#ic-spark"/></svg>Competenze che Acquisirai</h3>
             <div class="competence-tags-large">
               <span class="tag" th:each="c : ${a.competenzeAcquisite}" th:text="${c.descrizione}">Skill</span>
             </div>
@@ -121,10 +198,12 @@
         </div>
       </div>
     </div>
+    <!-- /card -->
   </div>
+  <!-- /griglia -->
 </div>
 
-<!-- OVERLAY GLOBALE -->
+<!-- ===== OVERLAY ===== -->
 <div class="overlay" id="overlay">
   <div class="overlay-content">
     <button class="btn-close-overlay" id="btnCloseOverlay" type="button">×</button>
@@ -136,76 +215,107 @@
     <div class="overlay-body" id="overlayBody"><!-- Popolato da JS --></div>
 
     <div class="overlay-footer">
-      <!-- FORM PER CONFERMA CANDIDATURA -->
       <form th:action="@{/internship/dashboard}" method="post" id="formCandidatura">
-        <input type="hidden" name="id" id="annuncioIdInput" />
-        <button class="btn-conferma-candidatura" type="submit">
-          Conferma Candidatura
-        </button>
+        <input type="hidden" name="id" id="annuncioIdInput"/>
+        <!-- Il bottone viene inserito/variato via JS in base a data-gia -->
       </form>
     </div>
   </div>
 </div>
+<!-- ===== /OVERLAY ===== -->
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Dropdown utente
   const userAvatar = document.getElementById('userAvatar');
   const dropdownMenu = document.getElementById('dropdownMenu');
-  const grid = document.getElementById('annunciGrid');
+  userAvatar.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+  });
+  document.addEventListener('click', e => {
+    if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target)) {
+      dropdownMenu.classList.remove('show');
+    }
+  });
 
+  // Overlay
+  const grid = document.getElementById('annunciGrid');
   const overlay = document.getElementById('overlay');
   const overlayTitolo = document.getElementById('overlayTitolo');
   const overlayBody = document.getElementById('overlayBody');
   const btnCloseOverlay = document.getElementById('btnCloseOverlay');
   const annuncioIdInput = document.getElementById('annuncioIdInput');
 
-  // Gestione dropdown utente
-  userAvatar.addEventListener('click', e => {
-    e.preventDefault(); e.stopPropagation();
-    dropdownMenu.classList.toggle('show');
-  });
-  document.addEventListener('click', e => {
-    if (!userAvatar.contains(e.target) && !dropdownMenu.contains(e.target))
-      dropdownMenu.classList.remove('show');
-  });
-
-  // Click su "Dettagli"
   grid.addEventListener('click', e => {
     const btn = e.target.closest('.btn-candidati');
     if (!btn) return;
 
     const card = btn.closest('.annuncio-card');
-    if (!card) return;
+    const tmpl = card && card.querySelector('.overlay-template');
+    if (!card || !tmpl) return;
 
-    const tmpl = card.querySelector('.overlay-template');
-    if (!tmpl) return;
-
-    // Passa l'id dell'annuncio al form
+    // id annuncio
     const annuncioId = card.getAttribute('data-annuncio-id');
     annuncioIdInput.value = annuncioId;
 
-    // Copia contenuto
+    // copia contenuto nello scalpo overlay
     const titleEl = tmpl.querySelector('.overlay-title');
     const bodyEl  = tmpl.querySelector('.overlay-body-content');
     overlayTitolo.textContent = titleEl ? titleEl.textContent : 'Dettagli';
     overlayBody.innerHTML = bodyEl ? bodyEl.innerHTML : '';
 
-    // Mostra overlay
+    // CTA in base a 'gia'
+    const gia = card.getAttribute('data-gia') === 'true';
+    const form = document.getElementById('formCandidatura');
+    // rimuovi bottoni precedenti
+    form.querySelectorAll('.btn-conferma-candidatura').forEach(b => b.remove());
+
+    if (gia) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn-conferma-candidatura is-disabled';
+      b.disabled = true;
+      b.setAttribute('aria-disabled', 'true');
+      b.title = 'Sei già candidato a questo annuncio';
+      b.textContent = 'Già candidato';
+      form.appendChild(b);
+    } else {
+      const b = document.createElement('button');
+      b.type = 'submit';
+      b.className = 'btn-conferma-candidatura';
+      b.textContent = 'Conferma Candidatura';
+      form.appendChild(b);
+    }
+
+    // mostra overlay
     overlay.classList.add('show');
     document.body.classList.add('overlay-open');
-  });
-
-  // Chiudi overlay
-  btnCloseOverlay.addEventListener('click', closeOverlay);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('show')) closeOverlay();
   });
 
   function closeOverlay() {
     overlay.classList.remove('show');
     document.body.classList.remove('overlay-open');
   }
+  btnCloseOverlay.addEventListener('click', closeOverlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('show')) closeOverlay();
+  });
+
+  // Blocca click su CTA disabilitata (safety)
+  document.addEventListener('click', e => {
+    const disabledBtn = e.target.closest('.btn-conferma-candidatura.is-disabled');
+    if (disabledBtn) { e.preventDefault(); e.stopPropagation(); }
+  });
+
+  // Flash auto-hide + close
+  const alerts = document.querySelectorAll('.alert.is-visible');
+  alerts.forEach(alert => {
+    const closeBtn = alert.querySelector('.alert-close');
+    if (closeBtn) closeBtn.addEventListener('click', () => alert.classList.remove('is-visible'));
+    setTimeout(() => alert.classList.remove('is-visible'), 4000);
+  });
 });
 
 // Dark mode

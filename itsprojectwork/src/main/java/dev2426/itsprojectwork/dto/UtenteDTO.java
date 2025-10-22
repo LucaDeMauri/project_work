@@ -4,7 +4,7 @@ import dev2426.itsprojectwork.models.Ruolo;
 
 public class UtenteDTO {
 	private long id;
-	private byte[] immagine;
+	private String immagine;
 	private String bio;
 	private String nome;
 	private String cognome;
@@ -12,7 +12,7 @@ public class UtenteDTO {
 	private Ruolo ruolo;
 	
 	
-	public UtenteDTO(long id, byte[] immagine, String bio, String nome, String cognome, String email, Ruolo ruolo) {
+	public UtenteDTO(long id, String immagine, String bio, String nome, String cognome, String email, Ruolo ruolo) {
 		this.id = id;
 		this.immagine = immagine;
 		this.bio = bio;
@@ -39,11 +39,11 @@ public class UtenteDTO {
 	}
 
 
-	public byte[] getImmagine() {
+	public String getImmagine() {
 		return immagine;
 	}
 
-	public void setImmagine(byte[] immagine) {
+	public void setImmagine(String immagine) {
 		this.immagine = immagine;
 	}
 
