@@ -1,479 +1,302 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Annunci</title>
-    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}"> 
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}"/>
+  <!-- Early apply tema per evitare flicker -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('theme'); // "dark" | "light" | null
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = saved ? saved === 'dark' : prefersDark;
+        document.documentElement.classList.toggle('dark-mode', useDark);
+      } catch (_) {}
+    })();
+  </script>
+
+  <!-- ===== CSS COMPLETO (puoi spostarlo in /css/internship/admin.css) ===== -->
+
 </head>
 <body>
-    <div class="header">
-        <a th:href="@{/admin}" class="btn btn-dashboard"> 
-            <span>←</span> 
-            <span class="testo-dashboard">Dashboard</span>
-        </a>
-        
-        <button id="btn-tema" class="btn btn-tema" onclick="cambiaTema()">🌙</button>
-    </div>
 
-    <div class="container">
-        <div class="form-box">
-            <h2>Nuovo Annuncio (Tirocinio)</h2>
-            <form id="form-tirocinio">
-                
-                <label for="titolo">Titolo dell'Annuncio</label>
-                <input type="text" id="titolo" required>
+<header class="admin-topbar">
+  
 
-                <div class="form-row">
-                    <div class="form-field-split">
-                        <label for="azienda">Azienda</label>
-                        <select id="azienda" required>
-                            <option value="">Seleziona Azienda...</option>
-                            <option th:each="azienda : ${listaAziende}" 
-                                    th:value="${azienda.nome}" 
-                                    th:text="${azienda.nome}">Nome Azienda</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-field-split">
-                        <label>Date del Periodo</label>
-                        <div class="date-fields-group">
-                            <input type="date" id="data_inizio" required>
-                            <input type="date" id="data_fine" required>
-                        </div>
-                    </div>
-                </div>
-                
-                <label for="mansione">Tipo di Mansione</label>
-                <input type="text" id="mansione" placeholder="Tipo di Mansione (tipoMansione)" required>
-                
-                <div class="form-row">
-                    <div class="form-field-split">
-                        <label for="location">Location</label>
-                        <input type="text" id="location" required>
-                    </div>
-                    <div class="form-field-split">
-                        <label for="orari">Orari</label>
-                        <input type="text" id="orari" required>
-                    </div>
-                </div>
-                
-                <label for="descrizione">Descrizione</label>
-                <textarea id="descrizione" rows="4" required></textarea>
-                
-                <label for="input-richieste">Competenze Richieste</label>
-                <div class="comp-input-group">
-                    <input type="hidden" id="competenze_richieste" name="competenze_richieste" value="">
-                    <input type="text" id="input-richieste" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
-                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('richieste')">+</button>
-                </div>
-                <div class="comp-tag-container" id="tag-richieste"></div>
+  <nav class="right">
+    <a class="btn ghost" th:href="@{/internship/dashboard}" title="Torna alla Dashboard">← Dashboard</a>
+    <a class="btn" th:href="@{/admin/candidature}">Gestisci Candidature</a>
+    <!-- <<<<<< BOTTPNE LIGHT/DARK >>>>>> -->
+    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">🌓</button>
+    <form method="post" th:action="@{/auth/logout}">
+      <button class="btn danger">Esci</button>
+    </form>
+  </nav>
+</header>
 
-                <label for="input-acquisite">Competenze Acquisite</label>
-                <div class="comp-input-group">
-                    <input type="hidden" id="competenze_acquisite" name="competenze_acquisite" value="">
-                    <input type="text" id="input-acquisite" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
-                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('acquisite')">+</button>
-                </div>
-                <div class="comp-tag-container" id="tag-acquisite"></div>
-                
-                <datalist id="lista-competenze"></datalist>
-                
-                <button type="submit">Aggiungi Annuncio</button>
-                <button type="button" th:onclick="|window.location.href='@{/admin/candidature}'|">
-                    Gestione Candidature
-                </button>
-            </form>
+<main class="admin-page">
+  <!-- COLONNA SINISTRA: CREAZIONE ANNUNCIO -->
+  <section class="panel">
+    <h2 class="panel-title">Crea un nuovo annuncio</h2>
+
+    <!-- Cambia qui la rotta se usi un endpoint diverso -->
+    <form class="form" method="post" th:action="@{/admin/annunci/crea}">
+      <div class="grid">
+        <div class="field">
+          <label for="titolo">Titolo <span>*</span></label>
+          <input id="titolo" name="titolo" required placeholder="Tirocinio Backend Java"/>
         </div>
 
-        <h2 class="tirocini">Annunci Attivi:</h2>
-        <div class="lista" id="lista-tirocini"></div>
-    </div>
-
-    <div id="modal-modifica" class="modal">
-        <div class="modal-content">
-            <h3>Modifica Annuncio</h3>
-            <form id="form-modifica">
-                <input type="hidden" id="edit-id">
-                
-                <label for="edit-titolo">Titolo dell'Annuncio</label>
-                <input type="text" id="edit-titolo" required>
-                
-                <div class="form-row">
-                    <div class="form-field-split">
-                        <label for="edit-azienda">Azienda</label>
-                        <select id="edit-azienda" required>
-                            <option value="">Seleziona Azienda...</option>
-                            <option th:each="azienda : ${listaAziende}" 
-                                    th:value="${azienda.nome}" 
-                                    th:text="${azienda.nome}">Nome Azienda</option>
-                        </select>
-                    </div>
-                    <div class="form-field-split">
-                        <label>Date del Periodo</label>
-                        <div class="date-fields-group">
-                            <input type="date" id="edit-data_inizio" required>
-                            <input type="date" id="edit-data_fine" required>
-                        </div>
-                    </div>
-                </div>
-                
-                <label for="edit-mansione">Tipo di Mansione</label>
-                <input type="text" id="edit-mansione" required>
-                
-                <div class="form-row">
-                    <div class="form-field-split">
-                        <label for="edit-location">Location</label>
-                        <input type="text" id="edit-location" required>
-                    </div>
-                    <div class="form-field-split">
-                        <label for="edit-orari">Orari</label>
-                        <input type="text" id="edit-orari" required>
-                    </div>
-                </div>
-                
-                <label for="edit-descrizione">Descrizione</label>
-                <textarea id="edit-descrizione" rows="4" required></textarea>
-                
-                <label for="edit-input-richieste">Competenze Richieste</label>
-                <div class="comp-input-group">
-                    <input type="hidden" id="edit-competenze_richieste" name="competenze_richieste" value="">
-                    <input type="text" id="edit-input-richieste" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
-                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('edit-richieste')">+</button>
-                </div>
-                <div class="comp-tag-container" id="edit-tag-richieste"></div>
-
-                <label for="edit-input-acquisite">Competenze Acquisite</label>
-                <div class="comp-input-group">
-                    <input type="hidden" id="edit-competenze_acquisite" name="competenze_acquisite" value="">
-                    <input type="text" id="edit-input-acquisite" placeholder="Cerca e aggiungi competenza" list="lista-competenze">
-                    <button type="button" class="btn btn-add-comp" onclick="aggiungiCompetenza('edit-acquisite')">+</button>
-                </div>
-                <div class="comp-tag-container" id="edit-tag-acquisite"></div>
-                
-                <div class="btn-group">
-                    <button type="submit">Salva</button>
-                    <button type="button" onclick="chiudiModal()">Annulla</button>
-                </div>
-            </form>
+        <div class="field">
+          <label for="aziendaId">Azienda</label>
+          <select id="aziendaId" name="aziendaId">
+            <option value="">Seleziona Azienda…</option>
+            <option th:each="az : ${listaAziende}" th:value="${az.id}" th:text="${az.nome}">Azienda</option>
+          </select>
         </div>
+
+        <div class="field">
+          <label for="data_inizio">Data Inizio</label>
+          <input id="data_inizio" name="data_inizio" type="date"/>
+        </div>
+
+        <div class="field">
+          <label for="data_fine">Data Fine</label>
+          <input id="data_fine" name="data_fine" type="date"/>
+        </div>
+
+        <div class="field">
+          <label for="tipoMansione">Tipo di Mansione</label>
+          <input id="tipoMansione" name="tipoMansione" placeholder="Developer / Frontend / Analyst"/>
+        </div>
+
+        <div class="field">
+          <label for="location">Location</label>
+          <input id="location" name="location" placeholder="Roma (ibrido)"/>
+        </div>
+
+        <div class="field">
+          <label for="orari">Orari</label>
+          <input id="orari" name="orari" placeholder="Lun–Ven 9–17"/>
+        </div>
+
+        <div class="field full">
+          <label for="descrizione">Descrizione</label>
+          <textarea id="descrizione" name="descrizione" rows="3" placeholder="Cosa farai, requisiti, benefit…"></textarea>
+        </div>
+
+        <!-- ========= COMPETENZE RICHIESTE ========= -->
+        <div class="field full">
+          <label for="skillsRequiredInput">Competenze Richieste</label>
+
+          <div class="tagbox" data-name="skillsRequired" id="skillsRequiredBox">
+            <div class="tags" aria-live="polite" aria-label="Competenze scelte"></div>
+
+            <div class="tagbox-input">
+              <input id="skillsRequiredInput"
+                     type="text"
+                     list="skillsCatalogList"
+                     placeholder="Cerca o aggiungi competenza…"
+                     autocomplete="off"/>
+              <button type="button" class="add-tag" aria-label="Aggiungi">+</button>
+            </div>
+
+            <div class="hidden-values"></div>
+          </div>
+
+          <!-- Catalogo suggerimenti -->
+          <datalist id="skillsCatalogList">
+            <option th:each="c : ${listaCompetenze}" th:value="${c.descrizione}" th:text="${c.descrizione}">Java</option>
+          </datalist>
+
+          <small>Invio o “+” per aggiungere. Clicca “×” per rimuovere. Niente duplicati.</small>
+        </div>
+
+        <!-- ========= COMPETENZE ACQUISITE ========= -->
+        <div class="field full">
+          <label for="skillsDevelopInput">Competenze Acquisite</label>
+
+          <div class="tagbox" data-name="skillsDevelop" id="skillsDevelopBox">
+            <div class="tags" aria-live="polite" aria-label="Competenze scelte"></div>
+
+            <div class="tagbox-input">
+              <input id="skillsDevelopInput"
+                     type="text"
+                     list="skillsCatalogList"
+                     placeholder="Cerca o aggiungi competenza…"
+                     autocomplete="off"/>
+              <button type="button" class="add-tag" aria-label="Aggiungi">+</button>
+            </div>
+
+            <div class="hidden-values"></div>
+          </div>
+
+          <small>Le competenze che lo studente svilupperà durante lo stage.</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Crea annuncio</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- COLONNA DESTRA: ANNUNCI ESISTENTI -->
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Annunci esistenti</h2>
+      <div class="mini-tip">Disattiva per nascondere l’annuncio dalla dashboard studenti.</div>
     </div>
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        
-        // La lista di tutte le competenze dal DB
-        const competenzeDB = /*[[${listaCompetenze}]]*/ ['Mock Competenza A', 'Mock Competenza B', 'Mock Competenza C'].map(c => (typeof c === 'object' && c !== null && c.nome) ? c : { nome: c });
+    <div class="cards">
+      <article class="card" th:each="a : ${listaAnnunci}">
+        <div class="avatar" th:text="${#strings.substring(a.titolo,0,1)}">A</div>
 
-        // Mappa per tenere traccia delle competenze aggiunte (Tag attivi)
-        let activeTags = {
-            'richieste': new Set(),
-            'acquisite': new Set(),
-            'edit-richieste': new Set(),
-            'edit-acquisite': new Set()
-        };
+        <div class="content" style="flex:1">
+          <h3 class="title" th:text="${a.titolo}">Titolo annuncio</h3>
+          <div class="meta">
+            <span class="chip" th:text="${a.azienda != null ? a.azienda.nome : '—'}">Azienda</span>
+            <span>•</span>
+            <span th:text="${a.data_inizio}">Inizio</span>
+            <span>–</span>
+            <span th:text="${a.data_fine}">Fine</span>
+            <span>•</span>
+            <span th:text="${a.location}">Roma</span>
+          </div>
 
-        let tirocini = [];
-        let editId = null;
+          <div class="card-actions">
+            <a class="btn" th:href="@{/admin/candidature}">Gestisci candidature</a>
+            <form method="post"
+                  th:action="@{'/admin/disattiva/' + ${a.id}}"
+                  onsubmit="return confirmDelete(this)">
+              <button class="btn danger">Disattiva</button>
+            </form>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
 
-        
-        // --- LOGICA PER LA GESTIONE DEI TAG ---
-        
-        /** * Aggiunge una competenza dal campo di input all'elenco dei tag attivi.
-         * La logica di verifica è qui: se la competenza non è trovata nel DB, NON viene aggiunta.
-         */
-        function aggiungiCompetenza(tipo) {
-            const isEdit = tipo.includes('edit');
-            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
-            const inputId = `${isEdit ? 'edit-input' : 'input'}-${baseTipo}`;
-            const inputElement = document.getElementById(inputId);
-            let competenza = inputElement.value.trim();
-            
-            if (competenza === "") { 
-                mostraMsg("Inserisci una competenza valida."); 
-                return; 
-            }
-            
-            // CONTROLLO RIGOROSO: Cerca la competenza nel DB (case insensitive)
-            const competenzaTrovata = competenzeDB.find(c => c.nome.toLowerCase() === competenza.toLowerCase());
-            
-            if (!competenzaTrovata) {
-                // Se non è trovata, non la aggiunge e mostra un messaggio
-                mostraMsg(`ERRORE: La competenza "${competenza}" non è presente nel database e non può essere aggiunta.`);
-                return; 
-            }
-            
-            const nomeCompetenza = competenzaTrovata.nome;
+<!-- ===== JS: Tema + TagBox ===== -->
+<script>
+  // Toggle tema con persistenza
+  (function(){
+    const root = document.documentElement;
+    const btn = document.getElementById('darkModeToggle');
 
-            // Verifica se è già stata aggiunta (controllo interno)
-            if (activeTags[tipo].has(nomeCompetenza)) { 
-                mostraMsg(`La competenza "${nomeCompetenza}" è già stata aggiunta.`); 
-                inputElement.value = ''; 
-                return; 
-            }
+    function setBtnIcon(){
+      if (!btn) return;
+      const dark = root.classList.contains('dark-mode');
+      btn.textContent = dark ? '☀️' : '🌓';
+    }
+    // sync body con html
+    document.body.classList.toggle('dark-mode', root.classList.contains('dark-mode'));
+    setBtnIcon();
 
-            // Procedi con l'aggiunta solo se è stata trovata nel DB
-            activeTags[tipo].add(nomeCompetenza);
-            createTagElement(nomeCompetenza, tipo);
-            updateHiddenField(tipo);
-            inputElement.value = '';
+    window.toggleDarkMode = function(){
+      const willBeDark = !root.classList.contains('dark-mode');
+      root.classList.toggle('dark-mode', willBeDark);
+      document.body.classList.toggle('dark-mode', willBeDark);
+      try { localStorage.setItem('theme', willBeDark ? 'dark' : 'light'); } catch(_) {}
+      setBtnIcon();
+    };
+  })();
+
+  // Conferma azioni distruttive
+  function confirmDelete(){ return confirm("Sei sicuro di voler disattivare questo annuncio?"); }
+
+  // ======== COMPONENTE TAGBOX (vanilla JS) ========
+  (function () {
+    function normalize(v){ return v.trim().replace(/\s+/g,' ').replace(/,+$/,''); }
+    function key(v){ return normalize(v).toLowerCase(); }
+
+    function TagBox(root) {
+      this.root = root;
+      this.name = root.dataset.name; // es. "skillsRequired"
+      this.tagsWrap = root.querySelector('.tags');
+      this.hiddenWrap = root.querySelector('.hidden-values');
+      this.input = root.querySelector('input[type="text"]');
+      this.addBtn = root.querySelector('.add-tag');
+      this.map = new Map(); // key -> original value
+
+      // Precarica tag già presenti se sei in modalità "modifica"
+      root.querySelectorAll('.tag[data-value]').forEach(span => {
+        this._add(span.getAttribute('data-value'), true);
+      });
+
+      // Eventi
+      this.addBtn.addEventListener('click', () => this.addFromInput());
+      this.input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); this.addFromInput(); }
+        if (e.key === 'Backspace' && !this.input.value && this.tagsWrap.lastElementChild) {
+          this.tagsWrap.lastElementChild.querySelector('button')?.click();
         }
+      });
 
-        function rimuoviCompetenza(nomeCompetenza, tipo, tagElement) {
-            activeTags[tipo].delete(nomeCompetenza);
-            tagElement.remove();
-            updateHiddenField(tipo);
-        }
+      this.tagsWrap.addEventListener('click', (e)=>{
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const span = btn.closest('.tag');
+        const val = span?.getAttribute('data-value');
+        if (val != null) this.remove(val);
+      });
+    }
 
-        function updateHiddenField(tipo) {
-            const isEdit = tipo.includes('edit');
-            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
-            const hiddenId = `${isEdit ? 'edit-' : ''}competenze_${baseTipo}`;
-            const hiddenElement = document.getElementById(hiddenId);
-            hiddenElement.value = Array.from(activeTags[tipo]).join(', ');
-        }
-        
-        function createTagElement(nomeCompetenza, tipo) {
-            const isEdit = tipo.includes('edit');
-            const baseTipo = isEdit ? tipo.replace('edit-', '') : tipo;
-            const tagContainerId = `${isEdit ? 'edit-' : ''}tag-${baseTipo}`;
-            const tagContainer = document.getElementById(tagContainerId);
-            if (!tagContainer) return;
-            
-            const tag = document.createElement('span');
-            tag.className = 'comp-tag';
-            tag.textContent = nomeCompetenza;
-            
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = 'x';
-            removeBtn.type = 'button';
-            removeBtn.onclick = function() {
-                rimuoviCompetenza(nomeCompetenza, tipo, tag);
-            };
-            
-            tag.appendChild(removeBtn);
-            tagContainer.appendChild(tag);
-        }
-        
-        function resetTags() {
-            Object.keys(activeTags).forEach(key => {
-                activeTags[key].clear();
-                const containerId = key.includes('edit') ? `edit-tag-${key.replace('edit-', '')}` : `tag-${key}`;
-                const hiddenId = key.includes('edit') ? `edit-competenze_${key.replace('edit-', '')}` : `competenze_${key}`;
-                document.getElementById(containerId)?. (innerHTML = '');
-                document.getElementById(hiddenId)?. (value = '');
-            });
-        }
-        
-        function loadEditTags(tirocinio) {
-            resetTags();
-            
-            const richieste = tirocinio.competenzeRichieste ? tirocinio.competenzeRichieste.split(',').map(s => s.trim()).filter(s => s) : [];
-            richieste.forEach(nome => {
-                activeTags['edit-richieste'].add(nome);
-                createTagElement(nome, 'edit-richieste');
-            });
-            updateHiddenField('edit-richieste');
+    TagBox.prototype._renderHidden = function(){
+      this.hiddenWrap.innerHTML = '';
+      for (const [,original] of this.map) {
+        const h = document.createElement('input');
+        h.type = 'hidden';
+        h.name = this.name;   // invia come lista: ?skillsRequired=a&skillsRequired=b
+        h.value = original;
+        this.hiddenWrap.appendChild(h);
+      }
+    };
 
-            const acquisite = tirocinio.competenzeAcquisite ? tirocinio.competenzeAcquisite.split(',').map(s => s.trim()).filter(s => s) : [];
-            acquisite.forEach(nome => {
-                activeTags['edit-acquisite'].add(nome);
-                createTagElement(nome, 'edit-acquisite');
-            });
-            updateHiddenField('edit-acquisite');
-        }
+    TagBox.prototype._renderTag = function(original){
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.setAttribute('data-value', original);
+      span.textContent = original;
+      const x = document.createElement('button');
+      x.type = 'button';
+      x.setAttribute('aria-label', 'Rimuovi');
+      x.textContent = '×';
+      span.appendChild(x);
+      this.tagsWrap.appendChild(span);
+    };
 
-        function initDatalist() {
-            const datalist = document.getElementById('lista-competenze');
-            datalist.innerHTML = '';
-            
-            competenzeDB.forEach(c => {
-                const option = document.createElement('option');
-                option.value = c.nome;
-                datalist.appendChild(option);
-            });
-        }
-        
-        // --- FUNZIONI PRINCIPALI ---
+    TagBox.prototype._add = function(value, skipInputClear){
+      const v = normalize(value);
+      if (!v) return;
+      const k = key(v);
+      if (this.map.has(k)) return;
+      this.map.set(k, v);
+      this._renderTag(v);
+      this._renderHidden();
+      if (!skipInputClear) this.input.value = '';
+    };
 
-        async function caricaTirocini() {
-            try {
-                const response = await fetch(/*[[@{/api/tirocini}]]*/ '/api/tirocini');
-                tirocini = await response.json();
-                mostraTirocini();
-            } catch (error) {
-                mostraMsg('Errore caricamento');
-            }
-        }
+    TagBox.prototype.addFromInput = function(){
+      this._add(this.input.value);
+    };
 
-        document.getElementById('form-tirocinio').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const tirocinio = {
-                titolo: document.getElementById('titolo').value, 
-                azienda: document.getElementById('azienda').value, 
-                data_inizio: document.getElementById('data_inizio').value,
-                data_fine: document.getElementById('data_fine').value,
-                tipoMansione: document.getElementById('mansione').value, 
-                location: document.getElementById('location').value,     
-                orari: document.getElementById('orari').value,           
-                descrizione: document.getElementById('descrizione').value, 
-                competenzeRichieste: document.getElementById('competenze_richieste').value, 
-                competenzeAcquisite: document.getElementById('competenze_acquisite').value  
-            };
+    TagBox.prototype.remove = function(original){
+      const k = key(original);
+      if (!this.map.has(k)) return;
+      this.map.delete(k);
+      const el = this.tagsWrap.querySelector(`.tag[data-value="${CSS.escape(original)}"]`);
+      if (el) el.remove();
+      this._renderHidden();
+    };
 
-            try {
-                await fetch(/*[[@{/api/tirocini}]]*/ '/api/tirocini', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(tirocinio)
-                });
-                
-                document.getElementById('form-tirocinio').reset();
-                document.getElementById('azienda').value = ''; 
-                resetTags(); 
-                
-                caricaTirocini();
-                mostraMsg('Annuncio aggiunto!');
-            } catch (error) {
-                mostraMsg('Errore');
-            }
-        });
-
-        document.getElementById('form-modifica').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const tirocinio = {
-                titolo: document.getElementById('edit-titolo').value, 
-                azienda: document.getElementById('edit-azienda').value, 
-                data_inizio: document.getElementById('edit-data_inizio').value,
-                data_fine: document.getElementById('edit-data_fine').value,
-                tipoMansione: document.getElementById('edit-mansione').value, 
-                location: document.getElementById('edit-location').value,     
-                orari: document.getElementById('edit-orari').value,           
-                descrizione: document.getElementById('edit-descrizione').value, 
-                competenzeRichieste: document.getElementById('edit-competenze_richieste').value, 
-                competenzeAcquisite: document.getElementById('edit-competenze_acquisite').value  
-            };
-
-            try {
-                await fetch(/*[[@{/api/tirocini/}]]*/ '/api/tirocini/' + editId, {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(tirocinio)
-                });
-                
-                chiudiModal();
-                caricaTirocini();
-                mostraMsg('Modificato!');
-            } catch (error) {
-                mostraMsg('Errore modifica');
-            }
-        });
-
-        function mostraTirocini() {
-            const lista = document.getElementById('lista-tirocini');
-            lista.innerHTML = '';
-
-            if (tirocini.length === 0) {
-                lista.innerHTML = '<p class="vuoto">Nessun annuncio</p>';
-                return;
-            }
-
-            tirocini.forEach(t => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-content">
-                        <div><strong>Titolo:</strong> ${t.titolo}</div>
-                        <div><strong>Azienda:</strong> ${t.azienda}</div>
-                        <div><strong>Mansione:</strong> ${t.tipoMansione}</div>
-                        <div><strong>Location:</strong> ${t.location}</div>
-                        <div><strong>Orari:</strong> ${t.orari}</div>
-                        <div><strong>Inizio:</strong> ${t.data_inizio}</div>
-                        <div><strong>Fine:</strong> ${t.data_fine}</div>
-                        <div class="competenze"><strong>Richieste:</strong> ${t.competenzeRichieste}</div>
-                        <div class="competenze"><strong>Acquisite:</strong> ${t.competenzeAcquisite}</div>
-                    </div>
-                    <div class="card-actions">
-                        <button class="btn" onclick="apriModifica(${t.id})">Modifica</button>
-                        <button class="btn btn-elimina" onclick="eliminaTirocinio(${t.id})">Elimina</button>
-                    </div>
-                `;
-                lista.appendChild(card);
-            });
-        }
-
-        function apriModifica(id) {
-            const t = tirocini.find(t => t.id === id);
-            if (!t) return;
-            
-            editId = id;
-            
-            document.getElementById('edit-titolo').value = t.titolo; 
-            document.getElementById('edit-azienda').value = t.azienda; 
-            document.getElementById('edit-data_inizio').value = t.data_inizio;
-            document.getElementById('edit-data_fine').value = t.data_fine;     
-            document.getElementById('edit-mansione').value = t.tipoMansione;
-            document.getElementById('edit-location').value = t.location;     
-            document.getElementById('edit-orari').value = t.orari;           
-            document.getElementById('edit-descrizione').value = t.descrizione; 
-            
-            loadEditTags(t); 
-
-            document.getElementById('modal-modifica').style.display = 'block';
-        }
-
-        async function eliminaTirocinio(id) {
-            try {
-                await fetch(/*[[@{/api/tirocini/}]]*/ `/api/tirocini/${id}`, { method: 'DELETE' });
-                caricaTirocini();
-                mostraMsg('Eliminato!');
-            } catch (error) {
-                mostraMsg('Errore eliminazione');
-            }
-        }
-
-        function chiudiModal() { 
-            document.getElementById('modal-modifica').style.display = 'none';
-            editId = null;
-            resetTags(); 
-        }
-
-        function cambiaTema() {
-            const isScuro = document.body.classList.toggle('tema-scuro');
-            const btnTema = document.getElementById('btn-tema');
-            if (isScuro) {
-                btnTema.textContent = '☀️';
-            } else {
-                btnTema.textContent = '🌙';
-            }
-        }
-
-        function mostraMsg(testo) {
-            alert(testo);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initDatalist(); 
-            caricaTirocini(); 
-            
-            const btnTema = document.getElementById('btn-tema');
-            if (document.body.classList.contains('tema-scuro')) {
-                btnTema.textContent = '☀️';
-            }
-            
-            document.querySelectorAll('input[list="lista-competenze"]').forEach(input => {
-                input.addEventListener('keyup', (event) => {
-                    if (event.key === 'Enter') {
-                        event.preventDefault(); 
-                        const type = input.id.includes('edit') ? (input.id.includes('richieste') ? 'edit-richieste' : 'edit-acquisite') : (input.id.includes('richieste') ? 'richieste' : 'acquisite');
-                        aggiungiCompetenza(type);
-                    }
-                });
-            });
-        });
-        /*]]>*/
-    </script>
+    const req = document.getElementById('skillsRequiredBox');
+    const dev = document.getElementById('skillsDevelopBox');
+    if (req) new TagBox(req);
+    if (dev) new TagBox(dev);
+  })();
+</script>
 </body>
 </html>
